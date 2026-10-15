@@ -17,8 +17,8 @@
   <!-- Start downloading the heading font right away instead of waiting
        for the CSS to be parsed and discover it. -->
   <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- The hero plate is the largest image on first screen: fetch it early too -->
-  <link rel="preload" href="images/rose-plate.webp" as="image" type="image/webp">
+  <!-- (Re-enable if the rose plate is shown again; preloading a hidden image wastes bandwidth.)
+  <link rel="preload" href="images/rose-plate.webp" as="image" type="image/webp"> -->
   <!-- Runs before the page paints: tells CSS "JavaScript is on", so effects
        that hide content (reveals, toggles) only apply when JS can undo them. -->
   <script>document.documentElement.classList.add('js');</script>
@@ -96,15 +96,28 @@
         </div>
       </div>
 
-      <!-- Botanical plate: P.-J. Redouté's Rosa centifolia (public domain), with the
+      <!-- Headshot. srcset lists two sizes; with `sizes` (how wide it displays) the
+           browser picks the smallest file that's still sharp on that screen:
+           phones get the 480px file, desktops and Retina screens the 800px one. -->
+      <figure class="portrait">
+        <img src="images/headshot-800.webp"
+             srcset="images/headshot-480.webp 480w, images/headshot-800.webp 800w"
+             sizes="(max-width: 40rem) 14rem, 22rem"
+             alt="Headshot of Your Name" width="800" height="1000" fetchpriority="high">
+        <svg class="leaf-icon portrait-leaf" aria-hidden="true"><use href="#leaf"/></svg>
+      </figure>
+
+      <!-- HIDDEN for now (remove the `hidden` attribute to bring it back).
+           Botanical plate: P.-J. Redouté's Rosa centifolia (public domain), with the
            paper removed by tools/prepare_plate.py. It's an inline SVG so the
            numbered markers share the image's coordinate system and can be styled
            with CSS. The names live in the HTML key below, so they stay readable
            at any screen size (text drawn inside the SVG would shrink with it). -->
-      <figure class="hero-figure plate">
+      <figure class="hero-figure plate" hidden>
         <svg class="plate-art" viewBox="0 0 450 604" role="img" aria-labelledby="plate-title">
           <title id="plate-title">Botanical plate of a cabbage rose, Rosa × centifolia, with eight numbered parts listed in the key below.</title>
-          <image href="images/rose-plate.webp" width="450" height="604"/>
+          <!-- data-href: main.js copies it to href only when this figure is visible -->
+          <image data-href="images/rose-plate.webp" width="450" height="604"/>
           <g class="plate-marker" data-part="1" style="--i:1"><line class="plate-leader" x1="205" y1="30" x2="256" y2="26"/><circle class="plate-point" cx="205" cy="30" r="2.5"/><g class="plate-badge" style="transform-origin:256px 26px"><circle cx="256" cy="26" r="13"/><text x="256" y="26">1</text></g></g>
           <g class="plate-marker" data-part="2" style="--i:2"><line class="plate-leader" x1="204" y1="72" x2="158" y2="52"/><circle class="plate-point" cx="204" cy="72" r="2.5"/><g class="plate-badge" style="transform-origin:158px 52px"><circle cx="158" cy="52" r="13"/><text x="158" y="52">2</text></g></g>
           <g class="plate-marker" data-part="3" style="--i:3"><line class="plate-leader" x1="411" y1="126" x2="436" y2="92"/><circle class="plate-point" cx="411" cy="126" r="2.5"/><g class="plate-badge" style="transform-origin:436px 92px"><circle cx="436" cy="92" r="13"/><text x="436" y="92">3</text></g></g>

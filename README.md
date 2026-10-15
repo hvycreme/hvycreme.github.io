@@ -14,7 +14,7 @@ css/style.css     All styles; design tokens (colors, fonts, spacing, motion) at 
 js/main.js        Role tailoring, scroll reveals, active nav, explanation toggle, optional sound
 fonts/            Fraunces (self-hosted, SIL Open Font License)
 images/           rose-plate.webp (hero plate), placeholders for figures and plant photos, favicon
-tools/            prepare_plate.py: removes the paper background from a botanical plate
+tools/            prepare_plate.py (botanical plate cut-out), prepare_headshot.py (portrait crop + color match)
 files/            PDFs: put resume.pdf here
 audio/            background.mp3 (optional ambient loop, off by default)
 .nojekyll         Tells GitHub Pages to serve files as-is (skip its Jekyll build step)
@@ -63,6 +63,10 @@ The "Seeking…" line in the intro also has one version per role (`<span data-fo
 1. Crop to 4:5 portrait and resize to **800×1000 px** (2× its display size, sharp on Retina screens).
 2. Compress at [squoosh.app](https://squoosh.app): **WebP**, quality ~75. Aim for **under 150 KB**.
 3. Save as `images/my-plant.webp`, update the `<img src>` in the About section, and describe the photo in `alt`.
+
+**Headshot:** `images/headshot-800.webp` / `headshot-480.webp`, made from the original photo by `tools/prepare_headshot.py` (crops to 4:5, color-matches the wall to the site's cream, strips metadata such as GPS location). For a new photo: `python3 tools/prepare_headshot.py photo.jpg` (adjust `CROP` in the script so your face sits in the upper middle).
+
+**Hero plate (currently hidden):** to show it again, remove `hidden` from `<figure class="hero-figure plate" hidden>` in `index.html` (and re-enable the commented-out preload in `<head>`). While hidden, its image isn't downloaded at all.
 
 **Hero plate:** P.-J. Redouté's *Rosa centifolia* (1817–24, public domain), cut out of its white paper by `tools/prepare_plate.py`. The numbered markers are an inline `<svg>` in `index.html`; the names are in the `<ol class="plate-key">` right below it.
 - *Move a marker:* each `<g class="plate-marker">` has a feature point (`x1,y1`, where the dashed line starts) and a badge position (the circle's `cx,cy`), in the image's own 450×604 pixel coordinates.

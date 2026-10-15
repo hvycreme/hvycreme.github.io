@@ -417,6 +417,66 @@ section p + p {
   width: min(100%, 27rem);
 }
 
+/* Text gets a little more room than the portrait on wide screens */
+@media (min-width: 56rem) {
+  .hero {
+    grid-template-columns: 1.35fr 1fr;
+  }
+}
+
+/* --- Portrait --------------------------------------------------------------
+   Arched top like a greenhouse window. In border-radius, values before the
+   "/" are horizontal radii and after it vertical ones: 50% of the width
+   across, 40% of the height (= half the width, since the photo is 4:5) down,
+   which makes the top a perfect semicircle. */
+.portrait {
+  --arch: 50% 50% var(--radius) var(--radius) / 40% 40% var(--radius) var(--radius);
+  position: relative;
+  justify-self: center;
+  width: min(100%, 22rem);
+}
+
+.portrait img {
+  border-radius: var(--arch);
+}
+
+/* A thin green frame floating 10px outside the photo, same arch shape */
+.portrait::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 45%, transparent);
+  border-radius: var(--arch);
+  pointer-events: none;
+}
+
+/* The site's leaf, tucked over the bottom corner of the frame */
+.portrait-leaf {
+  position: absolute;
+  left: -1.1rem;
+  bottom: 1.25rem;
+  padding: 0.35rem;
+  font-size: 2.6rem;
+  border-radius: 50%;
+  background: var(--color-bg);
+  transform: rotate(-12deg);
+}
+
+/* Phones: portrait sits above the name, smaller and left-aligned with the text.
+   (`order` only changes the visual order; fine for an image.) */
+@media (max-width: 40rem) {
+  .portrait {
+    order: -1;
+    justify-self: start;
+    width: min(60%, 14rem);
+    margin: var(--space-2) 0 0 10px;  /* keep the outer frame inside the gutter */
+  }
+
+  .portrait-leaf {
+    font-size: 2rem;
+  }
+}
+
 /* --- Botanical plate (hero figure) ------------------------------------- */
 .plate-art {
   display: block;
@@ -921,7 +981,8 @@ section p + p {
 /* Hero entrance: each line starts 0.1s after the previous one.
    "both" holds the invisible start state during the delay. */
 .hero-text > *,
-.hero-figure {
+.hero-figure,
+.portrait {
   animation: fade-rise var(--dur-slow) var(--ease) both;
 }
 
@@ -930,7 +991,8 @@ section p + p {
 .hero-text > :nth-child(4) { animation-delay: 0.3s; }
 .hero-text > :nth-child(5) { animation-delay: 0.4s; }
 .hero-text > :nth-child(6) { animation-delay: 0.5s; }
-.hero-figure { animation-delay: 0.3s; }
+.hero-figure,
+.portrait { animation-delay: 0.25s; }
 
 /* Scroll reveal: JS adds .is-visible when a section enters the viewport */
 .js .reveal {

@@ -240,6 +240,12 @@ document.addEventListener('click', (event) => {
    -------------------------------------------------------------------------- */
 const plate = document.querySelector('.plate');
 
+// Hidden figures shouldn't cost a download. Their images keep the address in
+// data-href (which browsers ignore); copy it into href only when visible.
+document.querySelectorAll('image[data-href]').forEach((img) => {
+  if (!img.closest('[hidden]')) img.setAttribute('href', img.dataset.href);
+});
+
 if (plate) {
   const highlight = (part) => {
     plate.querySelectorAll('[data-part]').forEach((el) => {
