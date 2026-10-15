@@ -12,6 +12,7 @@ Design: a cream-colored botanical-science aesthetic. Warm cream paper, charcoal 
 index.html        All page content
 css/style.css     All styles; design tokens (colors, fonts, spacing, motion) at the top in :root
 js/main.js        Role tailoring, scroll reveals, active nav, explanation toggle, optional sound
+js/particles.js   Interactive particle rose behind the intro (WebGL)
 fonts/            Fraunces (self-hosted, SIL Open Font License)
 images/           rose-plate.webp (hero plate), placeholders for figures and plant photos, favicon
 tools/            prepare_plate.py (botanical plate cut-out), prepare_headshot.py (portrait crop + color match)
@@ -65,6 +66,13 @@ The "Seeking…" line in the intro also has one version per role (`<span data-fo
 3. Save as `images/my-plant.webp`, update the `<img src>` in the About section, and describe the photo in `alt`.
 
 **Headshot:** `images/headshot-800.webp` / `headshot-480.webp`, made from the original photo by `tools/prepare_headshot.py` (crops to 4:5, color-matches the wall to the site's cream, strips metadata such as GPS location). For a new photo: `python3 tools/prepare_headshot.py photo.jpg` (adjust `CROP` in the script so your face sits in the upper middle).
+
+**Particle rose (intro background):** `js/particles.js` turns `images/rose-plate.webp` into ~24,000 WebGL particles that drift and scatter away from the mouse (the technique from Codrops' *Interactive Particles with Three.js*, written in plain WebGL, no library). Everything adjustable is in the `CONFIG` object at the top of the file:
+- `opacity`: how strong the effect is; `inkMix`: 0 = the rose's own colors, 1 = all forest green
+- `step`: sample every Nth pixel (higher = fewer, sparser particles)
+- `pushRadius` / `pushStrength`: how the mouse disturbs the particles
+- `placement`: the rose's size (`scale`, a multiple of the portrait's height) and position (`x`, `y`, as fractions of the portrait box)
+It starts after the page has loaded, pauses when the intro is scrolled out of view, and shows a still image for visitors with Reduce motion on. Without WebGL the intro simply has no effect.
 
 **Hero plate (currently hidden):** to show it again, remove `hidden` from `<figure class="hero-figure plate" hidden>` in `index.html` (and re-enable the commented-out preload in `<head>`). While hidden, its image isn't downloaded at all.
 
