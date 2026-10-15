@@ -1047,6 +1047,42 @@ figcaption {
 }
 
 /* Project status: a small mint pill, like the tags */
+/* Music project: subtitle and its three labeled parts */
+.project-subtitle {
+  margin-top: calc(-1 * var(--space-2));
+  color: var(--color-muted);
+}
+
+.project-part {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.project-part-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.project-note {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+/* "Why it interests me" is personal motivation, set apart from the study */
+.project-why {
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--color-mint, #BFE6D2);
+  border-radius: 0 var(--radius-sm, 10px) var(--radius-sm, 10px) 0;
+  background: color-mix(in srgb, var(--color-mint, #BFE6D2) 22%, transparent);
+  max-width: 44rem;  /* same reading width as the findings box above */
+}
+
 .project-status {
   align-self: flex-start;
   padding: 0.15em 0.75em;

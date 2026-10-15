@@ -67,7 +67,7 @@
         <p class="pronouns">he/him</p>
         <div class="hero-intro">
           <p>I study biochemistry, molecular biology, and psychology at the University of South Carolina. I’m interested in how biology and behavior shape health, and I’m planning to pursue medicine.</p>
-          <p>My research spans organic synthesis and how people perceive AI-generated music. Outside the lab, I’ve worked in student housing, taught psychology review sessions, and spent plenty of time caring for my plants.</p>
+          <p>My research spans organic synthesis and how expectations shape people’s responses to AI-generated music. Outside the lab, I’ve worked in student housing, taught psychology review sessions, and spent plenty of time caring for my plants.</p>
           <p>I’m looking for summer work in clinical research coordination or emergency care.</p>
         </div>
         <div class="hero-actions">
@@ -99,7 +99,7 @@
             <h3>Undergraduate Researcher <span class="entry-org">· Palomares Lab, Psychology</span></h3>
             <p class="entry-type">Research with human participants · Supervisor Dr. Melanie Palomares</p>
             <ul class="points">
-              <li>Study how people perceive and evaluate AI-generated music, with collaborator Dr. Emily Schwitzgebel (School of Music).</li>
+              <li>Study how source labels and expectations shape people’s responses to AI-generated music, with collaborator Dr. Emily Schwitzgebel (School of Music).</li>
               <li>Built a Python pipeline that turns song features into prompts used to generate matched AI versions in Suno (see Projects).</li>
               <li>Co-led a listener study. I’m the first author on a manuscript under review at PLOS ONE.</li>
               <li>Run participants and manage human-subjects data (CITI-trained).</li>
@@ -145,26 +145,39 @@
         <div class="project-text">
           <p class="project-meta">Palomares Lab · with Dr. Emily Schwitzgebel</p>
           <p class="project-status">First-author manuscript under review at PLOS ONE</p>
-          <h3>How listeners judge AI-generated music</h3>
-          <p>Whether people can tell human-made songs from AI versions of them, and how knowing the source changes the way they judge the music.</p>
-          <!-- Essential information stays visible: what the study found.
-               The toggle below only changes how the explanation is written. -->
-          <p class="finding"><span class="finding-label">In our study</span>
-            Listeners couldn’t distinguish the human songs from their AI-generated counterparts. With the source hidden they preferred the AI songs; when songs were labeled, they preferred the human ones.</p>
+          <h3>Expectations, context, and human judgment</h3>
+          <p class="project-subtitle">A study of how source labels influence responses to AI-generated music.</p>
 
-          <div class="explain-toggle" role="group" aria-label="Explanation style">
-            <button type="button" aria-pressed="true" data-show="plain">Plain language</button>
-            <button type="button" aria-pressed="false" data-show="detail">Scientific detail</button>
-          </div>
-          <div class="explain-panel" data-panel="plain">
-            <p class="panel-label">Plain language</p>
-            <p>The question is whether we can tell human-made songs from AI versions of them, and whether knowing where a song came from changes how we judge it. It matters because more music is being made with AI, and it’s worth knowing whether a label changes how people hear a song.</p>
-          </div>
-          <div class="explain-panel" data-panel="detail">
-            <p class="panel-label">Scientific detail</p>
-            <p>Pairs of human songs and AI versions were generated in Suno from my pipeline’s prompts. We compared listeners’ judgments when the source was hidden and when it was labeled. These are findings within this study, not general claims.</p>
-            <p>A follow-up study, where I lead stimulus preparation and the Qualtrics build, includes comparisons involving Claude, ChatGPT, and Gemini. It tests whether genre prototypicality helps explain AI music’s performance in blind comparisons. That is a hypothesis under investigation.</p>
-          </div>
+          <!-- Three parts. The question and the findings are always visible;
+               the toggle only changes how the question is explained. -->
+          <section class="project-part" aria-labelledby="p1-question">
+            <h4 class="project-part-label" id="p1-question">The question</h4>
+            <div class="explain-toggle" role="group" aria-label="Explanation style">
+              <button type="button" aria-pressed="true" data-show="plain">Plain language</button>
+              <button type="button" aria-pressed="false" data-show="detail">Scientific detail</button>
+            </div>
+            <div class="explain-panel" data-panel="plain">
+              <p class="panel-label">Plain language</p>
+              <p>We investigated whether listeners could tell human songs apart from matched AI-generated versions of them, and how knowing a song’s source affected the way they evaluated it.</p>
+            </div>
+            <div class="explain-panel" data-panel="detail">
+              <p class="panel-label">Scientific detail</p>
+              <p>For each human song, my Python pipeline extracted acoustic and lyric features and turned them into prompts, and a matched AI version was generated from those prompts in Suno. We compared listeners’ judgments when the source was hidden and when it was labeled.</p>
+              <p>A follow-up study, where I lead stimulus preparation and the Qualtrics build, includes comparisons involving Claude, ChatGPT, and Gemini. It tests whether genre prototypicality helps explain AI music’s performance in blind comparisons. That is a hypothesis under investigation.</p>
+            </div>
+          </section>
+
+          <section class="project-part" aria-labelledby="p1-found">
+            <h4 class="project-part-label" id="p1-found">What we found</h4>
+            <p class="finding">Listeners couldn’t distinguish the human songs from their AI-generated counterparts. They preferred the AI songs when the source was hidden, and the human songs when the source was labeled.</p>
+            <p class="project-note">These results describe this study, not listeners or music in general.</p>
+          </section>
+
+          <!-- Personal motivation: kept separate from the study and its findings -->
+          <section class="project-part project-why" aria-labelledby="p1-why">
+            <h4 class="project-part-label" id="p1-why">Why it interests me</h4>
+            <p>This work made me more interested in the expectations and experiences people bring to a judgment. That interest is also part of why I’m drawn to medicine: I want to understand both the biology of illness and the person experiencing it—their concerns, beliefs, and what matters to them.</p>
+          </section>
         </div>
       </article>
 
@@ -179,7 +192,7 @@
             <li>Generate matched AI versions in Suno.</li>
             <li>Prepare the stimuli for listener studies.</li>
           </ol>
-          <p>This is the tool behind the stimuli for “How listeners judge AI-generated music.” The study’s conclusions come from listener data, not the software.</p>
+          <p>This is the tool behind the stimuli for “Expectations, context, and human judgment.” The study’s conclusions come from listener data, not the software.</p>
         </div>
       </article>
 
