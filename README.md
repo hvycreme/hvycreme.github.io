@@ -33,6 +33,17 @@ files/            PDFs: put resume.pdf here
 | 06 About | `#about` | Why medicine, personal notes, Currently growing |
 | 07 Contact | `#contact` | Invitation, readable email address, Email / LinkedIn, interactive plant figure |
 
+### Personal synthesis project (molecule viewer)
+The Wiskur Lab entry includes a "Personal synthesis project" card. Its 3D viewer (3Dmol.js, self-hosted in `vendor/3dmol/`, BSD-3-Clause) stays switched off until a **verified** structure is added, so nothing guessed is ever shown:
+
+```bash
+pip install rdkit
+python3 tools/make_molecule_assets.py --smiles "<lab-verified SMILES>" --source "e.g. confirmed by Dr. Wiskur, Oct 2026"
+# or: --molfile lab-structure.sdf
+```
+
+This writes `molecules/target.sdf` (computational 3D coordinates: RDKit ETKDGv3 + MMFF94), `molecules/target-2d.svg` (static fallback), and `molecules/target.json` (formula, provenance), and adds `data-model="molecules/target.sdf"` to the card, which turns the viewer on. If any stereocenter is unassigned the script stops; pass `--allow-unassigned-stereo` only if that's correct (e.g. a racemate), and the page will say the model shows one arbitrary configuration.
+
 ### Adding the résumé
 There is no résumé file yet, so no download button is shown. To add it: save the PDF as `files/resume.pdf`, then in `index.html` uncomment the two `Download résumé` links (one in the intro's `.hero-actions`, one in Contact).
 

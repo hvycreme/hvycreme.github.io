@@ -22,6 +22,7 @@
   <script src="js/main.js" defer></script>
   <script src="js/particles.js" defer></script>
   <script src="js/pollen.js" defer></script>
+  <script src="js/molecule.js" defer></script>
 </head>
 <body>
 
@@ -123,6 +124,48 @@
               <li>Synthesize, purify, and characterize silane polymers and catalysts (see <a href="#p-synthesis">Projects</a>).</li>
               <li>Keep detailed lab records and follow safe laboratory practice.</li>
             </ul>
+
+            <!-- Featured personal project. The 3D viewer (js/molecule.js) only
+                 appears when a verified structure exists in molecules/
+                 (made with tools/make_molecule_assets.py); until then this
+                 card is a single column with no viewer. -->
+            <section class="mol-project" aria-labelledby="mol-title">
+              <div class="mol-text">
+                <h4 id="mol-title">Personal synthesis project</h4>
+                <p class="mol-sub">Wiskur Lab · <span class="mol-status">In progress</span></p>
+                <p>I’m working toward synthesizing this target compound as my personal project in Dr. Wiskur’s lab.</p>
+                <details class="mol-details">
+                  <summary>Technical details</summary>
+                  <dl>
+                    <div>
+                      <dt>Target compound (IUPAC name)</dt>
+                      <dd class="iupac">7-((oxiran-2-ylmethoxy)methyl)-2,3-dihydrobenzo[d]imidazo[2,1-b]thiazole</dd>
+                    </div>
+                    <!-- Filled in from molecules/target.json once a verified structure exists -->
+                    <div class="mol-meta" hidden>
+                      <dt>Molecular formula</dt>
+                      <dd data-mol="formula"></dd>
+                    </div>
+                    <div class="mol-meta" hidden>
+                      <dt>About the 3D model</dt>
+                      <dd data-mol="model"></dd>
+                    </div>
+                  </dl>
+                </details>
+              </div>
+
+              <figure class="mol-figure" hidden>
+                <div class="mol-stage">
+                  <div class="mol-viewer" role="img" aria-label="Interactive 3D ball-and-stick model of the target compound, 7-((oxiran-2-ylmethoxy)methyl)-2,3-dihydrobenzo[d]imidazo[2,1-b]thiazole. Drag sideways to rotate."></div>
+                  <img class="mol-fallback" data-src="molecules/target-2d.svg" width="420" height="300" alt="2D structure drawing of the target compound, 7-((oxiran-2-ylmethoxy)methyl)-2,3-dihydrobenzo[d]imidazo[2,1-b]thiazole." hidden>
+                </div>
+                <div class="mol-controls">
+                  <button type="button" class="mol-pause">Pause rotation</button>
+                  <button type="button" class="mol-reset">Reset view</button>
+                </div>
+                <figcaption class="mol-caption">Target structure · computational 3D model</figcaption>
+              </figure>
+            </section>
           </div>
         </li>
         <li class="entry" data-crc="3" data-ert="3">

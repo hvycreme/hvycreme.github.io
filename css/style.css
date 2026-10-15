@@ -1563,3 +1563,214 @@ figcaption {
     grid-template-columns: 1.4fr 1fr;
   }
 }
+
+
+/* ==========================================================================
+   Personal synthesis project (inside the Wiskur Lab research entry)
+   One column until a verified structure loads; then text left, molecule
+   right. Stacks on narrow screens.
+   ========================================================================== */
+.mol-project {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
+}
+
+@media (min-width: 48rem) {
+  .mol-project.has-model {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 17rem);
+    align-items: start;
+  }
+}
+
+.mol-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.mol-text h4 {
+  font-size: var(--text-lg);
+}
+
+.mol-sub {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+.mol-status {
+  padding: 0.1em 0.6em;
+  border-radius: var(--radius-pill);
+  background: var(--color-mint-soft);
+  color: var(--color-accent);
+}
+
+/* Technical details: a quiet disclosure */
+.mol-details {
+  margin-top: var(--space-1);
+  border-top: 1px dashed var(--color-border);
+  padding-top: var(--space-2);
+}
+
+.mol-details summary {
+  min-height: 2.75rem;          /* touch target */
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-accent);
+  cursor: pointer;
+  list-style: none;
+}
+
+.mol-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.mol-details summary::before {
+  content: "+" / "";
+  display: inline-grid;
+  place-items: center;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  background: var(--color-mint-soft);
+  font-family: var(--font-mono);
+  transition: transform var(--dur-control) var(--ease);
+}
+
+.mol-details[open] summary::before {
+  transform: rotate(45deg);
+}
+
+.mol-details dl {
+  display: grid;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+}
+
+.mol-details dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.mol-details dd {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+/* Long IUPAC names: break anywhere rather than overflow the card */
+.iupac {
+  font-family: var(--font-mono);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* [hidden] must win over the display rules below (the figure, fallback
+   image, and viewer are hidden until a verified structure loads) */
+.mol-project [hidden] {
+  display: none !important;
+}
+
+/* Molecule panel */
+.mol-figure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.mol-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-recessed);
+  overflow: hidden;
+  touch-action: pan-y;          /* vertical swipes scroll the page */
+}
+
+.mol-viewer {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+}
+
+.mol-viewer:active {
+  cursor: grabbing;
+}
+
+.mol-fallback {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: var(--space-3);
+}
+
+.mol-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.mol-controls[hidden] {
+  display: none;
+}
+
+.mol-controls button {
+  min-height: 2.75rem;
+  padding: 0.4em 1em;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
+  color: var(--color-accent);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition:
+    transform var(--dur-control) var(--ease),
+    box-shadow var(--dur-control) var(--ease);
+}
+
+.mol-controls button:hover {
+  box-shadow: var(--shadow-raised);
+  transform: translateY(-1px);
+}
+
+.mol-controls button:active {
+  box-shadow: var(--shadow-pressed);
+  transform: translateY(1px);
+}
+
+.mol-caption {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+@media (max-width: 48rem) {
+  .mol-figure {
+    max-width: 22rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mol-controls button:hover,
+  .mol-controls button:active {
+    transform: none;
+  }
+}
