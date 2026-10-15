@@ -375,7 +375,7 @@ section p + p {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
   align-items: center;
   gap: var(--space-5) var(--space-6);
-  padding-block: clamp(3rem, 2rem + 6vw, 7rem);
+  padding-block: clamp(2rem, 1rem + 4vw, 4.5rem);  /* actions stay in the first screen */
 }
 
 @media (min-width: 56rem) {
@@ -441,7 +441,7 @@ section p + p {
 .portrait {
   --arch: 50% 50% var(--radius) var(--radius) / 40% 40% var(--radius) var(--radius);
   justify-self: center;
-  width: min(100%, 20rem);
+  width: min(100%, 17rem);
   padding: 10px;
   border-radius: var(--arch);
   background: var(--color-surface);
@@ -458,7 +458,7 @@ section p + p {
   .portrait {
     order: -1;
     justify-self: start;
-    width: min(55%, 13rem);
+    width: min(45%, 11rem);
     margin: var(--space-2) 0 0 0;
   }
 }
@@ -1249,5 +1249,317 @@ figcaption {
 
   .js .reveal {
     opacity: 1;
+  }
+}
+
+
+/* ==========================================================================
+   Portfolio refinements
+   ========================================================================== */
+
+/* --- Intro: positioning statement, one supporting line, three highlights */
+.hero-lede {
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  max-width: 36rem;
+}
+
+.hero-sub {
+  color: var(--color-muted);
+  max-width: 36rem;
+}
+
+.highlights {
+  display: grid;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+}
+
+.highlights li {
+  position: relative;
+  padding-left: 1.1em;
+}
+
+/* green dot bullet */
+.highlights li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.highlights a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.highlights a:hover strong,
+.highlights a:focus-visible strong {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.highlights strong {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* --- Projects: header, then labeled facts (question, contribution, approach, outcome) */
+.project {
+  display: block;  /* full content width; paragraphs keep their 65ch reading width */
+}
+
+.project-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.project-head .project-subtitle {
+  margin-top: 0;
+}
+
+.project-head h3 {
+  font-size: clamp(1.25rem, 1.1rem + 0.8vw, 1.6rem);
+}
+
+.facts {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.facts > div {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr;
+  gap: var(--space-1) var(--space-4);
+}
+
+.facts dt {
+  padding-top: 0.25em;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.facts dd {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.facts dd > .points {
+  margin-top: 0;
+}
+
+@media (max-width: 40rem) {
+  .facts > div {
+    grid-template-columns: 1fr;
+  }
+}
+
+.project .project-why {
+  margin-top: var(--space-4);
+}
+
+/* --- Flow diagrams: an ordered list drawn as steps joined by arrows.
+   It's a real <ol>, so screen readers read the steps in order. */
+.flow {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  max-width: 56rem;
+  list-style: none;
+  padding: 0;
+  counter-reset: step;
+}
+
+.flow li {
+  position: relative;
+  flex: 1 1 0;      /* equal-width steps on one row */
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.15rem;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
+  counter-increment: step;
+}
+
+.flow li + li {
+  margin-left: 1.5rem;  /* room for the arrow */
+}
+
+.flow li + li::before {
+  content: "→" / "";   /* decorative: alt text is empty */
+  position: absolute;
+  left: -1.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-accent);
+  font-size: var(--text-base);
+}
+
+.flow-step {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.flow-step::before {
+  content: counter(step) ". ";
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--color-terracotta);
+}
+
+.flow-note {
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+
+/* Phones: a vertical sequence with downward arrows */
+@media (max-width: 40rem) {
+  .flow {
+    flex-direction: column;
+  }
+
+  .flow li {
+    flex: none;
+  }
+
+  .flow li + li {
+    margin-left: 0;
+    margin-top: 1.4rem;
+  }
+
+  .flow li + li::before {
+    content: "↓" / "";
+    left: 1rem;
+    top: -1.35rem;
+    transform: none;
+  }
+}
+
+/* --- Methods: one compact, grouped reference */
+.methods {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.methods > div {
+  display: grid;
+  grid-template-columns: 14rem 1fr;
+  gap: var(--space-2) var(--space-4);
+  align-items: start;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.methods > div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.methods dt {
+  font-weight: 600;
+}
+
+.method-where {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  color: var(--color-muted);
+}
+
+.methods dd {
+  margin: 0;
+}
+
+@media (max-width: 40rem) {
+  .methods > div {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Contact: invitation and actions first, artwork beside them */
+#contact .contact-grid {
+  align-items: start;
+}
+
+.contact-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.contact-lede {
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  max-width: 32rem;
+}
+
+.contact-email {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+}
+
+.contact-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.contact-email a {
+  font-size: var(--text-lg);
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+
+.contact-text .hero-actions {
+  margin-top: 0;
+}
+
+#contact .contact-figure {
+  width: min(100%, 17rem);
+}
+
+/* Intro spacing: the flex gap already separates these; drop the extra
+   paragraph margin, and keep the pronouns close to the name */
+.hero-text > p + p {
+  margin-top: 0;
+}
+
+.hero-text .pronouns {
+  margin-top: calc(-1 * var(--space-2));
+}
+
+.project-head .project-status {
+  max-width: none;
+}
+
+/* Wider screens: a tidy 2-column contact with the art beside the actions */
+@media (min-width: 56rem) {
+  #contact .contact-grid {
+    grid-template-columns: 1.4fr 1fr;
   }
 }

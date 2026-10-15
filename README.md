@@ -22,17 +22,21 @@ files/            PDFs: put resume.pdf here
 
 ## Page sections
 
-| Section | id | What goes there |
+| Section | id | Purpose |
 |---|---|---|
-| Introduction | `#intro` | Name, majors, short introduction, résumé + contact buttons, headshot |
-| 01 Research | `#research` | Research experience and the first-author manuscript |
-| 02 Projects | `#work` | Project summaries and results, always visible; Plain language / Scientific detail toggle for each explanation |
-| 03 Experience | `#experience` | Compact timeline: dates, role, organization, what you did |
-| 04 Education | `#education` | Degrees and coursework, **Certifications & training**, and **Methods I've used** |
-| 05 About | `#about` | Why medicine, two "unfurling leaf" notes, a plant photo, and **Currently growing** |
-| 06 Contact | `#contact` | Email, résumé download, LinkedIn, and the interactive particle rose |
+| Introduction | `#intro` | Name, positioning statement, summer goal, three highlight links, Email / LinkedIn |
+| 01 Research | `#research` | Appointments, dates, concise responsibilities |
+| 02 Projects | `#work` | Each project: question/purpose, my contribution, approach (with a flow diagram), outcome/status. Anchors: `#p-music`, `#p-pipeline`, `#p-synthesis` |
+| 03 Methods | `#methods` | Compact, grouped reference to methods actually used, with the lab where each was used |
+| 04 Experience | `#experience` | Housing, teaching, leadership, volunteering, employment |
+| 05 Education | `#education` | Degrees, certifications and training |
+| 06 About | `#about` | Why medicine, personal notes, Currently growing |
+| 07 Contact | `#contact` | Invitation, readable email address, Email / LinkedIn, interactive plant figure |
 
-### Unverified content
+### Adding the résumé
+There is no résumé file yet, so no download button is shown. To add it: save the PDF as `files/resume.pdf`, then in `index.html` uncomment the two `Download résumé` links (one in the intro's `.hero-actions`, one in Contact).
+
+## Unverified content
 Anything not yet confirmed (dates, titles, duties, certifications, skill levels, photos) is tracked in **`TODO.private.md`** at the project root. That file is git-ignored (`.gitignore`), so it is never committed or published by GitHub Pages. Do not put unverified details on the page; add them only after they are confirmed.
 
 ## Tailoring for each application

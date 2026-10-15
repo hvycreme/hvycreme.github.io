@@ -48,10 +48,11 @@
       <ol class="nav-list">
         <li><a href="#research"><span class="nav-num">01</span> Research</a></li>
         <li><a href="#work"><span class="nav-num">02</span> Projects</a></li>
-        <li><a href="#experience"><span class="nav-num">03</span> Experience</a></li>
-        <li><a href="#education"><span class="nav-num">04</span> Education</a></li>
-        <li><a href="#about"><span class="nav-num">05</span> About</a></li>
-        <li><a href="#contact"><span class="nav-num">06</span> Contact</a></li>
+        <li><a href="#methods"><span class="nav-num">03</span> Methods</a></li>
+        <li><a href="#experience"><span class="nav-num">04</span> Experience</a></li>
+        <li><a href="#education"><span class="nav-num">05</span> Education</a></li>
+        <li><a href="#about"><span class="nav-num">06</span> About</a></li>
+        <li><a href="#contact"><span class="nav-num">07</span> Contact</a></li>
       </ol>
     </nav>
     <a class="header-resume" href="mailto:gavineub@gmail.com">Email</a>
@@ -65,13 +66,20 @@
         <p class="eyebrow">Biochemistry &amp; Molecular Biology · Psychology · <abbr title="University of South Carolina">UofSC</abbr></p>
         <h1 class="hero-title" tabindex="-1">Gavin Eubanks</h1>
         <p class="pronouns">he/him</p>
-        <div class="hero-intro">
-          <p>I study biochemistry, molecular biology, and psychology at the University of South Carolina. I’m interested in how biology and behavior shape health, and I’m planning to pursue medicine.</p>
-          <p>My research spans organic synthesis and how expectations shape people’s responses to AI-generated music. Outside the lab, I’ve worked in student housing, taught psychology review sessions, and spent plenty of time caring for my plants.</p>
-          <p>I’m looking for summer work in clinical research coordination or emergency care.</p>
-        </div>
+        <p class="hero-lede">I study biochemistry and molecular biology and psychology at the University of South Carolina, with interests in medicine and research with human participants.</p>
+        <p class="hero-sub">I’m looking for summer work in clinical research coordination or emergency care.</p>
+
+        <!-- Strongest qualifications first; each links to the project behind it -->
+        <ul class="highlights" aria-label="Highlights">
+          <li><a href="#p-music"><strong>First-author manuscript</strong> under review at PLOS ONE</a></li>
+          <li><a href="#research"><strong>Human-participant research</strong>: running participants and managing study data</a></li>
+          <li><a href="#p-pipeline"><strong>Python research pipeline</strong> for matched AI music stimuli</a></li>
+        </ul>
+
         <div class="hero-actions">
           <a class="button button-primary" href="mailto:gavineub@gmail.com">Email me</a>
+          <!-- Résumé: add files/resume.pdf, then uncomment this link.
+               <a class="button" href="files/resume.pdf" download>Download résumé<span class="sr-only"> (PDF)</span></a> -->
           <a class="button" href="https://www.linkedin.com/in/gavin-eubanks-4684912ba/" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
         </div>
       </div>
@@ -81,7 +89,7 @@
       <figure class="portrait">
         <img src="images/headshot-800.webp"
              srcset="images/headshot-480.webp 480w, images/headshot-800.webp 800w"
-             sizes="(max-width: 40rem) 13rem, 20rem"
+             sizes="(max-width: 40rem) 11rem, 17rem"
              alt="Headshot of Gavin Eubanks" width="800" height="1000" fetchpriority="high">
       </figure>
     </section>
@@ -99,11 +107,10 @@
             <h3>Undergraduate Researcher <span class="entry-org">· Palomares Lab, Psychology</span></h3>
             <p class="entry-type">Research with human participants · Supervisor Dr. Melanie Palomares</p>
             <ul class="points">
-              <li>Study how source labels and expectations shape people’s responses to AI-generated music, with collaborator Dr. Emily Schwitzgebel (School of Music).</li>
-              <li>Built a Python pipeline that turns song features into prompts used to generate matched AI versions in Suno (see Projects).</li>
-              <li>Co-led a listener study. I’m the first author on a manuscript under review at PLOS ONE.</li>
-              <li>Run participants and manage human-subjects data (CITI-trained).</li>
-              <li>For a follow-up study, lead stimulus preparation and the Qualtrics experiment build.</li>
+              <li>Study how source labels and expectations shape responses to AI-generated music, with Dr. Emily Schwitzgebel (School of Music).</li>
+              <li>Co-led a listener study; first author on a manuscript under review at PLOS ONE.</li>
+              <li>Run participants and manage human-subjects data (CITI-trained); building the Qualtrics experiment for a follow-up study.</li>
+              <li>Built the study’s Python stimulus pipeline (see <a href="#p-pipeline">Projects</a>).</li>
             </ul>
           </div>
         </li>
@@ -113,11 +120,8 @@
             <h3>Undergraduate Researcher <span class="entry-org">· Wiskur Lab, Organic Chemistry</span></h3>
             <p class="entry-type">Laboratory research · Supervisor Dr. Sheryl L. Wiskur</p>
             <ul class="points">
-              <li>Synthesize silane polymers and catalysts.</li>
-              <li>Set up, monitor (TLC), and troubleshoot reactions.</li>
-              <li>Purify products by column chromatography, extraction, recrystallization, and distillation.</li>
-              <li>Characterize compounds with ¹H and ¹³C NMR.</li>
-              <li>Plan experiments with controls and keep detailed lab records.</li>
+              <li>Synthesize, purify, and characterize silane polymers and catalysts (see <a href="#p-synthesis">Projects</a>).</li>
+              <li>Keep detailed lab records and follow safe laboratory practice.</li>
             </ul>
           </div>
         </li>
@@ -127,10 +131,9 @@
             <h3>Undergraduate Researcher <span class="entry-org">· Outten Lab, Biochemistry</span></h3>
             <p class="entry-type">Laboratory research · with Dr. Outten</p>
             <ul class="points">
-              <li>Studied iron-sulfur cluster biogenesis and its mechanistic properties.</li>
-              <li>Purified proteins and performed iron-sulfur cluster reconstitution.</li>
-              <li>Characterized samples by UV-visible and infrared spectroscopy.</li>
-              <li>Prepared buffers and kept detailed records.</li>
+              <li>Studied iron-sulfur cluster biogenesis and mechanistic properties.</li>
+              <li>Purified proteins, performed iron-sulfur cluster reconstitution, and characterized samples by UV-visible and infrared spectroscopy.</li>
+              <li>Prepared buffers and solutions and kept detailed records.</li>
             </ul>
           </div>
         </li>
@@ -141,75 +144,150 @@
     <section id="work" class="reveal">
       <h2 class="section-title"><span class="section-num">02</span> Projects</h2>
 
-      <article class="project">
-        <div class="project-text">
+      <!-- Each project: question/purpose, my contribution, approach, outcome/status -->
+      <article class="project" id="p-music">
+        <header class="project-head">
           <p class="project-meta">Palomares Lab · with Dr. Emily Schwitzgebel</p>
-          <p class="project-status">First-author manuscript under review at PLOS ONE</p>
           <h3>Expectations, context, and human judgment</h3>
           <p class="project-subtitle">A study of how source labels influence responses to AI-generated music.</p>
-
-          <!-- Three parts. The question and the findings are always visible;
-               the toggle only changes how the question is explained. -->
-          <section class="project-part" aria-labelledby="p1-question">
-            <h4 class="project-part-label" id="p1-question">The question</h4>
-            <div class="explain-toggle" role="group" aria-label="Explanation style">
-              <button type="button" aria-pressed="true" data-show="plain">Plain language</button>
-              <button type="button" aria-pressed="false" data-show="detail">Scientific detail</button>
-            </div>
-            <div class="explain-panel" data-panel="plain">
-              <p class="panel-label">Plain language</p>
-              <p>We investigated whether listeners could tell human songs apart from matched AI-generated versions of them, and how knowing a song’s source affected the way they evaluated it.</p>
-            </div>
-            <div class="explain-panel" data-panel="detail">
-              <p class="panel-label">Scientific detail</p>
-              <p>For each human song, my Python pipeline extracted acoustic and lyric features and turned them into prompts, and a matched AI version was generated from those prompts in Suno. We compared listeners’ judgments when the source was hidden and when it was labeled.</p>
-              <p>A follow-up study, where I lead stimulus preparation and the Qualtrics build, includes comparisons involving Claude, ChatGPT, and Gemini. It tests whether genre prototypicality helps explain AI music’s performance in blind comparisons. That is a hypothesis under investigation.</p>
-            </div>
-          </section>
-
-          <section class="project-part" aria-labelledby="p1-found">
-            <h4 class="project-part-label" id="p1-found">What we found</h4>
-            <p class="finding">Listeners couldn’t distinguish the human songs from their AI-generated counterparts. They preferred the AI songs when the source was hidden, and the human songs when the source was labeled.</p>
-            <p class="project-note">These results describe this study, not listeners or music in general.</p>
-          </section>
-
-          <!-- Personal motivation: kept separate from the study and its findings -->
-          <section class="project-part project-why" aria-labelledby="p1-why">
-            <h4 class="project-part-label" id="p1-why">Why it interests me</h4>
-            <p>This work made me more interested in the expectations and experiences people bring to a judgment. That interest is also part of why I’m drawn to medicine: I want to understand both the biology of illness and the person experiencing it—their concerns, beliefs, and what matters to them.</p>
-          </section>
-        </div>
+          <p class="project-status">First-author manuscript under review at PLOS ONE · not yet published</p>
+        </header>
+        <dl class="facts">
+          <div>
+            <dt>The question</dt>
+            <dd>Could listeners tell human songs apart from matched AI-generated versions, and how did knowing a song’s source affect their evaluations?</dd>
+          </div>
+          <div>
+            <dt>My contribution</dt>
+            <dd>
+              <ul class="points">
+                <li>Built the Python pipeline that writes the prompts for the matched AI versions (<a href="#p-pipeline">next project</a>).</li>
+                <li>Co-led the listener study and am first author on the manuscript.</li>
+                <li>For a follow-up study: lead stimulus preparation, the Qualtrics build, and comparisons involving Claude, ChatGPT, and Gemini.</li>
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt>Approach</dt>
+            <dd>
+              <ol class="flow" aria-label="Study process">
+                <li><span class="flow-step">Human songs</span></li>
+                <li><span class="flow-step">Matched AI versions</span><span class="flow-note">generated in Suno from pipeline prompts</span></li>
+                <li><span class="flow-step">Listener study</span><span class="flow-note">source hidden or labeled</span></li>
+                <li><span class="flow-step">Compare judgments</span><span class="flow-note">telling them apart; preference</span></li>
+              </ol>
+              <div class="explain-toggle" role="group" aria-label="Explanation style">
+                <button type="button" aria-pressed="true" data-show="plain">Plain language</button>
+                <button type="button" aria-pressed="false" data-show="detail">Scientific detail</button>
+              </div>
+              <div class="explain-panel" data-panel="plain">
+                <p class="panel-label">Plain language</p>
+                <p>Listeners judged real songs and AI versions made to match them. Sometimes they knew which was which, and sometimes they didn’t.</p>
+              </div>
+              <div class="explain-panel" data-panel="detail">
+                <p class="panel-label">Scientific detail</p>
+                <p>For each human song, my pipeline extracted acoustic and lyric features and turned them into prompts; a matched AI version was generated from those prompts in Suno. We compared listeners’ judgments when the source was hidden and when it was labeled.</p>
+                <p>The follow-up tests whether genre prototypicality helps explain AI music’s performance in blind comparisons. That is a hypothesis under investigation.</p>
+              </div>
+            </dd>
+          </div>
+          <div>
+            <dt>What we found</dt>
+            <dd>
+              <p class="finding">Listeners couldn’t distinguish the human songs from their AI-generated counterparts. They preferred the AI songs when the source was hidden, and the human songs when the source was labeled.</p>
+              <p class="project-note">These results describe this study, not listeners or music in general.</p>
+            </dd>
+          </div>
+        </dl>
+        <!-- Personal motivation: kept separate from the study and its findings -->
+        <section class="project-why" aria-labelledby="p1-why">
+          <h4 class="project-part-label" id="p1-why">Why it interests me</h4>
+          <p>This work made me more interested in the expectations and experiences people bring to a judgment. That interest is also part of why I’m drawn to medicine: I want to understand both the biology of illness and the person experiencing it—their concerns, beliefs, and what matters to them.</p>
+        </section>
       </article>
 
-      <article class="project">
-        <div class="project-text">
-          <p class="project-meta">Palomares Lab · my software contribution</p>
+      <article class="project" id="p-pipeline">
+        <header class="project-head">
+          <p class="project-meta">Palomares Lab · software</p>
           <h3>A Python pipeline for matched AI music</h3>
-          <p>A tool that analyzes human songs and turns their features into prompts for matched AI versions.</p>
-          <ol class="steps">
-            <li>Extract acoustic and lyric features (tempo, rhythm, key, timbre, dynamics, vocal range).</li>
-            <li>Turn those features into prompts.</li>
-            <li>Generate matched AI versions in Suno.</li>
-            <li>Prepare the stimuli for listener studies.</li>
-          </ol>
-          <p>This is the tool behind the stimuli for “Expectations, context, and human judgment.” The study’s conclusions come from listener data, not the software.</p>
-        </div>
+        </header>
+        <dl class="facts">
+          <div>
+            <dt>Purpose</dt>
+            <dd>Produce AI-generated versions of human songs that match them on measurable features, as stimuli for listener studies.</dd>
+          </div>
+          <div>
+            <dt>My contribution</dt>
+            <dd>I built it in Python: the feature extraction and the prompt generation.</dd>
+          </div>
+          <div>
+            <dt>Approach</dt>
+            <dd>
+              <ol class="flow" aria-label="Pipeline workflow">
+                <li><span class="flow-step">Source song</span></li>
+                <li><span class="flow-step">Feature extraction</span><span class="flow-note">tempo, rhythm, key, timbre, dynamics, vocal range; lyric features</span></li>
+                <li><span class="flow-step">Prompt generation</span></li>
+                <li><span class="flow-step">Matched AI stimulus</span><span class="flow-note">generated in Suno</span></li>
+                <li><span class="flow-step">Listener study</span></li>
+              </ol>
+            </dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd>Used to prepare the matched stimuli for the study above. The software produces stimuli; the study’s conclusions come from listener data.</dd>
+          </div>
+        </dl>
       </article>
 
-      <article class="project">
-        <div class="project-text">
-          <p class="project-meta">Wiskur Lab · ongoing</p>
-          <h3>Organic synthesis in the Wiskur Lab</h3>
-          <p class="finding"><span class="finding-label">My role</span>
-            I make silane polymers and catalysts, monitor and troubleshoot reactions, purify products, and characterize them by ¹H and ¹³C NMR. I plan experiments with controls and keep detailed lab records.</p>
-        </div>
+      <article class="project" id="p-synthesis">
+        <header class="project-head">
+          <p class="project-meta">Wiskur Lab · organic chemistry</p>
+          <h3>Synthesizing silane polymers and catalysts</h3>
+        </header>
+        <dl class="facts">
+          <div>
+            <dt>Focus</dt>
+            <dd>Synthesis of silane polymers and catalysts in Dr. Sheryl L. Wiskur’s lab.</dd>
+          </div>
+          <div>
+            <dt>My contribution</dt>
+            <dd>I set up, monitor (by TLC), and troubleshoot reactions; purify products by column chromatography, extraction, recrystallization, and distillation; and characterize them by ¹H and ¹³C NMR. I plan experiments with appropriate controls.</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd>Ongoing since October 2025.</dd>
+          </div>
+        </dl>
       </article>
     </section>
 
-    <!-- ===== 03 Experience =====
+    <!-- ===== 03 Methods: a compact reference to methods actually used ===== -->
+    <section id="methods" class="reveal">
+      <h2 class="section-title"><span class="section-num">03</span> Methods</h2>
+      <dl class="methods">
+        <div>
+          <dt>Research with people <span class="method-where">Palomares Lab</span></dt>
+          <dd><ul class="tags"><li>Experimental design</li><li>Running participants</li><li>Human-subjects data management</li><li>Qualtrics</li></ul></dd>
+        </div>
+        <div>
+          <dt>Data &amp; computing <span class="method-where">Palomares Lab</span></dt>
+          <dd><ul class="tags"><li>Python (audio and lyric feature extraction)</li><li>Prompt generation for Suno</li></ul></dd>
+        </div>
+        <div>
+          <dt>Organic chemistry <span class="method-where">Wiskur Lab</span></dt>
+          <dd><ul class="tags"><li>Organic synthesis</li><li>TLC</li><li>Column chromatography</li><li>Extraction</li><li>Recrystallization</li><li>Distillation</li><li>¹H and ¹³C NMR</li></ul></dd>
+        </div>
+        <div>
+          <dt>Biochemistry <span class="method-where">Outten Lab</span></dt>
+          <dd><ul class="tags"><li>Protein purification</li><li>Iron-sulfur cluster reconstitution</li><li>UV-visible spectroscopy</li><li>IR spectroscopy</li></ul></dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- ===== 04 Experience =====
          The Experience list uses the same data-crc / data-ert ordering as Research. -->
     <section id="experience" class="reveal">
-      <h2 class="section-title"><span class="section-num">03</span> Experience</h2>
+      <h2 class="section-title"><span class="section-num">04</span> Experience</h2>
       <ol class="timeline" data-sortable>
         <li class="entry" data-crc="2" data-ert="1">
           <p class="entry-date">Mar 2025 – Present</p>
@@ -285,9 +363,9 @@
       </ol>
     </section>
 
-    <!-- ===== 04 Education ===== -->
+    <!-- ===== 05 Education ===== -->
     <section id="education" class="reveal">
-      <h2 class="section-title"><span class="section-num">04</span> Education</h2>
+      <h2 class="section-title"><span class="section-num">05</span> Education</h2>
       <ol class="timeline">
         <li class="entry">
           <p class="entry-date">Expected May 2027</p>
@@ -318,40 +396,11 @@
         <li><span>Hazardous Waste Management Training — University of South Carolina</span><span class="level">Feb 2024</span></li>
       </ul>
 
-      <h3 class="subsection-title">Methods I’ve used</h3>
-      <div class="skills-grid">
-        <div class="skill-group">
-          <h3>Research with people</h3>
-          <ul class="skill-list">
-            <li><span>Experimental design</span><span class="level">Used in Palomares Lab</span></li>
-            <li><span>Data collection with human participants</span><span class="level">Used in Palomares Lab</span></li>
-            <li><span>Qualtrics</span><span class="level">Used in Palomares Lab</span></li>
-          </ul>
-        </div>
-        <div class="skill-group">
-          <h3>Data &amp; computing</h3>
-          <ul class="skill-list">
-            <li><span>Python (audio and lyric feature extraction)</span><span class="level">Used in Palomares Lab</span></li>
-            <li><span>Generative AI tools (Suno)</span><span class="level">Used in Palomares Lab</span></li>
-          </ul>
-        </div>
-        <div class="skill-group">
-          <h3>Laboratory</h3>
-          <ul class="skill-list">
-            <li><span>Organic synthesis</span><span class="level">Used in Wiskur Lab</span></li>
-            <li><span>Column chromatography, extraction, recrystallization, distillation</span><span class="level">Used in Wiskur Lab</span></li>
-            <li><span>TLC</span><span class="level">Used in Wiskur Lab</span></li>
-            <li><span>¹H and ¹³C NMR</span><span class="level">Used in Wiskur Lab</span></li>
-            <li><span>Protein purification</span><span class="level">Used in Outten Lab</span></li>
-            <li><span>UV-Vis and IR spectroscopy</span><span class="level">Used in Outten Lab</span></li>
-          </ul>
-        </div>
-      </div>
     </section>
 
-    <!-- ===== 05 About ===== -->
+    <!-- ===== 06 About ===== -->
     <section id="about" class="reveal">
-      <h2 class="section-title"><span class="section-num">05</span> About</h2>
+      <h2 class="section-title"><span class="section-num">06</span> About</h2>
       <div class="about-text">
         <p>I grew up in South Carolina, and I’d like to go to medical school and practice here. What draws me to medicine is where my two majors meet: how the body works, and how people experience being sick or getting care. I like making scientific explanations clear enough that people feel informed.</p>
 
@@ -372,7 +421,7 @@
             Plants and computers
           </summary>
           <div class="unfurl-body">
-            <p>I’m drawn to orchids, carnivorous plants, variegated and iridescent leaves, and how quickly different plants grow. I like noticing new growth and small changes in how a plant is doing. On the computer side, I like building tools, like the Python pipeline from my research. I also like swimming, reading, and spending time with friends.</p>
+            <p>I’m drawn to orchids, carnivorous plants, variegated and iridescent leaves, and how quickly different plants grow. I like noticing new growth and small changes in how a plant is doing. On the computer side, I like building small tools that make a task easier. I also like swimming, reading, and spending time with friends.</p>
           </div>
         </details>
       </div>
@@ -392,22 +441,25 @@
         <li>
           <p class="growing-label">On my computer</p>
           <p class="growing-name">My music-analysis pipeline</p>
-          <p>The Python tool that analyzes songs and writes prompts for matched AI versions for our listener studies.</p>
+          <p>The Python tool behind our listener-study stimuli.</p>
         </li>
       </ul>
     </section>
 
-    <!-- ===== 06 Contact ===== -->
+    <!-- ===== 07 Contact ===== -->
     <section id="contact" class="reveal">
-      <h2 class="section-title"><span class="section-num">06</span> Contact</h2>
+      <h2 class="section-title"><span class="section-num">07</span> Contact</h2>
       <div class="contact-grid">
         <div class="contact-text">
-          <p>Email is the easiest way to reach me. I’m glad to talk about summer roles in clinical research coordination or emergency care.</p>
-          <ul class="contact-links">
-            <li><a class="button button-primary" href="mailto:gavineub@gmail.com">Email me</a></li>
-            <li><a href="https://www.linkedin.com/in/gavin-eubanks-4684912ba/" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a></li>
-          </ul>
-          <p class="contact-location">Columbia, South Carolina</p>
+          <p class="contact-lede">I’d be glad to talk about summer roles in clinical research coordination or emergency care.</p>
+          <p class="contact-email"><span class="contact-label">Email</span> <a href="mailto:gavineub@gmail.com">gavineub@gmail.com</a></p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="mailto:gavineub@gmail.com">Email me</a>
+            <!-- Résumé: add files/resume.pdf, then uncomment this link.
+               <a class="button" href="files/resume.pdf" download>Download résumé<span class="sr-only"> (PDF)</span></a> -->
+            <a class="button" href="https://www.linkedin.com/in/gavin-eubanks-4684912ba/" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
+          </div>
+          <p class="contact-location">Based in Columbia, South Carolina</p>
         </div>
         <!-- The rose plate as interactive particles (js/particles.js). The canvas is
              decorative (hidden from screen readers); the caption below is real text. -->
