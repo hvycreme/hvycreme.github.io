@@ -1,1 +1,361 @@
-/* Styles arrive in Step 2 */
+/* ==========================================================================
+   1. Design tokens
+   Every color, font, and spacing value lives here. Change a value once
+   and it updates everywhere it's used via var(--name).
+   ========================================================================== */
+:root {
+  /* Colors */
+  --color-bg: #0b0f17;          /* page background: near-black navy */
+  --color-surface: #131a26;     /* cards sit one step lighter than the page */
+  --color-border: #222c3d;
+  --color-text: #e6e9ef;        /* main text: off-white is easier on eyes than #fff */
+  --color-muted: #9aa4b2;       /* secondary text */
+  --color-accent: #5eead4;      /* the ONE accent color: swap this to re-theme */
+
+  /* Fonts: system stacks load instantly (no download) */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Type scale: clamp(min, preferred, max) grows smoothly with screen width */
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
+  --text-xl: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+  --text-hero: clamp(2.75rem, 1.5rem + 6vw, 5rem);
+
+  /* Spacing scale: use these instead of random pixel values */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+  --space-6: 4rem;
+  --space-section: clamp(4rem, 3rem + 5vw, 7rem);
+
+  /* Layout */
+  --content-width: 68rem;   /* a max, not a fixed width */
+  --gutter: clamp(1rem, 4vw, 2rem);
+  --radius: 12px;
+  --header-height: 4rem;
+
+  /* Motion (used from Step 3 on): one easing curve for everything */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);  /* "ease-out-quint": fast start, gentle stop */
+  --dur-fast: 0.3s;
+  --dur-slow: 0.8s;
+}
+
+/* ==========================================================================
+   2. Reset: remove browser defaults that fight us
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;  /* width includes padding + border: far easier math */
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  /* Smooth scroll when clicking nav links; offset for the sticky header */
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height);
+  -webkit-text-size-adjust: 100%;
+}
+
+img {
+  display: block;
+  max-width: 100%;   /* images never overflow their container */
+  height: auto;
+}
+
+/* ==========================================================================
+   3. Base typography
+   ========================================================================== */
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+h3 {
+  font-size: var(--text-lg);
+}
+
+p {
+  max-width: 65ch;   /* ~65 characters per line is the readable sweet spot */
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+/* Visible keyboard focus ring (only shows for keyboard users, not mouse clicks) */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   4. Header + numbered nav
+   ========================================================================== */
+.site-header {
+  position: sticky;   /* stays at the top while scrolling */
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: var(--header-height);
+  padding: var(--space-2) var(--gutter);
+  /* Semi-transparent so content blurs underneath */
+  background: rgb(11 15 23 / 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.logo {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--color-accent);
+  text-decoration: none;
+  flex-shrink: 0;   /* the logo never gets squished */
+}
+
+/* min-width: 0 lets the nav shrink below its content width so it can
+   scroll inside itself instead of pushing the page wider. */
+.site-header nav {
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;   /* hide the scrollbar (Firefox) */
+}
+
+.site-header nav::-webkit-scrollbar {
+  display: none;           /* hide the scrollbar (Safari/Chrome) */
+}
+
+.nav-list {
+  display: flex;
+  gap: var(--space-4);
+  list-style: none;   /* removes the browser's "1." "2." markers */
+  padding: 0;
+  white-space: nowrap;
+}
+
+/* Phones: the nav row is swipeable; fade the right edge as a hint */
+@media (max-width: 40rem) {
+  .site-header nav {
+    mask-image: linear-gradient(to right, #000 85%, transparent);
+    -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
+  }
+
+  .nav-list {
+    padding-right: var(--space-5);  /* last item can scroll clear of the fade */
+  }
+}
+
+.nav-list a {
+  display: inline-block;
+  padding-block: var(--space-1);
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+
+.nav-list a:hover {
+  color: var(--color-text);
+}
+
+.nav-num {
+  font-family: var(--font-mono);
+  color: var(--color-accent);
+  margin-right: 0.15em;
+}
+
+/* ==========================================================================
+   5. Sections
+   One rule centers and pads every section, so they all line up.
+   ========================================================================== */
+main > section {
+  /* min() = "100%, but never wider than --content-width" */
+  width: min(100% - 2 * var(--gutter), var(--content-width));
+  margin-inline: auto;
+  padding-block: var(--space-section);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-5);
+}
+
+.section-num {
+  font-family: var(--font-mono);
+  font-size: 0.7em;
+  font-weight: 400;
+  color: var(--color-accent);
+}
+
+/* Decorative line after the title; flex: 1 fills remaining space */
+.section-title::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  max-width: 16rem;
+  background: var(--color-border);
+}
+
+section p + p {
+  margin-top: var(--space-3);
+}
+
+/* ==========================================================================
+   6. Hero
+   ========================================================================== */
+.hero {
+  min-height: calc(100svh - var(--header-height));  /* svh = phone-safe viewport height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-3);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  color: var(--color-accent);
+}
+
+.hero-title {
+  font-size: var(--text-hero);
+  font-weight: 800;
+}
+
+.hero-tagline {
+  font-size: var(--text-lg);
+  color: var(--color-muted);
+}
+
+.button {
+  align-self: flex-start;
+  margin-top: var(--space-3);
+  padding: 0.75em 1.5em;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+
+.button:hover {
+  background: rgb(94 234 212 / 0.1);
+}
+
+/* ==========================================================================
+   7. Responsive grids
+   auto-fit + minmax: "fit as many columns as possible, each at least
+   X wide, sharing leftover space equally." No media queries needed.
+   min(100%, X) stops a column from overflowing on very narrow phones.
+   ========================================================================== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-4);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: var(--space-5);
+  align-items: center;
+}
+
+.about-photo {
+  width: 100%;
+  max-width: 20rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  justify-self: center;
+}
+
+/* ==========================================================================
+   8. Card component
+   ========================================================================== */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.card p {
+  color: var(--color-muted);
+}
+
+/* Pushes the card's link to the bottom so links align across a row */
+.card > a:last-child {
+  margin-top: auto;
+  padding-top: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.card-meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+/* ==========================================================================
+   9. Contact + footer
+   ========================================================================== */
+.contact-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+  margin-top: var(--space-4);
+}
+
+.contact-links a {
+  display: inline-block;
+  padding: 0.6em 1.2em;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  overflow-wrap: anywhere;   /* long email addresses can wrap on phones */
+}
+
+.contact-links a:hover {
+  border-color: var(--color-accent);
+}
+
+.site-footer {
+  padding: var(--space-5) var(--gutter);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.site-footer p {
+  max-width: none;
+}
