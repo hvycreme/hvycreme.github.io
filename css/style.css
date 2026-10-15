@@ -176,26 +176,6 @@ a:hover {
   color: var(--color-accent);
 }
 
-/* --- Draft placeholders -----------------------------------------------------
-   Anything still waiting for real information gets a dashed terracotta
-   outline, so it's impossible to miss before publishing. Remove the
-   class="draft" when you replace the text. */
-.draft {
-  background: var(--color-terracotta-soft);
-  outline: 1px dashed color-mix(in srgb, var(--color-terracotta) 60%, transparent);
-  outline-offset: 1px;
-  border-radius: 4px;
-}
-
-/* Block-level placeholders hug their text instead of spanning the full width */
-p.draft,
-li.draft,
-h1.draft,
-h3.draft,
-figcaption.draft {
-  width: fit-content;
-}
-
 /* ==========================================================================
    4. Header + numbered nav
    ========================================================================== */
@@ -342,7 +322,7 @@ figcaption.draft {
 
   .nav-list {
     padding-left: 1.25rem;
-    padding-right: var(--space-5);
+    padding-right: 3.5rem;  /* clears the 2rem right fade so 06 Contact can scroll fully into view */
   }
 }
 
@@ -556,7 +536,7 @@ section p + p {
 .entry {
   position: relative;
   display: grid;
-  grid-template-columns: 9rem 1fr;
+  grid-template-columns: 10rem 1fr;
   gap: var(--space-1) var(--space-4);
   max-width: none;
   padding: var(--space-4) 0 var(--space-4) var(--space-4);
@@ -582,6 +562,7 @@ section p + p {
 .entry-date {
   align-self: start;
   justify-self: start;
+  white-space: nowrap;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   line-height: 2.2;
@@ -764,11 +745,6 @@ section p + p {
   font-size: var(--text-sm);
 }
 
-.project-figure img {
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-raised-sm);
-}
-
 figcaption {
   margin-top: var(--space-2);
   font-family: var(--font-sans);
@@ -816,23 +792,6 @@ figcaption {
 /* ==========================================================================
    11. About + leaf "unfurl" + Currently growing
    ========================================================================== */
-.about-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-  gap: var(--space-5);
-  align-items: start;
-}
-
-.about-photo {
-  justify-self: center;
-  width: min(100%, 18rem);
-}
-
-.about-photo img {
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-raised);
-}
-
 .unfurl {
   margin-top: var(--space-4);
   border-top: 1px dashed var(--color-border);
@@ -1078,6 +1037,53 @@ figcaption {
   font-size: 1.4rem;
 }
 
+
+/* --- Small additions for the content pass -------------------------------- */
+.pronouns {
+  margin-top: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+/* Project status: a small mint pill, like the tags */
+.project-status {
+  align-self: flex-start;
+  padding: 0.15em 0.75em;
+  border-radius: var(--radius-pill);
+  background: var(--color-mint-soft);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+/* Workflow steps: numbered in mono, in the accent color */
+.steps {
+  display: grid;
+  gap: var(--space-1);
+  padding-left: 1.4em;
+}
+
+.steps li::marker {
+  font-family: var(--font-mono);
+  color: var(--color-accent);
+}
+
+.contact-location {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+/* The email button keeps its solid primary look inside the contact pill list */
+.contact-links a.button-primary,
+.contact-links a.button-primary:hover {
+  background: var(--color-accent);
+  color: var(--color-surface);
+}
+
+.contact-links a.button-primary:hover {
+  background: var(--color-accent-hover);
+}
 
 /* ==========================================================================
    14. Motion (restrained): one entrance, gentle section reveals

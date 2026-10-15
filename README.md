@@ -24,15 +24,16 @@ files/            PDFs: put resume.pdf here
 
 | Section | id | What goes there |
 |---|---|---|
-| Introduction | `#intro` | Name, majors, three-sentence introduction, résumé + contact buttons, headshot |
-| 01 Experience | `#experience` | Compact timeline: dates, role, organization, what you did |
-| 02 Selected work | `#work` | Projects: summary and result always visible; Plain language / Scientific detail toggle for the explanation |
-| 03 Skills & certifications | `#skills` | Four groups: clinical, research & lab, data & computing, communication |
-| 04 About me | `#about` | Why medicine, two "unfurling leaf" notes, a plant photo, and **Currently growing** |
-| 05 Contact | `#contact` | Email, résumé download, LinkedIn, and the interactive particle rose |
+| Introduction | `#intro` | Name, majors, short introduction, résumé + contact buttons, headshot |
+| 01 Research | `#research` | Research experience and the first-author manuscript |
+| 02 Projects | `#work` | Project summaries and results, always visible; Plain language / Scientific detail toggle for each explanation |
+| 03 Experience | `#experience` | Compact timeline: dates, role, organization, what you did |
+| 04 Education | `#education` | Degrees and coursework, **Certifications & training**, and **Methods I've used** |
+| 05 About | `#about` | Why medicine, two "unfurling leaf" notes, a plant photo, and **Currently growing** |
+| 06 Contact | `#contact` | Email, résumé download, LinkedIn, and the interactive particle rose |
 
-### Draft placeholders
-Everything still waiting for real information is in **[square brackets]** with `class="draft"`, which shows a dashed terracotta highlight on the page. Search `index.html` for `class="draft"` to find them all; when you replace one, delete the brackets and the class. Nothing should be published while any remain.
+### Unverified content
+Anything not yet confirmed (dates, titles, duties, certifications, skill levels, photos) is tracked in **`TODO.private.md`** at the project root. That file is git-ignored (`.gitignore`), so it is never committed or published by GitHub Pages. Do not put unverified details on the page; add them only after they are confirmed.
 
 ## Tailoring for each application
 
@@ -40,9 +41,9 @@ Send a different link with each application. The page re-orders itself so the mo
 
 | Link | Use for | Effect |
 |---|---|---|
-| `https://hvycreme.github.io/` | General | Default order |
-| `https://hvycreme.github.io/?for=crc` | Clinical research coordinator | Research, data, and documentation first |
-| `https://hvycreme.github.io/?for=ert` | Emergency room tech | Clinical training, service, and certifications first |
+| `https://hvycreme.github.io/` | General | Default order: leads with clinical-research-relevant work |
+| `https://hvycreme.github.io/?for=crc` | Clinical research coordinator | Research and Experience reordered: research, data, and documentation first |
+| `https://hvycreme.github.io/?for=ert` | Emergency room tech | Research and Experience reordered: clinical training, service, and certifications first |
 
 The order is set in `index.html` by numbers on each experience entry and skill group:
 
@@ -52,7 +53,7 @@ The order is set in `index.html` by numbers on each experience entry and skill g
 
 ## Common edits
 
-**Résumé:** save your PDF as **`files/resume.pdf`** (exact name). Both résumé buttons point there.
+**Résumé:** save your PDF as **`files/resume.pdf`** (exact name). Résumé links are removed from the site until this file exists; once it does, restore the résumé links in the header, hero, and contact section.
 
 **Add an experience entry:** copy one whole `<li>…</li>` inside `<ol class="timeline">`, then give it `data-crc` / `data-ert` numbers.
 
@@ -74,7 +75,7 @@ Nothing loads until a visitor scrolls near Contact; the fly-in plays when it com
 
 **Mouse trail ("pollen"):** `js/pollen.js` releases a few small yellow and mustard dots wherever the mouse moves; they drift up and fade in about a second. It only runs while dots are visible, is mouse/trackpad only (not touch), and is off for Reduce motion. Tune it with `MAX_PARTICLES`, `SPACING`, `COLORS`, and the `globalAlpha` line in `frame()`.
 
-**Rose source image:** P.-J. Redouté, *Rosa centifolia*, from *Les Roses* (1817–1824). The artwork is in the public domain; the specific scan's source is not recorded, so note where it came from (or swap in a scan with a documented source, e.g. from the Biodiversity Heritage Library) before publishing. To process a new scan: `pip install pillow numpy scipy`, then `python3 tools/prepare_plate.py my-scan.jpg images/rose-plate.webp`.
+**Rose source image:** P.-J. Redouté, *Rosa centifolia*, from *Les Roses* (1817–1824). The artwork is in the public domain; the specific scan's source is not recorded yet; track it in `TODO.private.md` and add a source link to the credit (or swap in a scan with a documented source, e.g. from the Biodiversity Heritage Library) before publishing. To process a new scan: `pip install pillow numpy scipy`, then `python3 tools/prepare_plate.py my-scan.jpg images/rose-plate.webp`.
 
 ## Customizing the look
 
