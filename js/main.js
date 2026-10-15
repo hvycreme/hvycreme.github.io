@@ -232,3 +232,23 @@ function playClickSound() {
 document.addEventListener('click', (event) => {
   if (soundOn && event.target.closest('a, button, summary')) playClickSound();
 });
+
+/* --------------------------------------------------------------------------
+   7. Botanical plate: hovering a name in the key highlights its marker
+   (and vice versa). Both carry the same data-part number, so one listener
+   on the whole figure can match them up.
+   -------------------------------------------------------------------------- */
+const plate = document.querySelector('.plate');
+
+if (plate) {
+  const highlight = (part) => {
+    plate.querySelectorAll('[data-part]').forEach((el) => {
+      el.classList.toggle('is-highlighted', el.dataset.part === part);
+    });
+  };
+  plate.addEventListener('pointerover', (event) => {
+    const target = event.target.closest('[data-part]');
+    highlight(target ? target.dataset.part : null);
+  });
+  plate.addEventListener('pointerleave', () => highlight(null));
+}

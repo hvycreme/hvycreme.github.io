@@ -414,15 +414,97 @@ section p + p {
 
 .hero-figure {
   justify-self: center;
-  width: min(100%, 24rem);
+  width: min(100%, 27rem);
 }
 
-/* On phones the drawing is a garnish, not the main course: keep it small
-   so experience is only a short scroll away. */
-@media (max-width: 40rem) {
-  .hero-figure {
-    width: min(70%, 15rem);
-  }
+/* --- Botanical plate (hero figure) ------------------------------------- */
+.plate-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;  /* markers near the edge aren't clipped */
+}
+
+/* SVG uses `fill`/`stroke` instead of `color`/`border`, but CSS variables
+   work the same way, so the plate follows the site's tokens. */
+.plate-leader {
+  stroke: var(--color-terracotta);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.plate-point {
+  fill: var(--color-terracotta);
+}
+
+.plate-badge circle {
+  fill: var(--color-surface);
+  stroke: var(--color-terracotta);
+  stroke-width: 1.5;
+}
+
+.plate-badge text {
+  fill: var(--color-terracotta);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  text-anchor: middle;            /* center horizontally on x */
+  dominant-baseline: central;     /* center vertically on y */
+}
+
+/* Markers appear one by one after the hero text (--i is set per marker in
+   the HTML), then grow when their name in the key is hovered. */
+.plate-marker {
+  animation: fade-in var(--dur-slow) var(--ease) both;
+  animation-delay: calc(0.6s + var(--i) * 0.08s);
+}
+
+.plate-badge {
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.plate-marker.is-highlighted .plate-badge {
+  transform: scale(1.35);
+}
+
+.plate figcaption {
+  margin-top: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+.plate-title {
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+/* The key: numbered like the markers, two columns when there's room */
+.plate-key {
+  columns: 2 11rem;
+  column-gap: var(--space-4);
+  margin-block: var(--space-2);
+  padding-left: 2.2em;  /* room for the "1." numbers */
+  font-family: var(--font-mono);
+}
+
+.plate-key li {
+  break-inside: avoid;  /* never split one entry across columns */
+  padding-block: 0.1rem;
+  cursor: default;
+}
+
+.plate-key li::marker {
+  color: var(--color-terracotta);
+  font-weight: 700;
+}
+
+.plate-key li.is-highlighted {
+  color: var(--color-text);
+}
+
+.plate-credit {
+  font-style: italic;
 }
 
 /* ==========================================================================
@@ -820,6 +902,11 @@ section p + p {
    Only opacity and transform animate: the browser can do both on the GPU
    without recalculating layout.
    ========================================================================== */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @keyframes fade-rise {
   from {
     opacity: 0;

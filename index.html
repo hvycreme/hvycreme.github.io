@@ -17,6 +17,8 @@
   <!-- Start downloading the heading font right away instead of waiting
        for the CSS to be parsed and discover it. -->
   <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- The hero plate is the largest image on first screen: fetch it early too -->
+  <link rel="preload" href="images/rose-plate.webp" as="image" type="image/webp">
   <!-- Runs before the page paints: tells CSS "JavaScript is on", so effects
        that hide content (reveals, toggles) only apply when JS can undo them. -->
   <script>document.documentElement.classList.add('js');</script>
@@ -94,9 +96,38 @@
         </div>
       </div>
 
-      <figure class="hero-figure">
-        <!-- Decorative: alt="" tells screen readers to skip it -->
-        <img src="images/specimen.svg" alt="" width="420" height="540">
+      <!-- Botanical plate: P.-J. Redouté's Rosa centifolia (public domain), with the
+           paper removed by tools/prepare_plate.py. It's an inline SVG so the
+           numbered markers share the image's coordinate system and can be styled
+           with CSS. The names live in the HTML key below, so they stay readable
+           at any screen size (text drawn inside the SVG would shrink with it). -->
+      <figure class="hero-figure plate">
+        <svg class="plate-art" viewBox="0 0 450 604" role="img" aria-labelledby="plate-title">
+          <title id="plate-title">Botanical plate of a cabbage rose, Rosa × centifolia, with eight numbered parts listed in the key below.</title>
+          <image href="images/rose-plate.webp" width="450" height="604"/>
+          <g class="plate-marker" data-part="1" style="--i:1"><line class="plate-leader" x1="205" y1="30" x2="256" y2="26"/><circle class="plate-point" cx="205" cy="30" r="2.5"/><g class="plate-badge" style="transform-origin:256px 26px"><circle cx="256" cy="26" r="13"/><text x="256" y="26">1</text></g></g>
+          <g class="plate-marker" data-part="2" style="--i:2"><line class="plate-leader" x1="204" y1="72" x2="158" y2="52"/><circle class="plate-point" cx="204" cy="72" r="2.5"/><g class="plate-badge" style="transform-origin:158px 52px"><circle cx="158" cy="52" r="13"/><text x="158" y="52">2</text></g></g>
+          <g class="plate-marker" data-part="3" style="--i:3"><line class="plate-leader" x1="411" y1="126" x2="436" y2="92"/><circle class="plate-point" cx="411" cy="126" r="2.5"/><g class="plate-badge" style="transform-origin:436px 92px"><circle cx="436" cy="92" r="13"/><text x="436" y="92">3</text></g></g>
+          <g class="plate-marker" data-part="4" style="--i:4"><g class="plate-badge" style="transform-origin:300px 196px"><circle cx="300" cy="196" r="13"/><text x="300" y="196">4</text></g></g>
+          <g class="plate-marker" data-part="5" style="--i:5"><line class="plate-leader" x1="241" y1="330" x2="288" y2="318"/><circle class="plate-point" cx="241" cy="330" r="2.5"/><g class="plate-badge" style="transform-origin:288px 318px"><circle cx="288" cy="318" r="13"/><text x="288" y="318">5</text></g></g>
+          <g class="plate-marker" data-part="6" style="--i:6"><line class="plate-leader" x1="100" y1="372" x2="52" y2="300"/><circle class="plate-point" cx="100" cy="372" r="2.5"/><g class="plate-badge" style="transform-origin:52px 300px"><circle cx="52" cy="300" r="13"/><text x="52" y="300">6</text></g></g>
+          <g class="plate-marker" data-part="7" style="--i:7"><line class="plate-leader" x1="432" y1="424" x2="436" y2="372"/><circle class="plate-point" cx="432" cy="424" r="2.5"/><g class="plate-badge" style="transform-origin:436px 372px"><circle cx="436" cy="372" r="13"/><text x="436" y="372">7</text></g></g>
+          <g class="plate-marker" data-part="8" style="--i:8"><line class="plate-leader" x1="193" y1="517" x2="148" y2="522"/><circle class="plate-point" cx="193" cy="517" r="2.5"/><g class="plate-badge" style="transform-origin:148px 522px"><circle cx="148" cy="522" r="13"/><text x="148" y="522">8</text></g></g>
+        </svg>
+        <figcaption>
+          <p class="plate-title">Fig. 1 · <em>Rosa × centifolia</em> L.</p>
+          <ol class="plate-key">
+          <li data-part="1">Flower bud</li>
+          <li data-part="2">Hypanthium (future hip)</li>
+          <li data-part="3">Sepal</li>
+          <li data-part="4">Corolla (petals)</li>
+          <li data-part="5">Pedicel (flower stalk)</li>
+          <li data-part="6">Pinnately compound leaf</li>
+          <li data-part="7">Serrate leaf margin</li>
+          <li data-part="8">Prickle</li>
+          </ol>
+          <p class="plate-credit">After P.-J. Redouté, <cite>Les Roses</cite> (1817–24)</p>
+        </figcaption>
       </figure>
     </section>
 

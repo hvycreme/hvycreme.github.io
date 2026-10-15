@@ -13,7 +13,8 @@ index.html        All page content
 css/style.css     All styles; design tokens (colors, fonts, spacing, motion) at the top in :root
 js/main.js        Role tailoring, scroll reveals, active nav, explanation toggle, optional sound
 fonts/            Fraunces (self-hosted, SIL Open Font License)
-images/           specimen.svg (hero drawing), placeholders for figures and plant photos, favicon
+images/           rose-plate.webp (hero plate), placeholders for figures and plant photos, favicon
+tools/            prepare_plate.py: removes the paper background from a botanical plate
 files/            PDFs: put resume.pdf here
 audio/            background.mp3 (optional ambient loop, off by default)
 .nojekyll         Tells GitHub Pages to serve files as-is (skip its Jekyll build step)
@@ -63,7 +64,9 @@ The "Seeking…" line in the intro also has one version per role (`<span data-fo
 2. Compress at [squoosh.app](https://squoosh.app): **WebP**, quality ~75. Aim for **under 150 KB**.
 3. Save as `images/my-plant.webp`, update the `<img src>` in the About section, and describe the photo in `alt`.
 
-**Hero drawing:** `images/specimen.svg` is a plain text file; its labels and caption ("fig. 1 — specimen sketch") can be edited in any text editor.
+**Hero plate:** P.-J. Redouté's *Rosa centifolia* (1817–24, public domain), cut out of its white paper by `tools/prepare_plate.py`. The numbered markers are an inline `<svg>` in `index.html`; the names are in the `<ol class="plate-key">` right below it.
+- *Move a marker:* each `<g class="plate-marker">` has a feature point (`x1,y1`, where the dashed line starts) and a badge position (the circle's `cx,cy`), in the image's own 450×604 pixel coordinates.
+- *Use a sharper scan or a different plate:* `pip install pillow numpy scipy`, then `python3 tools/prepare_plate.py my-scan.jpg images/rose-plate.webp`, and adjust the marker coordinates and the `viewBox`/`width`/`height` to the new image size (the script prints it).
 
 **Music:** off by default; visitors turn it on with the speaker button in the header. Replace `audio/background.mp3` with any MP3 you have the rights to use (under ~1 MB). To remove sound entirely, delete the `<button class="sound-toggle">` in `index.html`.
 
