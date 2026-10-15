@@ -208,3 +208,39 @@ if (root.classList.contains('gate-open')) {
 } else {
   gate.remove(); // returning visitor this session: no gate
 }
+
+/* --------------------------------------------------------------------------
+   Step 8: Subtle UI click sounds
+   Each click builds a brand-new oscillator ("tone generator") + gain node,
+   plays a ~0.1 s blip, then stops. Web Audio nodes are single-use and very
+   cheap, so creating one per event is the intended pattern, and it means
+   rapid clicks overlap naturally instead of cutting each other off.
+   (Reusing ONE <audio> element would restart it on every click instead.)
+   No sound file is needed: the tone is synthesized.
+   -------------------------------------------------------------------------- */
+function playClickSound() {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+
+  const osc = ctx.createOscillator();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(880, t);                        // starts at A5...
+  osc.frequency.exponentialRampToValueAtTime(520, t + 0.08);   // ...and dips: a soft "tick"
+
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.0001, t);                         // exponential ramps can't start at 0
+  gain.gain.exponentialRampToValueAtTime(0.06, t + 0.005);     // 5 ms attack (avoids a click/pop)
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);    // quick decay
+
+  osc.connect(gain).connect(ctx.destination);
+  osc.start(t);
+  osc.stop(t + 0.13); // after stop() the nodes are garbage-collected automatically
+}
+
+// Event delegation: ONE listener on the document handles clicks on every
+// link and button, including ones added later, instead of one listener each.
+document.addEventListener('click', (event) => {
+  if (!soundOn) return;
+  if (event.target.closest('a, button')) playClickSound();
+});
