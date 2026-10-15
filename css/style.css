@@ -1,51 +1,64 @@
 /* ==========================================================================
    0. Fonts
-   Fraunces (headings) is self-hosted from /fonts instead of loaded from
-   Google: same-origin files skip an extra DNS + connection to another
-   server. It's a "variable font": one file holds every weight 400–700.
-   font-display: swap shows text in a fallback font immediately, then
-   swaps in Fraunces when it arrives, so text is never invisible.
-   License: SIL Open Font License (free to self-host).
+   System UI sans-serif for everything, with monospace for dates and labels.
+   No web fonts are loaded, so there is nothing to download before text shows.
    ========================================================================== */
-@font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-latin.woff2") format("woff2");
-  font-weight: 400 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-latin-italic.woff2") format("woff2");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
 
 /* ==========================================================================
    1. Design tokens
-   Every color, font, and spacing value lives here. Change a value once
-   and it updates everywhere it's used via var(--name).
+   Every color, shadow, radius, and spacing value lives here. Change a value
+   once and it updates everywhere it's used via var(--name).
+   Style: a soft "clay" UI. Cream surfaces, gently raised controls, recessed
+   tracks, and a muted mint for selected, hover, and focus states.
    ========================================================================== */
 :root {
-  /* Colors: cream paper, charcoal ink, forest green, a little terracotta */
-  --color-bg: #f6f1e6;          /* warm cream page */
-  --color-surface: #fcf9f2;     /* a lighter sheet of paper */
-  --color-border: #e2d8c5;      /* hairlines */
-  --color-rule: #cfc3ab;        /* slightly stronger line: timeline, section rules */
-  --color-text: #2b2a27;        /* deep charcoal: softer than pure black */
-  --color-muted: #5c584f;       /* secondary text */
-  --color-accent: #2f5d3a;      /* forest green: links, buttons, the leaf motif */
+  /* Colors: cream surfaces, charcoal ink, forest green actions, muted mint */
+  --color-bg: #f3efe5;          /* cream page */
+  --color-surface: #faf7f0;     /* raised sheet: cards, buttons, figures */
+  --color-surface-hi: #fffdf8;  /* brighter surface on hover */
+  --color-recess: #e9e3d5;      /* recessed track (toggle) */
+  --color-border: #ddd5c3;      /* hairlines */
+  --color-rule: #cbc1ac;        /* section rules, timeline line */
+  --color-text: #292d28;        /* soft charcoal ink (12:1 on bg) */
+  --color-muted: #5c6157;       /* secondary text (5.5:1 on bg, 4.97:1 on recess) */
+  --color-accent: #2f5d3a;      /* forest green: links, primary actions */
   --color-accent-hover: #24492d;
-  --color-terracotta: #9a4d33;  /* small touches only: labels, numbers */
+  --color-mint: #bfe6d2;        /* selected, hover, and focus states */
+  --color-terracotta: #8a3f28;  /* small labels only (6.5:1 on bg) */
   /* Derived colors: color-mix() blends two colors, so these follow the tokens above */
-  --color-header: color-mix(in srgb, var(--color-bg) 90%, transparent);
-  --color-accent-soft: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  --color-header: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  --color-mint-soft: color-mix(in srgb, var(--color-mint) 40%, var(--color-surface));
   --color-terracotta-soft: color-mix(in srgb, var(--color-terracotta) 9%, var(--color-surface));
 
+  /* Elevation: warm, ink-tinted shadows. A light top edge makes raised things
+     look lit from above; the lower shadow lifts them off the page. */
+  --shadow-raised:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 1px 1px rgba(120, 100, 70, 0.10),
+    0 6px 14px -4px rgba(120, 100, 70, 0.28);
+  --shadow-raised-hover:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 2px 3px rgba(120, 100, 70, 0.12),
+    0 9px 18px -5px rgba(120, 100, 70, 0.32);
+  --shadow-raised-sm:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 1px 2px rgba(120, 100, 70, 0.14),
+    0 3px 8px -3px rgba(120, 100, 70, 0.20);
+  --shadow-pressed:
+    inset 0 2px 4px rgba(120, 100, 70, 0.28),
+    inset 0 0 0 1px rgba(120, 100, 70, 0.06);
+  --shadow-recessed:
+    inset 0 2px 5px rgba(120, 100, 70, 0.22),
+    inset 0 0 0 1px rgba(120, 100, 70, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.7);
+  --focus-glow: 0 0 0 5px rgba(191, 230, 210, 0.75);  /* mint halo, added to the outline */
+
+  /* Shape: consistent radii */
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-pill: 999px;
+
   /* Fonts */
-  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
@@ -69,12 +82,12 @@
   /* Layout */
   --content-width: 66rem;
   --gutter: clamp(1rem, 4vw, 2rem);
-  --radius: 12px;
   --header-height: 4rem;
 
-  /* Motion: one easing curve for everything */
+  /* Motion: one easing curve. Controls use --dur-control (150-220ms). */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-fast: 0.3s;
+  --dur-control: 0.18s;
+  --dur-fast: 0.2s;
   --dur-slow: 0.7s;
 }
 
@@ -95,7 +108,7 @@ html {
   overflow-x: clip;  /* nothing can cause sideways scrolling (unlike "hidden",
                         "clip" doesn't break the sticky header) */
   scroll-behavior: smooth;
-  scroll-padding-top: var(--header-height);
+  scroll-padding-top: calc(var(--header-height) + 1rem);  /* anchors land below the sticky bar, with air */
   -webkit-text-size-adjust: 100%;
 }
 
@@ -113,15 +126,15 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  line-height: 1.7;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3 {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
 }
 
 h3 {
@@ -143,6 +156,8 @@ a:hover {
   color: var(--color-accent-hover);
 }
 
+/* Focus: a solid green outline (3:1+ on every surface) plus a soft mint halo.
+   Controls below add the halo to their own shadow list. */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
@@ -167,9 +182,9 @@ a:hover {
    class="draft" when you replace the text. */
 .draft {
   background: var(--color-terracotta-soft);
-  outline: 1px dashed color-mix(in srgb, var(--color-terracotta) 55%, transparent);
+  outline: 1px dashed color-mix(in srgb, var(--color-terracotta) 60%, transparent);
   outline-offset: 1px;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 /* Block-level placeholders hug their text instead of spanning the full width */
@@ -204,9 +219,10 @@ figcaption.draft {
   align-items: center;
   gap: 0.4em;
   flex-shrink: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 1.15rem;
   font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--color-text);
   text-decoration: none;
 }
@@ -269,25 +285,43 @@ figcaption.draft {
   background: var(--color-accent);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform var(--dur-fast) var(--ease);
+  transition: transform var(--dur-control) var(--ease);
 }
 
 .nav-list a.is-active::after {
   transform: scaleX(1);
 }
 
-/* Résumé stays one click away from anywhere on the page */
+/* Résumé stays one click away from anywhere on the page: a small raised pill */
 .header-resume {
   flex-shrink: 0;
-  padding: 0.3em 0.9em;
-  border: 1px solid var(--color-accent);
-  border-radius: 999px;
+  padding: 0.4em 1em;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
+  color: var(--color-accent);
   font-size: var(--text-sm);
+  font-weight: 500;
   text-decoration: none;
+  transition:
+    transform var(--dur-control) var(--ease),
+    box-shadow var(--dur-control) var(--ease),
+    background-color var(--dur-control) var(--ease);
 }
 
 .header-resume:hover {
-  background: var(--color-accent-soft);
+  background: var(--color-surface-hi);
+  box-shadow: var(--shadow-raised-hover);
+  transform: translateY(-1px);
+}
+
+.header-resume:active {
+  box-shadow: var(--shadow-pressed);
+  transform: translateY(1px);
+}
+
+.header-resume:focus-visible {
+  box-shadow: var(--shadow-raised-sm), var(--focus-glow);
 }
 
 @media (max-width: 40rem) {
@@ -299,12 +333,15 @@ figcaption.draft {
     display: none;  /* just the leaf on phones: more room for the nav */
   }
 
+  /* Both ends fade when the strip scrolls; padding keeps the first item clear at rest */
   .site-header nav {
-    mask-image: linear-gradient(to right, #000 85%, transparent);
-    -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
+    margin-right: var(--space-2);
+    mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 2rem), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 2rem), transparent 100%);
   }
 
   .nav-list {
+    padding-left: 1.25rem;
     padding-right: var(--space-5);
   }
 }
@@ -390,7 +427,8 @@ section p + p {
 
 .hero-title {
   font-size: var(--text-hero);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
 }
 
 .hero-intro {
@@ -415,28 +453,24 @@ section p + p {
 }
 
 /* --- Portrait --------------------------------------------------------------
-   One treatment: an arched top like a greenhouse window, with a single thin
-   green outline. In border-radius, values before "/" are horizontal radii and
+   One treatment: an arched top (like a greenhouse window) set in a soft raised
+   frame. The frame is the element itself: surface-colored padding plus a
+   raised shadow. In border-radius, values before "/" are horizontal radii and
    after it vertical: 50% of the width across and 40% of the height down
    (= half the width for a 4:5 photo), so the top is a perfect semicircle. */
 .portrait {
   --arch: 50% 50% var(--radius) var(--radius) / 40% 40% var(--radius) var(--radius);
-  position: relative;
   justify-self: center;
   width: min(100%, 20rem);
+  padding: 10px;
+  border-radius: var(--arch);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised);
+  animation: fade-rise var(--dur-slow) var(--ease) 0.15s both;
 }
 
 .portrait img {
   border-radius: var(--arch);
-}
-
-.portrait::before {
-  content: "";
-  position: absolute;
-  inset: -9px;
-  border: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
-  border-radius: var(--arch);
-  pointer-events: none;
 }
 
 /* Phones: portrait above the name, smaller, aligned with the text */
@@ -445,44 +479,72 @@ section p + p {
     order: -1;
     justify-self: start;
     width: min(55%, 13rem);
-    margin: var(--space-2) 0 0 9px;
+    margin: var(--space-2) 0 0 0;
   }
 }
 
 /* ==========================================================================
    7. Buttons
+   Raised pills. Hover lifts a little and brightens; :active sinks in.
+   Text colors never change on hover, so only transform, shadow, and
+   background move (150-220ms).
    ========================================================================== */
 .button {
   display: inline-block;
-  padding: 0.65em 1.3em;
-  border: 1px solid var(--color-accent);
-  border-radius: 999px;
+  min-height: 2.75rem;  /* 44px touch target */
+  padding: 0.6em 1.4em;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised);
   color: var(--color-accent);
   font-size: var(--text-sm);
   font-weight: 500;
+  line-height: 1.6;
+  text-align: center;
   text-decoration: none;
+  transition:
+    transform var(--dur-control) var(--ease),
+    box-shadow var(--dur-control) var(--ease),
+    background-color var(--dur-control) var(--ease);
 }
 
 .button:hover {
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
+  background: var(--color-surface-hi);
+  box-shadow: var(--shadow-raised-hover);
+  transform: translateY(-1px);
+}
+
+.button:active {
+  box-shadow: var(--shadow-pressed);
+  transform: translateY(1px);
+}
+
+.button:focus-visible {
+  box-shadow: var(--shadow-raised), var(--focus-glow);
 }
 
 .button-primary {
   background: var(--color-accent);
-  color: var(--color-bg);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 6px 14px -4px rgba(47, 93, 58, 0.45);
+  color: var(--color-surface);
 }
 
 .button-primary:hover {
   background: var(--color-accent-hover);
-  color: var(--color-bg);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 9px 18px -5px rgba(47, 93, 58, 0.5);
+  color: var(--color-surface);
+}
+
+.button-primary:active {
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.25);
 }
 
 /* ==========================================================================
    8. Experience: a compact timeline
    One thin vertical line; each entry is a dot on it, with the date in a
    left column on wide screens. Entries are separated by dashed rules
-   instead of boxes.
+   instead of boxes. Kept flat on purpose.
    ========================================================================== */
 .timeline {
   list-style: none;
@@ -591,11 +653,13 @@ section p + p {
   color: var(--color-terracotta);
 }
 
-/* The result: always visible, set off like a margin note */
+/* The result: always visible, set off like a margin note on a light sheet */
 .finding {
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3);
   border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius-sm);
   background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
 }
 
 .finding-label {
@@ -607,14 +671,16 @@ section p + p {
   color: var(--color-accent);
 }
 
-/* Segmented control. Hidden without JS (both panels show instead). */
+/* Segmented control: a recessed track with one raised, mint-selected segment.
+   Hidden without JS (both panels show instead). */
 .explain-toggle {
   display: none;
   align-self: flex-start;
-  padding: 3px;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  background: var(--color-surface);
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--color-recess);
+  box-shadow: var(--shadow-recessed);
 }
 
 .js .explain-toggle {
@@ -622,20 +688,43 @@ section p + p {
 }
 
 .explain-toggle button {
-  min-height: 2.25rem;  /* comfortable touch target */
-  padding: 0.35em 1em;
+  min-height: 2.75rem;  /* 44px touch target */
+  padding: 0.35em 1.1em;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-muted);
   font: inherit;
   font-size: var(--text-sm);
   cursor: pointer;
+  transition:
+    transform var(--dur-control) var(--ease),
+    box-shadow var(--dur-control) var(--ease),
+    background-color var(--dur-control) var(--ease);
+}
+
+.explain-toggle button:hover {
+  background: var(--color-surface-hi);
+  color: var(--color-text);
+}
+
+.explain-toggle button:active {
+  transform: translateY(1px);
+}
+
+.explain-toggle button:focus-visible {
+  box-shadow: var(--shadow-raised-sm), var(--focus-glow);
 }
 
 .explain-toggle button[aria-pressed="true"] {
-  background: var(--color-accent);
-  color: var(--color-bg);
+  background: var(--color-mint);
+  box-shadow: var(--shadow-raised);
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.explain-toggle button[aria-pressed="true"]:hover {
+  background: var(--color-mint);
 }
 
 .panel-label {
@@ -653,6 +742,7 @@ section p + p {
   animation: fade-in var(--dur-fast) var(--ease);
 }
 
+/* Tags: small mint chips */
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -662,9 +752,9 @@ section p + p {
 }
 
 .tags li {
-  padding: 0.1em 0.7em;
-  border-radius: 999px;
-  background: var(--color-accent-soft);
+  padding: 0.15em 0.75em;
+  border-radius: var(--radius-pill);
+  background: var(--color-mint-soft);
   color: var(--color-accent);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
@@ -675,14 +765,14 @@ section p + p {
 }
 
 .project-figure img {
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-raised-sm);
 }
 
 figcaption {
   margin-top: var(--space-2);
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--font-sans);
+  font-style: normal;
   font-size: var(--text-sm);
   color: var(--color-muted);
 }
@@ -740,6 +830,7 @@ figcaption {
 
 .about-photo img {
   border-radius: var(--radius);
+  box-shadow: var(--shadow-raised);
 }
 
 .unfurl {
@@ -748,16 +839,40 @@ figcaption {
   padding-top: var(--space-3);
 }
 
-/* <summary> is the clickable line. Remove the default ▸ triangle. */
+/* <summary> is the clickable line: a light raised pill. Remove the default ▸ triangle. */
 .unfurl summary {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  min-height: 2.75rem;  /* comfortable touch target */
-  font-family: var(--font-serif);
-  font-size: var(--text-lg);
+  min-height: 2.75rem;  /* 44px touch target */
+  padding: 0.3em var(--space-3) 0.3em var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 600;
   cursor: pointer;
   list-style: none;
+  transition:
+    transform var(--dur-control) var(--ease),
+    box-shadow var(--dur-control) var(--ease),
+    background-color var(--dur-control) var(--ease);
+}
+
+.unfurl summary:hover {
+  background: var(--color-surface-hi);
+  box-shadow: var(--shadow-raised);
+  transform: translateY(-1px);
+}
+
+.unfurl summary:active {
+  box-shadow: var(--shadow-pressed);
+  transform: translateY(1px);
+}
+
+.unfurl summary:focus-visible {
+  box-shadow: var(--shadow-raised-sm), var(--focus-glow);
 }
 
 .unfurl summary::-webkit-details-marker {
@@ -768,7 +883,7 @@ figcaption {
 .unfurl-leaf {
   font-size: 1.4rem;
   transform: rotate(-70deg) scale(0.75);
-  transition: transform var(--dur-slow) var(--ease);
+  transition: transform var(--dur-control) var(--ease);
 }
 
 .unfurl[open] .unfurl-leaf {
@@ -780,11 +895,11 @@ figcaption {
 }
 
 .unfurl-body {
-  padding: var(--space-2) 0 0 calc(1.4rem + var(--space-2));
+  padding: var(--space-3) 0 0 calc(1.4rem + var(--space-2));
   color: var(--color-muted);
 }
 
-/* Currently growing: three short notes, not cards */
+/* Currently growing: three short notes, each a small raised sheet */
 .growing {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
@@ -794,8 +909,10 @@ figcaption {
 }
 
 .growing li {
-  padding-left: var(--space-3);
-  border-left: 2px solid var(--color-accent-soft);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
   font-size: var(--text-sm);
   color: var(--color-muted);
 }
@@ -811,8 +928,9 @@ figcaption {
 }
 
 .growing-name {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: var(--text-base);
+  font-weight: 600;
   color: var(--color-text);
 }
 
@@ -835,8 +953,39 @@ figcaption {
   margin-top: var(--space-4);
 }
 
+/* Contact links use the same raised pill as the buttons */
 .contact-links a {
+  display: inline-block;
+  min-height: 2.75rem;  /* 44px touch target */
+  padding: 0.6em 1.2em;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised);
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
   overflow-wrap: anywhere;
+  transition:
+    transform var(--dur-control) var(--ease),
+    box-shadow var(--dur-control) var(--ease),
+    background-color var(--dur-control) var(--ease);
+}
+
+.contact-links a:hover {
+  background: var(--color-surface-hi);
+  box-shadow: var(--shadow-raised-hover);
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.contact-links a:active {
+  box-shadow: var(--shadow-pressed);
+  transform: translateY(1px);
+}
+
+.contact-links a:focus-visible {
+  box-shadow: var(--shadow-raised), var(--focus-glow);
 }
 
 /* The canvas fills this box; the box keeps the plate's 450:604 shape.
@@ -845,12 +994,18 @@ figcaption {
 .contact-figure {
   justify-self: center;
   width: min(100%, 22rem);
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised);
 }
 
 .contact-art {
   position: relative;
   width: 100%;
   aspect-ratio: 450 / 604;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
   touch-action: pan-y;
 }
 
@@ -945,27 +1100,20 @@ figcaption {
   }
 }
 
-.hero-text,
-.portrait {
+.hero-text {
   animation: fade-rise var(--dur-slow) var(--ease) both;
 }
 
-.portrait {
-  animation-delay: 0.15s;
-}
-
 /* Scroll reveal: JS adds .is-visible when a section enters the viewport */
+/* Opacity only: a translate on the section would shift its top edge while
+   it's still hidden, so anchor jumps would land 1rem short of the header. */
 .js .reveal {
   opacity: 0;
-  transform: translateY(1rem);
-  transition:
-    opacity var(--dur-slow) var(--ease),
-    transform var(--dur-slow) var(--ease);
+  transition: opacity var(--dur-slow) var(--ease);
 }
 
 .js .reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
 }
 
 /* ==========================================================================
@@ -989,11 +1137,12 @@ figcaption {
   left: var(--space-2);
   z-index: 20;
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
   background: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-surface);
   font-weight: 600;
   text-decoration: none;
+  box-shadow: var(--shadow-raised);
   transform: translateY(-200%);
 }
 
@@ -1009,7 +1158,8 @@ figcaption {
    16. Reduced motion
    Visitors can ask their OS to minimize motion (Mac/iPhone: Settings →
    Accessibility → Reduce motion). Durations become ~0 rather than "none"
-   so animationend/transitionend events still fire.
+   so animationend/transitionend events still fire. Lifts and presses are
+   removed so controls don't move.
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -1026,8 +1176,19 @@ figcaption {
     transition-delay: 0s !important;
   }
 
+  .button:hover,
+  .button:active,
+  .header-resume:hover,
+  .header-resume:active,
+  .explain-toggle button:active,
+  .unfurl summary:hover,
+  .unfurl summary:active,
+  .contact-links a:hover,
+  .contact-links a:active {
+    transform: none;
+  }
+
   .js .reveal {
     opacity: 1;
-    transform: none;
   }
 }

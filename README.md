@@ -4,7 +4,7 @@ My personal portfolio: a single-page static site built with plain HTML, CSS, and
 
 **Live site:** https://hvycreme.github.io/
 
-Design: a botanical field notebook with a clean professional layout. Warm cream paper, charcoal text, forest-green accents with small touches of terracotta, Fraunces serif headings, ruled section headings, and one leaf motif.
+Design: a soft, cream "clay" interface with a clean professional layout. A cream background (`#F3EFE5`), lighter surfaces raised above it, charcoal text, sans-serif headings, raised pill buttons that sink when pressed, a recessed toggle track with a mint selected segment, and a mint focus glow for keyboard users. One leaf motif and the botanical plate carry the botanical theme.
 
 ## Project structure
 
@@ -14,7 +14,6 @@ css/style.css     All styles; design tokens (colors, fonts, spacing, motion) at 
 js/main.js        Role tailoring, scroll reveals, active nav, explanation toggle
 js/particles.js   Interactive particle rose in the Contact section (WebGL)
 js/pollen.js      Mouse-trail particles across the page background (Canvas 2D)
-fonts/            Fraunces (self-hosted, SIL Open Font License)
 images/           headshot, rose-plate.webp (particle source), placeholders for figures and plant photos, favicon
 tools/            prepare_plate.py (botanical plate cut-out), prepare_headshot.py (portrait crop + color match)
 files/            PDFs: put resume.pdf here
@@ -81,9 +80,12 @@ Nothing loads until a visitor scrolls near Contact; the fly-in plays when it com
 
 All in the `:root` block at the top of `css/style.css`:
 
-- `--color-bg`, `--color-surface`, `--color-text`, `--color-muted`, `--color-border`: the palette
-- `--color-accent` (forest green) and `--color-terracotta` (use sparingly)
-- `--font-serif`, `--font-sans`, `--font-mono`: fonts
+- `--color-bg`: the cream page background (`#F3EFE5`); `--color-surface`: lighter raised surfaces (cards, pill buttons) above it
+- `--color-text`, `--color-muted`, `--color-border`: text and edges; keep borders soft so surfaces read as clay, not outlines
+- `--color-accent` (mint, used for the selected toggle segment and the focus glow) and `--color-terracotta` (use sparingly)
+- Buttons: raised pill shape by default, sinking into a pressed state on `:active`; the toggle is a recessed track with a mint selected segment
+- Focus: a mint glow ring on `:focus-visible`; keep it visible on every interactive element
+- `--font-sans` (headings and body) and `--font-mono`: fonts; headings are sans-serif
 - `--space-section`: breathing room between sections
 - `--dur-fast`, `--dur-slow`, `--ease`: animation speed and feel (keep durations 0.3–0.9 s)
 

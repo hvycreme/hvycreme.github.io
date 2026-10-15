@@ -135,6 +135,24 @@ document.querySelectorAll('.project').forEach((project) => {
     panels.forEach((panel) => (panel.hidden = panel.dataset.panel !== name));
   }
 
-  buttons.forEach((btn) => btn.addEventListener('click', () => show(btn.dataset.show)));
+  buttons.forEach((btn, index) => {
+    btn.addEventListener('click', () => show(btn.dataset.show));
+
+    // Arrow keys / Home / End move focus within the group and select the
+    // newly focused button. Enter and Space work natively on <button>.
+    btn.addEventListener('keydown', (event) => {
+      const group = Array.from(btn.closest('.explain-toggle').querySelectorAll('button'));
+      let target = null;
+      if (event.key === 'ArrowRight') target = (index + 1) % group.length;
+      else if (event.key === 'ArrowLeft') target = (index - 1 + group.length) % group.length;
+      else if (event.key === 'Home') target = 0;
+      else if (event.key === 'End') target = group.length - 1;
+      if (target === null) return;
+
+      event.preventDefault();
+      group[target].focus();
+      show(group[target].dataset.show);
+    });
+  });
   show('plain'); // start in plain language (without JS, both panels stay visible)
 });
