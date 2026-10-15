@@ -26,6 +26,12 @@
     inkMix: 0.3,          // 0 = original colors, 1 = all forest-green ink
     ink: [0x2f / 255, 0x5d / 255, 0x3a / 255],
     drift: 2.2,           // how far dots wander (plate pixels)
+    // "Alive" self-motion, inspired by the fizzing particle skin of the
+    // emotions in Inside Out. Set any to 0 to turn that layer off.
+    fizz: 0.7,            // fast tiny jitter per dot (plate pixels)
+    twinkle: 0.4,         // how much each dot brightens/dims (0..1)
+    breathe: 0.008,       // whole-flower swell (fraction of its size)
+    sway: 0.012,          // whole-flower sway around the stem base (radians)
     pushRadius: 55,       // pointer/finger influence radius (CSS px)
     pushStrength: 22,     // how far dots get pushed (CSS px)
     introSeconds: 2.2,
@@ -55,6 +61,11 @@
     uniform float uIntro;    // 0 -> 1 during the fly-in
     uniform float uPointSize;
     uniform float uDrift;
+    uniform float uFizz;
+    uniform float uTwinkle;
+    uniform float uBreathe;
+    uniform float uSway;
+    uniform vec2 uPivot;     // bottom of the stem (device px): sway/breathe origin
     uniform float uPushRadius;
     uniform float uPushStrength;
     uniform vec3 uTrail[${TRAIL_LENGTH}];  // xy = pointer position (device px), z = strength
@@ -80,6 +91,22 @@
                     valueNoise(aBase * 0.03 + vec2(aRand.y * 9.0, -t))) - 0.5;
       p += n * 2.0 * uDrift * uScale;
 
+      // 1b. Fizz: a fast, tiny circular jitter at each dot's own speed and
+      //     phase, so the surface shimmers while the shape holds still.
+      p += vec2(sin(uTime * (4.0 + aRand.x * 5.0) + aRand.y * 60.0),
+                cos(uTime * (3.0 + aRand.y * 5.0) + aRand.x * 60.0)) * uFizz * uScale;
+
+      // 1c. Breathing: the whole flower swells slightly and sways around the
+      //     base of the stem, slowly, like a plant in still air.
+      float swell = 1.0 + uBreathe * sin(uTime * 0.9);
+      float tilt = uSway * sin(uTime * 0.55);
+      vec2 rel = (p - uPivot) * swell;
+      p = uPivot + vec2(rel.x * cos(tilt) - rel.y * sin(tilt),
+                        rel.x * sin(tilt) + rel.y * cos(tilt));
+
+      // Twinkle: each dot pulses brighter/bigger on its own slow rhythm
+      float tw = 0.5 + 0.5 * sin(uTime * (1.2 + aRand.x * 2.5) + aRand.y * 6.2832);
+
       // 2. Pointer trail: push dots away from recent pointer positions
       float touched = 0.0;
       for (int i = 0; i < ${TRAIL_LENGTH}; i++) {
@@ -100,10 +127,12 @@
       // Device pixels -> clip space (-1..1, y up)
       vec2 clip = (p / uRes) * 2.0 - 1.0;
       gl_Position = vec4(clip.x, -clip.y, 0.0, 1.0);
-      gl_PointSize = uPointSize * (0.7 + aRand.y * 0.6) * (1.0 + touched * 0.8);
+      gl_PointSize = uPointSize * (0.7 + aRand.y * 0.6) * (1.0 + touched * 0.8)
+                   * (1.0 + uTwinkle * 0.5 * (tw - 0.5));
 
-      vColor = aColor;
-      vAlpha = e;
+      // Brightest moment of a twinkle catches a little warm light
+      vColor = mix(aColor, vec3(1.0, 0.97, 0.88), uTwinkle * 0.35 * tw * tw);
+      vAlpha = e * (1.0 - uTwinkle * 0.5 + uTwinkle * 0.5 * tw);
     }`;
 
   const FRAGMENT_SHADER = `
@@ -137,6 +166,7 @@
 
   const u = {};
   ['uRes', 'uOffset', 'uScale', 'uPixelRatio', 'uTime', 'uIntro', 'uPointSize', 'uDrift',
+   'uFizz', 'uTwinkle', 'uBreathe', 'uSway', 'uPivot',
    'uPushRadius', 'uPushStrength', 'uTrail', 'uOpacity'].forEach((name) => {
     u[name] = gl.getUniformLocation(program, name);
   });
@@ -212,6 +242,12 @@
     gl.uniform1f(u.uPixelRatio, dpr);
     gl.uniform1f(u.uPointSize, CONFIG.pointSize * dpr);
     gl.uniform1f(u.uDrift, reduceMotion ? 0 : CONFIG.drift);
+    // Reduce motion: no self-motion at all, just a still image of dots
+    gl.uniform1f(u.uFizz, reduceMotion ? 0 : CONFIG.fizz);
+    gl.uniform1f(u.uTwinkle, reduceMotion ? 0 : CONFIG.twinkle);
+    gl.uniform1f(u.uBreathe, reduceMotion ? 0 : CONFIG.breathe);
+    gl.uniform1f(u.uSway, reduceMotion ? 0 : CONFIG.sway);
+    gl.uniform2f(u.uPivot, (offsetX + (plateW * s) / 2) * dpr, (offsetY + plateH * s) * dpr);
     gl.uniform1f(u.uPushRadius, CONFIG.pushRadius * dpr);
     gl.uniform1f(u.uPushStrength, CONFIG.pushStrength * dpr);
     gl.uniform1f(u.uOpacity, CONFIG.opacity);

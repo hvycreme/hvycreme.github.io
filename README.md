@@ -71,6 +71,7 @@ The order is set in `index.html` by numbers on each experience entry and skill g
 - `step`: sample every Nth pixel (higher = fewer, sparser particles)
 - `pushRadius` / `pushStrength`: how a pointer or finger disturbs the particles
 - `fill`: how much of its box the rose fills
+- `fizz`, `twinkle`, `breathe`, `sway`: the rose's self-motion (shimmering dots, twinkling, a slow swell and sway), inspired by the particle skin of the emotions in *Inside Out*; set any to 0 to turn that layer off
 Nothing loads until a visitor scrolls near Contact; the fly-in plays when it comes into view; it pauses offscreen and shows a still image for visitors with Reduce motion on. Without WebGL the box is simply empty.
 
 **Mouse trail ("pollen"):** `js/pollen.js` releases a few small yellow and mustard dots wherever the mouse moves; they drift up and fade in about a second. It only runs while dots are visible, is mouse/trackpad only (not touch), and is off for Reduce motion. Tune it with `MAX_PARTICLES`, `SPACING`, `COLORS`, and the `globalAlpha` line in `frame()`.
