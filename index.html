@@ -5,13 +5,13 @@
   <!-- Makes phones render at device width instead of a zoomed-out desktop view -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Your Name — Biochemistry, Molecular Biology &amp; Psychology</title>
-  <meta name="description" content="I study biochemistry, molecular biology, and psychology, plan to pursue medicine, and am looking for a summer role in clinical research or emergency care.">
+  <meta name="description" content="I study biochemistry, molecular biology, and psychology at the University of South Carolina. I’m planning to pursue medicine and looking for a role in clinical research or emergency care.">
   <meta name="color-scheme" content="light">
   <meta name="theme-color" content="#f6f1e6">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <!-- Open Graph: the title/description shown when your link is shared (iMessage, LinkedIn, Slack) -->
   <meta property="og:title" content="Your Name">
-  <meta property="og:description" content="Biochemistry, molecular biology, and psychology student planning to pursue medicine. Looking for a summer role in clinical research or emergency care.">
+  <meta property="og:description" content="Biochemistry, molecular biology, and psychology student at the University of South Carolina, planning to pursue medicine. Looking for a role in clinical research or emergency care.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://hvycreme.github.io/">
   <!-- Start downloading the heading font right away instead of waiting
@@ -24,6 +24,7 @@
   <!-- defer: download in parallel, run after the HTML is parsed (so the DOM exists) -->
   <script src="js/main.js" defer></script>
   <script src="js/particles.js" defer></script>
+  <script src="js/pollen.js" defer></script>
 </head>
 <body>
 
@@ -41,6 +42,9 @@
       <path d="M4 20 15 9M9.2 14.8l-.6-4M12 12l3.6.6M11.6 12.4l-.4-3.4M7 17l4 .2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
     </symbol>
   </svg>
+
+  <!-- Mouse-trail "pollen" behind the whole page (js/pollen.js). Decorative. -->
+  <canvas class="pollen" aria-hidden="true"></canvas>
 
   <header class="site-header">
     <!-- Skip link: the first thing a keyboard user reaches. Hidden until focused. -->
@@ -66,12 +70,12 @@
     <!-- ===== Introduction ===== -->
     <section id="intro" class="hero">
       <div class="hero-text">
-        <p class="eyebrow">Biochemistry · Molecular Biology · Psychology</p>
+        <p class="eyebrow">Biochemistry · Molecular Biology · Psychology · <abbr title="University of South Carolina">UofSC</abbr></p>
         <h1 class="hero-title" tabindex="-1"><span class="draft">[Your Name]</span></h1>
         <div class="hero-intro">
           <p>I study biochemistry, molecular biology, and psychology, and I’m interested in how biology and behavior shape health.</p>
-          <p>I’m planning to pursue medicine and looking for a summer role in clinical research or emergency care.</p>
-          <p>Outside of school, I’m usually tending to my plants, exploring a science question, or working on something on my computer.</p>
+          <p>I’m planning to pursue medicine and currently looking for a role in clinical research or emergency care.</p>
+          <p>Outside of school, I’m usually tending to my plants, exploring curiosities, or working on something on my computer.</p>
         </div>
         <div class="hero-actions">
           <a class="button button-primary" href="files/resume.pdf" target="_blank" rel="noopener">View résumé<span class="sr-only"> (PDF, opens in a new tab)</span></a>
@@ -121,10 +125,11 @@
         <li class="entry" data-crc="3" data-ert="3">
           <p class="entry-date draft">[Dates]</p>
           <div class="entry-body">
-            <h3><span class="draft">[Role]</span> <span class="entry-org">· <span class="draft">[Organization]</span></span></h3>
-            <p class="entry-type draft">[Type]</p>
+            <h3>Volunteer <span class="entry-org">· <span class="draft">[Arboretum name]</span></span></h3>
+            <p class="entry-type">Volunteer service</p>
             <ul class="points">
-              <li class="draft">[What you were responsible for]</li>
+              <li class="draft">[What you did as a volunteer there]</li>
+              <li class="draft">[One specific task or project, and what came of it]</li>
             </ul>
           </div>
         </li>
@@ -276,7 +281,7 @@
         </li>
         <li>
           <p class="growing-label">On my mind</p>
-          <p class="growing-name draft">[A science question]</p>
+          <p class="growing-name draft">[A curiosity you’re exploring]</p>
           <p class="draft">[Why it interests you]</p>
         </li>
         <li>
@@ -292,18 +297,24 @@
       <h2 class="section-title"><span class="section-num">05</span> Contact</h2>
       <div class="contact-grid">
         <div class="contact-text">
-          <p>Email is the easiest way to reach me. I’m glad to talk about summer roles in clinical research or emergency care.</p>
+          <p>Email is the easiest way to reach me. I’m glad to talk about roles in clinical research or emergency care.</p>
           <ul class="contact-links">
             <li><a class="button button-primary draft" href="mailto:you@example.com">[you@example.com]</a></li>
             <li><a class="button" href="files/resume.pdf" download>Download résumé (PDF)</a></li>
             <li><a class="button draft" href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">[LinkedIn]<span class="sr-only"> (opens in a new tab)</span></a></li>
           </ul>
         </div>
-        <!-- The rose plate as interactive particles (js/particles.js). Decorative,
-             so hidden from screen readers. Move a mouse or drag a finger across it. -->
-        <div class="contact-art" aria-hidden="true">
-          <canvas class="particles"></canvas>
-        </div>
+        <!-- The rose plate as interactive particles (js/particles.js). The canvas is
+             decorative (hidden from screen readers); the caption below is real text. -->
+        <figure class="contact-figure">
+          <div class="contact-art" aria-hidden="true">
+            <canvas class="particles"></canvas>
+          </div>
+          <figcaption>
+            <p class="figure-caption"><em>Rosa × centifolia</em>, the cabbage rose, redrawn in about 24,000 particles. Move your cursor or finger through it.</p>
+            <p class="figure-credit">After Pierre-Joseph Redouté, <cite>Les Roses</cite> (1817–1824). Public domain. Scan source: <span class="draft">[where this scan came from]</span></p>
+          </figcaption>
+        </figure>
       </div>
     </section>
 
@@ -312,7 +323,6 @@
   <footer class="site-footer">
     <svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg>
     <p>© 2026 <span class="draft">[Your Name]</span></p>
-    <p class="credit">Rose: Pierre-Joseph Redouté, <cite>Rosa centifolia</cite>, from <cite>Les Roses</cite> (1817–1824).</p>
   </footer>
 
 </body>

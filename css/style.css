@@ -373,6 +373,13 @@ section p + p {
   gap: var(--space-3);
 }
 
+/* UofSC: the full name shows on hover; no dotted underline in the label */
+.eyebrow abbr {
+  text-decoration: none;
+  text-transform: none;  /* keep "UofSC" as written, not "UOFSC" */
+  cursor: help;
+}
+
 .eyebrow {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
@@ -835,12 +842,36 @@ figcaption {
 /* The canvas fills this box; the box keeps the plate's 450:604 shape.
    touch-action: pan-y = a finger dragging sideways disturbs the particles,
    while vertical swipes still scroll the page. */
-.contact-art {
-  position: relative;
+.contact-figure {
   justify-self: center;
   width: min(100%, 22rem);
+}
+
+.contact-art {
+  position: relative;
+  width: 100%;
   aspect-ratio: 450 / 604;
   touch-action: pan-y;
+}
+
+/* Caption + credit, set like a figure legend in a field notebook */
+.contact-figure figcaption {
+  margin-top: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+}
+
+/* Upright caption so the species name (in <em>) reads as italic, by convention */
+.figure-caption {
+  font-style: normal;
+}
+
+.figure-credit {
+  margin-top: var(--space-1);
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: var(--text-xs);
+  line-height: 1.5;
 }
 
 .particles {
@@ -857,9 +888,20 @@ figcaption {
 }
 
 @media (max-width: 40rem) {
-  .contact-art {
-    width: min(80%, 17rem);
+  .contact-figure {
+    width: min(85%, 18rem);
   }
+}
+
+/* Mouse-trail pollen: fixed to the screen, behind all content, and it
+   ignores the mouse itself so every link and button stays clickable. */
+.pollen {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* ==========================================================================
@@ -881,9 +923,6 @@ figcaption {
   font-size: 1.4rem;
 }
 
-.site-footer .credit {
-  font-size: var(--text-xs);
-}
 
 /* ==========================================================================
    14. Motion (restrained): one entrance, gentle section reveals
