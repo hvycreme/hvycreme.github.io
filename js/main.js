@@ -9,6 +9,10 @@
    into the viewport. Unlike a "scroll" event listener (which fires dozens of
    times per second), the callback only runs when visibility actually changes.
    -------------------------------------------------------------------------- */
+// matchMedia lets JS read the same media queries CSS uses.
+// .matches is checked live, so it reflects the setting at the moment it's used.
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
 const revealEls = document.querySelectorAll('.reveal');
 
 if ('IntersectionObserver' in window) {
@@ -67,7 +71,10 @@ function scrollNavToLink(link) {
   const navBox = nav.getBoundingClientRect();
   const linkBox = link.getBoundingClientRect();
   const linkCenter = linkBox.left - navBox.left + nav.scrollLeft + linkBox.width / 2;
-  nav.scrollTo({ left: linkCenter - nav.clientWidth / 2, behavior: 'smooth' });
+  nav.scrollTo({
+    left: linkCenter - nav.clientWidth / 2,
+    behavior: prefersReducedMotion.matches ? 'auto' : 'smooth',
+  });
 }
 
 // Two inputs decide the active link:

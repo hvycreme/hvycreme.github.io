@@ -6,11 +6,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Your Name — Portfolio</title>
   <meta name="description" content="Portfolio of Your Name: projects, experience, and contact.">
-  <!-- Runs instantly, before the page paints: tells CSS "JavaScript is on".
-       Reveal styles only hide content when this class exists, so the page
-       is never stuck invisible if JS fails to load. -->
-  <!-- "gate-open" shows the intro gate, unless the visitor already entered
-       during this browser session (sessionStorage clears when the tab closes). -->
+  <!-- Tells the browser the page is dark, so scrollbars and form controls match -->
+  <meta name="color-scheme" content="dark">
+  <!-- Colors the browser's toolbar on phones (Safari, Chrome Android) -->
+  <meta name="theme-color" content="#16120f">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <!-- Open Graph: the title/description shown when your link is shared (iMessage, LinkedIn, Slack) -->
+  <meta property="og:title" content="Your Name — Portfolio">
+  <meta property="og:description" content="Biochemistry & Psychology student at USC. Projects, experience, and contact.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://hvycreme.github.io/">
+  <!-- Runs instantly, before the page paints:
+       - "js" tells CSS that JavaScript is on. Reveal styles only hide content
+         when this class exists, so the page is never stuck invisible if JS fails.
+       - "gate-open" shows the intro gate, unless the visitor already entered
+         during this browser session (sessionStorage clears when the tab closes). -->
   <script>
     document.documentElement.classList.add('js');
     try {
@@ -25,15 +35,17 @@
 
   <!-- Intro gate (Step 7). Browsers only allow audio to start from a user
        gesture, so this click is what unlocks the background music. -->
-  <div class="intro-gate" id="intro-gate">
+  <div class="intro-gate" id="intro-gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
     <div class="gate-inner">
-      <p class="eyebrow">Your Name · Portfolio</p>
+      <p class="eyebrow" id="gate-title">Your Name · Portfolio</p>
       <button class="gate-button" id="gate-enter" type="button">Click to begin</button>
       <button class="gate-skip" id="gate-skip" type="button">Enter without sound</button>
     </div>
   </div>
 
   <header class="site-header">
+    <!-- Skip link: the first thing a keyboard user reaches. Hidden until focused. -->
+    <a class="skip-link" href="#main">Skip to content</a>
     <a class="logo" href="#home">YN</a>
     <nav aria-label="Primary">
       <ol class="nav-list">
@@ -54,7 +66,7 @@
     </button>
   </header>
 
-  <main>
+  <main id="main" tabindex="-1">
 
     <!-- Hero: the first screen. Not numbered; it's the intro, not a topic. -->
     <section id="home" class="hero">
@@ -71,7 +83,7 @@
           <p>A few sentences about who you are, what you study, and what you're curious about.</p>
           <p>A second paragraph about what you're looking for: research, internships, collaborations.</p>
         </div>
-        <img class="about-photo" src="images/placeholder.svg" alt="Portrait of Your Name" width="320" height="320">
+        <img class="about-photo" src="images/placeholder.svg" alt="Portrait of Your Name" width="320" height="320" loading="lazy" decoding="async">
       </div>
     </section>
 
@@ -128,8 +140,8 @@
       <p>I'm always happy to talk. The fastest way to reach me is email.</p>
       <ul class="contact-links">
         <li><a href="mailto:you@example.com">you@example.com</a></li>
-        <li><a href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a></li>
-        <li><a href="files/resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a></li>
+        <li><a href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a></li>
+        <li><a href="files/resume.pdf" target="_blank" rel="noopener">Résumé (PDF)<span class="sr-only"> (opens in a new tab)</span></a></li>
       </ul>
     </section>
 
