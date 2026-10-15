@@ -4,60 +4,82 @@ My personal portfolio: a single-page static site built with plain HTML, CSS, and
 
 **Live site:** https://hvycreme.github.io/
 
+Design: a cream-colored botanical-science aesthetic. Warm cream paper, charcoal text, forest-green accents with small touches of terracotta, Fraunces serif headings, and one leaf motif carried through the page.
+
 ## Project structure
 
 ```
-index.html        All page content (one <section> per topic)
+index.html        All page content
 css/style.css     All styles; design tokens (colors, fonts, spacing, motion) at the top in :root
-js/main.js        Scroll reveals, active nav, intro gate + music, click sounds
-images/           Photos, favicon (placeholder.svg is a stand-in portrait)
-files/            PDFs, e.g. resume.pdf
-audio/            background.mp3 (ambient loop for the intro gate)
+js/main.js        Role tailoring, scroll reveals, active nav, explanation toggle, optional sound
+fonts/            Fraunces (self-hosted, SIL Open Font License)
+images/           specimen.svg (hero drawing), placeholders for figures and plant photos, favicon
+files/            PDFs: put resume.pdf here
+audio/            background.mp3 (optional ambient loop, off by default)
 .nojekyll         Tells GitHub Pages to serve files as-is (skip its Jekyll build step)
 ```
 
-## Editing content
+## Page sections
 
-Everything you'll want to change is in `index.html`. Search for these placeholders:
+| Section | id | What goes there |
+|---|---|---|
+| Introduction | `#intro` | Name, majors, interests, the summer roles you're seeking, "What I bring", résumé + contact buttons |
+| 01 Relevant experience | `#experience` | Research, employment, volunteering, leadership: responsibilities + concrete contributions |
+| 02 Selected work | `#work` | Two projects, each with an always-visible **Key finding** and a Plain language / Scientific detail toggle |
+| 03 Skills & certifications | `#skills` | Only what you hold, with an honest level (Proficient / Working / Familiar) |
+| 04 About me | `#about` | Why medicine, two "unfurling leaf" notes, a plant photo, and three **Currently growing** cards |
+| 05 Contact | `#contact` | Email, résumé download, LinkedIn |
 
-| What | Where |
-|---|---|
-| Your name | `<title>`, `og:title`, `.logo` ("YN"), `.hero-title`, gate `#gate-title`, footer |
-| Tagline | `.hero-tagline` and `og:description` |
-| About text + photo | `<section id="about">` |
-| Projects | `<section id="projects">`: copy/paste an `<article class="card">` per project |
-| Experience / Leadership | `<section id="experience">` / `<section id="leadership">` |
-| Email, LinkedIn | `<section id="contact">` |
+Everything in **[square brackets]** is a placeholder to replace.
 
-**Remove a section** (e.g. Leadership): delete its `<section>` *and* its `<li>` in the nav, then renumber the others.
+## Tailoring for each application
 
-### Résumé
-Save your PDF as **`files/resume.pdf`** (exact name). The Contact link already points there.
+Send a different link with each application. The page re-orders itself so the most relevant evidence comes first:
 
-### Photo
-1. Crop it square, resize to **640×640 px** (2× the 320 px display size, sharp on Retina screens).
-2. Compress it at [squoosh.app](https://squoosh.app): choose **WebP**, quality ~75. Aim for **under 100 KB**.
-3. Save as `images/portrait.webp` and change the `<img src>` in the About section. Update the `alt` text to describe the photo.
+| Link | Use for | Effect |
+|---|---|---|
+| `https://hvycreme.github.io/` | General | Default order |
+| `https://hvycreme.github.io/?for=crc` | Clinical research coordinator | Research, data, and documentation first |
+| `https://hvycreme.github.io/?for=ert` | Emergency room tech | Clinical training, service, and certifications first |
 
-### Music
-Replace `audio/background.mp3` with any MP3 you have the rights to use (keep it under ~1 MB: 96 kbps is plenty for background music). Volume is `MUSIC_VOLUME` near the top of the Step 7 block in `js/main.js`.
+The order is set in `index.html` by numbers on each experience entry and skill group:
 
-To **remove the intro gate entirely**: delete the `<div class="intro-gate">…</div>` block in `index.html`. Everything else adapts automatically.
+```html
+<li data-crc="1" data-ert="3">   <!-- 1st for CRC links, 3rd for ERT links -->
+```
+
+The "Seeking…" line in the intro also has one version per role (`<span data-for="crc">` etc.).
+
+## Common edits
+
+**Résumé:** save your PDF as **`files/resume.pdf`** (exact name). Both résumé buttons point there.
+
+**Add an experience entry:** copy one whole `<li>…</li>` inside `<ol class="timeline">`, then give it `data-crc` / `data-ert` numbers.
+
+**Project figures:** export your chart as PNG or SVG into `images/`, change the `<img src>`, and write `alt` text that states what the chart *shows* (the trend, not just "a chart").
+
+**Plant photo:**
+1. Crop to 4:5 portrait and resize to **800×1000 px** (2× its display size, sharp on Retina screens).
+2. Compress at [squoosh.app](https://squoosh.app): **WebP**, quality ~75. Aim for **under 150 KB**.
+3. Save as `images/my-plant.webp`, update the `<img src>` in the About section, and describe the photo in `alt`.
+
+**Hero drawing:** `images/specimen.svg` is a plain text file; its labels and caption ("fig. 1 — specimen sketch") can be edited in any text editor.
+
+**Music:** off by default; visitors turn it on with the speaker button in the header. Replace `audio/background.mp3` with any MP3 you have the rights to use (under ~1 MB). To remove sound entirely, delete the `<button class="sound-toggle">` in `index.html`.
 
 ## Customizing the look
 
 All in the `:root` block at the top of `css/style.css`:
 
-- `--color-accent`: the single accent color
 - `--color-bg`, `--color-surface`, `--color-text`, `--color-muted`, `--color-border`: the palette
-- `--font-sans`, `--font-mono`: fonts
+- `--color-accent` (forest green) and `--color-terracotta` (use sparingly)
+- `--font-serif`, `--font-sans`, `--font-mono`: fonts
+- `--space-section`: breathing room between sections
 - `--dur-fast`, `--dur-slow`, `--ease`: animation speed and feel (keep durations 0.3–0.9 s)
 
-When changing colors, check text contrast is at least **4.5:1** with a tool like [webaim.org/resources/contrastchecker](https://webaim.org/resources/contrastchecker/).
+When changing colors, check text contrast is at least **4.5:1** with [webaim.org/resources/contrastchecker](https://webaim.org/resources/contrastchecker/).
 
 ## Previewing locally
-
-Opening `index.html` by double-clicking mostly works, but a local server matches GitHub Pages more closely:
 
 ```bash
 cd hvycreme.github.io
@@ -67,19 +89,19 @@ python3 -m http.server 8000
 
 ## Deploying (GitHub Pages)
 
-GitHub Pages is already enabled. Every push to `main` republishes automatically within about a minute.
+GitHub Pages is already enabled: every push to `main` republishes within about a minute.
 
-For reference, to set it up from scratch:
+To set it up from scratch:
 
-1. Push the code to a **public** repo named `<username>.github.io` (any other name works too, but the site then lives at `<username>.github.io/<repo-name>/`).
+1. Push the code to a **public** repo named `<username>.github.io`.
 2. On GitHub: **Settings → Pages**.
 3. Under **Build and deployment**, Source: **Deploy from a branch**; Branch: **main**, folder **/ (root)** → **Save**.
 4. Wait 1–2 minutes, then visit `https://<username>.github.io/`.
 
-Check deploy status under the repo's **Actions** tab ("pages build and deployment": green ✓ = live).
+Deploy status is under the repo's **Actions** tab ("pages build and deployment": green ✓ = live).
 
 ### Editing without a terminal
-On github.com, open any file → click the **pencil icon** → edit → **Commit changes**. The site updates a minute later. To upload a photo or PDF: open the folder → **Add file → Upload files**.
+On github.com, open any file → **pencil icon** → edit → **Commit changes**. To upload a photo or PDF: open the folder → **Add file → Upload files**.
 
 ### "I pushed but nothing changed"
 GitHub Pages lets browsers cache files for up to 10 minutes. Force a fresh copy:
@@ -89,8 +111,9 @@ GitHub Pages lets browsers cache files for up to 10 minutes. Force a fresh copy:
 
 ## Accessibility & performance notes
 
-- Real `<a>` / `<button>` elements throughout; skip link; visible keyboard focus.
+- Real `<a>`, `<button>`, and `<details>` elements throughout; skip link; visible keyboard focus.
+- All text meets WCAG AA contrast (4.5:1 or better).
 - All animations respect the OS **Reduce motion** setting (`prefers-reduced-motion`).
 - Animations only touch `transform` and `opacity`; scroll effects use `IntersectionObserver`, never scroll events.
-- Background audio only starts from a click, fades in, and can be turned off anytime with the header toggle.
-- First load is ~11 KB gzipped (HTML + CSS + JS). The music is only downloaded if the visitor chooses sound.
+- Works without JavaScript: every section is visible and both project explanations show.
+- Sound is off by default; the music file is only downloaded if a visitor turns it on.

@@ -1,60 +1,91 @@
 /* ==========================================================================
+   0. Fonts
+   Fraunces (headings) is self-hosted from /fonts instead of loaded from
+   Google: same-origin files skip an extra DNS + connection to another
+   server. It's a "variable font": one file holds every weight 400–700.
+   font-display: swap shows text in a fallback font immediately, then
+   swaps in Fraunces when it arrives, so text is never invisible.
+   License: SIL Open Font License (free to self-host).
+   ========================================================================== */
+@font-face {
+  font-family: "Fraunces";
+  src: url("../fonts/fraunces-latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("../fonts/fraunces-latin-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ==========================================================================
    1. Design tokens
    Every color, font, and spacing value lives here. Change a value once
    and it updates everywhere it's used via var(--name).
    ========================================================================== */
 :root {
-  /* Colors */
-  --color-bg: #16120f;          /* page background: espresso */
-  --color-surface: #1f1a16;     /* cards sit one step lighter than the page */
-  --color-border: #342c25;
-  --color-text: #f2e8d5;        /* main text: cream (softer on the eyes than #fff) */
-  --color-muted: #b5a991;       /* secondary text: muted latte */
-  --color-accent: #e0b77a;      /* the ONE accent color (caramel): swap this to re-theme */
+  /* Colors: cream paper, charcoal ink, forest green, a little terracotta */
+  --color-bg: #f6f1e6;          /* warm cream page */
+  --color-surface: #fcf9f2;     /* cards: a lighter sheet of paper on the page */
+  --color-border: #e2d8c5;
+  --color-text: #2b2a27;        /* deep charcoal: softer than pure black */
+  --color-muted: #5c584f;       /* secondary text */
+  --color-accent: #2f5d3a;      /* forest green: links, buttons, the leaf motif */
+  --color-accent-hover: #24492d;
+  --color-terracotta: #9a4d33;  /* small touches only: labels, highlights */
   /* Derived colors: color-mix() blends two colors, so these follow the tokens above */
-  --color-header: color-mix(in srgb, var(--color-bg) 85%, transparent);
-  --color-accent-soft: color-mix(in srgb, var(--color-accent) 12%, transparent);
-  --shadow-lift: 0 14px 30px -12px rgb(0 0 0 / 0.7);  /* card hover shadow */
+  --color-header: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  --color-accent-soft: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  --color-terracotta-soft: color-mix(in srgb, var(--color-terracotta) 10%, var(--color-surface));
+  --color-grid: color-mix(in srgb, var(--color-accent) 7%, transparent);
+  --shadow-lift: 0 16px 32px -18px rgb(60 45 20 / 0.35);
 
-  /* Fonts: system stacks load instantly (no download) */
+  /* Fonts */
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* Type scale: clamp(min, preferred, max) grows smoothly with screen width */
-  --text-sm: 0.875rem;
+  --text-xs: 0.8rem;
+  --text-sm: 0.9rem;
   --text-base: 1rem;
-  --text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
-  --text-xl: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.3rem);
+  --text-xl: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
   --text-hero: clamp(2.75rem, 1.5rem + 6vw, 5rem);
 
-  /* Spacing scale: use these instead of random pixel values */
+  /* Spacing scale */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 1rem;
   --space-4: 1.5rem;
   --space-5: 2.5rem;
   --space-6: 4rem;
-  --space-section: clamp(4rem, 3rem + 5vw, 7rem);
+  --space-section: clamp(5rem, 3.5rem + 6vw, 9rem);  /* generous: "plenty of open space" */
 
   /* Layout */
-  --content-width: 68rem;   /* a max, not a fixed width */
+  --content-width: 68rem;
   --gutter: clamp(1rem, 4vw, 2rem);
-  --radius: 12px;
+  --radius: 14px;
   --header-height: 4rem;
 
-  /* Motion (used from Step 3 on): one easing curve for everything */
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);  /* "ease-out-quint": fast start, gentle stop */
+  /* Motion: one easing curve for everything */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 0.3s;
   --dur-slow: 0.8s;
 }
 
 /* ==========================================================================
-   2. Reset: remove browser defaults that fight us
+   2. Reset
    ========================================================================== */
 *,
 *::before,
 *::after {
-  box-sizing: border-box;  /* width includes padding + border: far easier math */
+  box-sizing: border-box;
 }
 
 * {
@@ -62,7 +93,6 @@
 }
 
 html {
-  /* Smooth scroll when clicking nav links; offset for the sticky header */
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-height);
   -webkit-text-size-adjust: 100%;
@@ -70,7 +100,7 @@ html {
 
 img {
   display: block;
-  max-width: 100%;   /* images never overflow their container */
+  max-width: 100%;
   height: auto;
 }
 
@@ -82,21 +112,27 @@ body {
   color: var(--color-text);
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  line-height: 1.65;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 600;
   line-height: 1.15;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 h3 {
   font-size: var(--text-lg);
 }
 
+h4 {
+  font-size: var(--text-base);
+}
+
 p {
-  max-width: 65ch;   /* ~65 characters per line is the readable sweet spot */
+  max-width: 65ch;
 }
 
 a {
@@ -105,26 +141,40 @@ a {
   text-underline-offset: 0.2em;
 }
 
-/* Visible keyboard focus ring (only shows for keyboard users, not mouse clicks) */
+a:hover {
+  color: var(--color-accent-hover);
+}
+
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
+}
+
+/* Elements focused by script (tabindex="-1") don't need a visible ring */
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* The leaf motif. 1em = it scales with the surrounding text size. */
+.leaf-icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  color: var(--color-accent);
 }
 
 /* ==========================================================================
    4. Header + numbered nav
    ========================================================================== */
 .site-header {
-  position: sticky;   /* stays at the top while scrolling */
+  position: sticky;
   top: 0;
   z-index: 10;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-4);
   height: var(--header-height);
   padding: var(--space-2) var(--gutter);
-  /* Semi-transparent so content blurs underneath */
   background: var(--color-header);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -132,46 +182,44 @@ a {
 }
 
 .logo {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  flex-shrink: 0;
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-text);
   text-decoration: none;
-  flex-shrink: 0;   /* the logo never gets squished */
 }
 
-/* min-width: 0 lets the nav shrink below its content width so it can
-   scroll inside itself instead of pushing the page wider. */
+.logo .leaf-icon {
+  font-size: 1.4rem;
+}
+
+/* min-width: 0 lets the nav shrink and scroll inside itself
+   instead of pushing the page wider than the screen. */
 .site-header nav {
   min-width: 0;
+  margin-left: auto;
   overflow-x: auto;
-  scrollbar-width: none;   /* hide the scrollbar (Firefox) */
+  scrollbar-width: none;
 }
 
 .site-header nav::-webkit-scrollbar {
-  display: none;           /* hide the scrollbar (Safari/Chrome) */
+  display: none;
 }
 
 .nav-list {
   display: flex;
   gap: var(--space-4);
-  list-style: none;   /* removes the browser's "1." "2." markers */
+  list-style: none;
   padding: 0;
   white-space: nowrap;
 }
 
-/* Phones: the nav row is swipeable; fade the right edge as a hint */
-@media (max-width: 40rem) {
-  .site-header nav {
-    mask-image: linear-gradient(to right, #000 85%, transparent);
-    -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
-  }
-
-  .nav-list {
-    padding-right: var(--space-5);  /* last item can scroll clear of the fade */
-  }
-}
-
 .nav-list a {
+  position: relative;  /* anchor for the ::after underline */
   display: inline-block;
   padding-block: var(--space-1);
   color: var(--color-muted);
@@ -179,22 +227,60 @@ a {
   text-decoration: none;
 }
 
-.nav-list a:hover {
+.nav-list a:hover,
+.nav-list a.is-active {
   color: var(--color-text);
 }
 
 .nav-num {
   font-family: var(--font-mono);
+  font-size: var(--text-xs);
   color: var(--color-accent);
   margin-right: 0.15em;
 }
 
+/* Active underline: scaleX is a transform, so it animates smoothly */
+.nav-list a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.nav-list a.is-active::after {
+  transform: scaleX(1);
+}
+
+@media (max-width: 40rem) {
+  .site-header {
+    gap: var(--space-3);
+  }
+
+  .logo span {
+    display: none;  /* just the leaf on phones: more room for the nav */
+  }
+
+  .site-header nav {
+    mask-image: linear-gradient(to right, #000 85%, transparent);
+    -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
+  }
+
+  .nav-list {
+    padding-right: var(--space-5);
+  }
+}
+
 /* ==========================================================================
    5. Sections
-   One rule centers and pads every section, so they all line up.
    ========================================================================== */
 main > section {
-  /* min() = "100%, but never wider than --content-width" */
   width: min(100% - 2 * var(--gutter), var(--content-width));
   margin-inline: auto;
   padding-block: var(--space-section);
@@ -202,7 +288,7 @@ main > section {
 
 .section-title {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: var(--space-3);
   font-size: var(--text-xl);
   margin-bottom: var(--space-5);
@@ -210,18 +296,22 @@ main > section {
 
 .section-num {
   font-family: var(--font-mono);
-  font-size: 0.7em;
+  font-size: var(--text-sm);
   font-weight: 400;
-  color: var(--color-accent);
+  color: var(--color-terracotta);
 }
 
-/* Decorative line after the title; flex: 1 fills remaining space */
-.section-title::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  max-width: 16rem;
-  background: var(--color-border);
+.section-intro {
+  margin-top: calc(-1 * var(--space-4));
+  margin-bottom: var(--space-5);
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.subsection-title {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-lg);
 }
 
 section p + p {
@@ -229,104 +319,156 @@ section p + p {
 }
 
 /* ==========================================================================
-   6. Hero
+   6. Introduction (hero)
    ========================================================================== */
 .hero {
-  min-height: calc(100svh - var(--header-height));  /* svh = phone-safe viewport height */
+  position: relative;  /* anchor for the graph-paper ::before */
+  isolation: isolate;  /* new stacking context: z-index -1 stays inside the hero */
+  min-height: calc(100svh - var(--header-height));
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  align-items: center;
+  gap: var(--space-5);
+  padding-block: var(--space-6);
+}
+
+/* Faint graph paper, like a lab notebook. Two 1px gradient lines repeated
+   every 28px make the grid; the radial mask fades it out at the edges.
+   It's on a pseudo-element so the mask doesn't fade the text too. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 60% 60% at 70% 45%, #000 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 70% 45%, #000 20%, transparent 75%);
+}
+
+.hero-text {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: var(--space-3);
 }
 
 .eyebrow {
   font-family: var(--font-mono);
-  color: var(--color-accent);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-terracotta);
 }
 
 .hero-title {
   font-size: var(--text-hero);
-  font-weight: 800;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
-.hero-tagline {
+.hero-statement {
+  font-family: var(--font-serif);
   font-size: var(--text-lg);
+  line-height: 1.5;
+}
+
+.hero-statement em {
+  color: var(--color-accent);
+}
+
+.hero-seeking {
   color: var(--color-muted);
 }
 
-/* --- Entrance animation (Step 3) ---------------------------------------
-   @keyframes defines the motion once; any element can then use it.
-   Only opacity and transform change: the browser can animate both on
-   the GPU without recalculating layout, so it stays smooth. */
-@keyframes fade-rise {
-  from {
-    opacity: 0;
-    transform: translateY(1.5rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.hero-seeking strong {
+  color: var(--color-text);
+  font-weight: 600;
 }
 
-/* "both" = hold the "from" state during the delay and keep the "to" state
-   after finishing, so nothing flashes visible before its turn. */
-.hero > * {
-  animation: fade-rise var(--dur-slow) var(--ease) both;
-}
-
-/* Stagger: each hero line starts 0.12s after the one before it */
-.hero > :nth-child(2) { animation-delay: 0.12s; }
-.hero > :nth-child(3) { animation-delay: 0.24s; }
-.hero > :nth-child(4) { animation-delay: 0.36s; }
-
-.button {
-  align-self: flex-start;
-  margin-top: var(--space-3);
-  padding: 0.75em 1.5em;
-  border: 1px solid var(--color-accent);
-  border-radius: var(--radius);
-  color: var(--color-accent);
-  font-family: var(--font-mono);
+.bring-list {
+  display: grid;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
   font-size: var(--text-sm);
+}
+
+.bring-list li {
+  display: flex;
+  align-items: flex-start;  /* leaf stays on the first line if text wraps */
+  gap: var(--space-2);
+}
+
+.bring-list .leaf-icon {
+  margin-top: 0.3em;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.hero-figure {
+  justify-self: center;
+  width: min(100%, 24rem);
+}
+
+/* On phones the drawing is a garnish, not the main course: keep it small
+   so experience is only a short scroll away. */
+@media (max-width: 40rem) {
+  .hero-figure {
+    width: min(70%, 15rem);
+  }
+}
+
+/* ==========================================================================
+   7. Buttons
+   ========================================================================== */
+.button {
+  display: inline-block;
+  padding: 0.7em 1.4em;
+  border: 1px solid var(--color-accent);
+  border-radius: 999px;
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: 500;
   text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease);
 }
 
 .button:hover {
   background: var(--color-accent-soft);
+  color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.button-primary {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.button-primary:hover {
+  background: var(--color-accent-hover);
+  color: var(--color-bg);
 }
 
 /* ==========================================================================
-   7. Responsive grids
+   8. Cards + grids
    auto-fit + minmax: "fit as many columns as possible, each at least
-   X wide, sharing leftover space equally." No media queries needed.
-   min(100%, X) stops a column from overflowing on very narrow phones.
+   X wide." min(100%, X) stops overflow on very narrow phones.
    ========================================================================== */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
   gap: var(--space-4);
 }
 
-.about-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
-  gap: var(--space-5);
-  align-items: center;
-}
-
-.about-photo {
-  width: 100%;
-  max-width: 20rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--color-border);
-  justify-self: center;
-}
-
-/* ==========================================================================
-   8. Card component
-   ========================================================================== */
 .card {
+  position: relative;  /* anchor for the ::after shadow layer */
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -334,26 +476,315 @@ section p + p {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-}
-
-.card p {
-  color: var(--color-muted);
-}
-
-/* Pushes the card's link to the bottom so links align across a row */
-.card > a:last-child {
-  margin-top: auto;
-  padding-top: var(--space-2);
-  font-size: var(--text-sm);
+  transition: transform var(--dur-fast) var(--ease);
 }
 
 .card-meta {
   font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-terracotta);
+}
+
+.card-org {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+/* Hover: lift (transform) + shadow layer fading in (opacity).
+   Transitioning box-shadow directly would repaint every frame. */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: var(--shadow-lift);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+  }
+
+  .card:hover::after {
+    opacity: 1;
+  }
+}
+
+.card:focus-within::after {
+  opacity: 1;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+}
+
+.tags li {
+  padding: 0.15em 0.7em;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+/* ==========================================================================
+   9. Experience timeline
+   The vertical line is a "stem"; each entry hangs off it with a leaf.
+   ========================================================================== */
+.timeline {
+  position: relative;
+  display: grid;
+  gap: var(--space-4);
+  list-style: none;
+  padding: 0;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0.7rem;
+  top: 1rem;
+  bottom: 1rem;
+  width: 2px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-accent) 35%, transparent);
+}
+
+.timeline > li {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.timeline-leaf {
+  position: absolute;
+  left: 0;
+  top: 1.5rem;
+  font-size: 1.5rem;
+  background: var(--color-bg);  /* hides the stem line behind the leaf */
+}
+
+/* Alternate leaves left/right, like leaves along a real stem */
+.timeline > li:nth-child(even) .timeline-leaf {
+  transform: scaleX(-1);
+}
+
+.points {
+  display: grid;
+  gap: var(--space-1);
+  padding-left: 1.1em;
+  color: var(--color-muted);
+}
+
+.points li::marker {
+  color: var(--color-accent);
+}
+
+/* ==========================================================================
+   10. Projects + Plain language / Scientific detail toggle
+   ========================================================================== */
+.project {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: var(--space-5);
+  align-items: start;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.project + .project {
+  margin-top: var(--space-5);
+}
+
+.project-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Key finding: always visible, highlighted like a margin note */
+.finding {
+  padding: var(--space-3);
+  border-left: 3px solid var(--color-terracotta);
+  border-radius: 0 8px 8px 0;
+  background: var(--color-terracotta-soft);
+}
+
+.finding-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-terracotta);
+}
+
+/* Segmented control. Hidden without JS (both panels show instead). */
+.explain-toggle {
+  display: none;
+  align-self: flex-start;
+  padding: 3px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+}
+
+.js .explain-toggle {
+  display: inline-flex;
+}
+
+.explain-toggle button {
+  padding: 0.4em 1em;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-muted);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.explain-toggle button[aria-pressed="true"] {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.panel-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-terracotta);
+}
+
+/* With JS, the toggle replaces the labels */
+.js .panel-label {
+  display: none;
+}
+
+/* A panel fades in each time it's shown */
+.explain-panel:not([hidden]) {
+  animation: fade-rise var(--dur-fast) var(--ease);
+}
+
+.project-figure figcaption,
+.about-photo figcaption {
+  margin-top: var(--space-2);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.project-figure img {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.project-links {
   font-size: var(--text-sm);
 }
 
 /* ==========================================================================
-   9. Contact + footer
+   11. Skills
+   ========================================================================== */
+.skill-list {
+  display: grid;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.skill-list li {
+  display: grid;
+  gap: 0.1rem;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.skill-list li:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.level {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+}
+
+/* ==========================================================================
+   12. About + leaf "unfurl" + Currently growing
+   ========================================================================== */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.about-photo {
+  justify-self: center;
+  width: min(100%, 20rem);
+}
+
+.about-photo img {
+  border-radius: var(--radius);
+}
+
+.unfurl {
+  margin-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-3);
+}
+
+/* <summary> is the clickable line. Remove the default ▸ triangle. */
+.unfurl summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  cursor: pointer;
+  list-style: none;
+}
+
+.unfurl summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Closed: the leaf is curled (rotated, smaller). Open: it unfurls. */
+.unfurl-leaf {
+  font-size: 1.5rem;
+  transform: rotate(-70deg) scale(0.75);
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.unfurl[open] .unfurl-leaf {
+  transform: rotate(0deg) scale(1);
+}
+
+.unfurl[open] .unfurl-body {
+  animation: fade-rise var(--dur-slow) var(--ease);
+}
+
+.unfurl-body {
+  padding: var(--space-3) 0 0 calc(1.5rem + var(--space-2));
+  color: var(--color-muted);
+}
+
+.growing .card p:last-child {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+/* ==========================================================================
+   13. Contact + footer
    ========================================================================== */
 .contact-links {
   display: flex;
@@ -365,19 +796,14 @@ section p + p {
 }
 
 .contact-links a {
-  display: inline-block;
-  padding: 0.6em 1.2em;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  text-decoration: none;
-  overflow-wrap: anywhere;   /* long email addresses can wrap on phones */
-}
-
-.contact-links a:hover {
-  border-color: var(--color-accent);
+  overflow-wrap: anywhere;
 }
 
 .site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
   padding: var(--space-5) var(--gutter);
   border-top: 1px solid var(--color-border);
   color: var(--color-muted);
@@ -385,16 +811,41 @@ section p + p {
   text-align: center;
 }
 
-.site-footer p {
-  max-width: none;
+.site-footer .leaf-icon {
+  font-size: 1.5rem;
 }
 
 /* ==========================================================================
-   10. Scroll reveal (Step 4)
-   Elements with .reveal start invisible and 2rem lower. JavaScript adds
-   .is-visible when they scroll into view, and the transition animates
-   between the two states. Gated behind .js so no-JS visitors see everything.
+   14. Motion: entrance + scroll reveal
+   Only opacity and transform animate: the browser can do both on the GPU
+   without recalculating layout.
    ========================================================================== */
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hero entrance: each line starts 0.1s after the previous one.
+   "both" holds the invisible start state during the delay. */
+.hero-text > *,
+.hero-figure {
+  animation: fade-rise var(--dur-slow) var(--ease) both;
+}
+
+.hero-text > :nth-child(2) { animation-delay: 0.1s; }
+.hero-text > :nth-child(3) { animation-delay: 0.2s; }
+.hero-text > :nth-child(4) { animation-delay: 0.3s; }
+.hero-text > :nth-child(5) { animation-delay: 0.4s; }
+.hero-text > :nth-child(6) { animation-delay: 0.5s; }
+.hero-figure { animation-delay: 0.3s; }
+
+/* Scroll reveal: JS adds .is-visible when a section enters the viewport */
 .js .reveal {
   opacity: 0;
   transform: translateY(2rem);
@@ -409,160 +860,14 @@ section p + p {
 }
 
 /* ==========================================================================
-   11. Active nav link (Step 5)
-   JS adds .is-active to the link for the section in the middle of the
-   screen. The underline is a pseudo-element scaled from 0 to full width:
-   scaleX is a transform, so it animates smoothly.
+   15. Sound toggle
    ========================================================================== */
-.nav-list a {
-  position: relative;  /* anchor for the ::after underline */
-}
-
-.nav-list a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--color-accent);
-  transform: scaleX(0);
-  transform-origin: left;  /* grows from the left edge */
-  transition: transform var(--dur-fast) var(--ease);
-}
-
-.nav-list a.is-active {
-  color: var(--color-text);
-}
-
-.nav-list a.is-active::after {
-  transform: scaleX(1);
-}
-
-/* ==========================================================================
-   12. Card hover (Step 6)
-   The lift is a transform. The shadow lives on a ::after layer and fades
-   in with opacity, instead of transitioning box-shadow directly:
-   box-shadow changes force a repaint every frame; opacity doesn't.
-   ========================================================================== */
-.card {
-  position: relative;  /* anchor for the ::after shadow layer */
-  transition: transform var(--dur-fast) var(--ease);
-}
-
-.card::after {
-  content: "";
-  position: absolute;
-  inset: 0;                    /* cover the card exactly */
-  border-radius: inherit;
-  box-shadow: var(--shadow-lift);
-  opacity: 0;
-  pointer-events: none;        /* never block clicks on the card's link */
-  transition: opacity var(--dur-fast) var(--ease);
-}
-
-/* (hover: hover) = devices with a real pointer. Without this, a tap on a
-   phone leaves the card stuck in its "hovered" state. */
-@media (hover: hover) {
-  .card:hover {
-    transform: translateY(-4px);
-  }
-
-  .card:hover::after {
-    opacity: 1;
-  }
-}
-
-/* Keyboard users get the same lift when they tab to a link inside a card */
-.card:focus-within {
-  transform: translateY(-4px);
-}
-
-.card:focus-within::after {
-  opacity: 1;
-}
-
-/* ==========================================================================
-   13. Intro gate + sound toggle (Step 7)
-   ========================================================================== */
-/* Hidden by default; shown only when JS is on AND this is a first visit */
-.intro-gate {
-  display: none;
-}
-
-.js.gate-open .intro-gate,
-.intro-gate.is-leaving {
-  display: grid;
-  place-items: center;   /* centers .gate-inner both ways */
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  padding: var(--gutter);
-  background: var(--color-bg);
-  transition: opacity var(--dur-slow) var(--ease);
-}
-
-/* Leaving: fade out, and let clicks pass through immediately */
-.intro-gate.is-leaving {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.gate-inner {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-4);
-  text-align: center;
-}
-
-.gate-button {
-  padding: 1em 2.25em;
-  border: 1px solid var(--color-accent);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-accent);
-  font: inherit;
-  font-family: var(--font-mono);
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: transform var(--dur-fast) var(--ease);
-}
-
-.gate-button:hover {
-  background: var(--color-accent-soft);
-  transform: scale(1.04);
-}
-
-.gate-skip {
-  border: 0;
-  background: none;
-  color: var(--color-muted);
-  font: inherit;
-  font-size: var(--text-sm);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-  cursor: pointer;
-}
-
-/* While the gate is up: no page scrolling, and the hero entrance waits */
-.gate-open,
-.gate-open body {
-  overflow: hidden;
-}
-
-.gate-open .hero > * {
-  animation-play-state: paused;
-}
-
-/* Sound toggle: only useful with JS, so hidden otherwise */
 .sound-toggle {
   display: none;
   flex-shrink: 0;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  margin-left: auto;   /* pushes it to the far right */
+  width: 2.25rem;
+  height: 2.25rem;
   border: 1px solid var(--color-border);
   border-radius: 50%;
   background: transparent;
@@ -578,9 +883,9 @@ section p + p {
   color: var(--color-text);
 }
 
-/* Show the "waves" icon when on, the "x" icon when off */
 .sound-toggle[aria-pressed="true"] {
   color: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .sound-toggle[aria-pressed="true"] .icon-off,
@@ -588,15 +893,9 @@ section p + p {
   display: none;
 }
 
-/* Elements focused by script (tabindex="-1") don't need a visible ring */
-[tabindex="-1"]:focus {
-  outline: none;
-}
-
 /* ==========================================================================
-   14. Accessibility helpers (Step 9)
+   16. Accessibility helpers
    ========================================================================== */
-/* Visually hidden but still read by screen readers */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -609,7 +908,6 @@ section p + p {
   border: 0;
 }
 
-/* Skip link: parked above the screen, slides into view when focused */
 .skip-link {
   position: absolute;
   top: var(--space-2);
@@ -624,17 +922,19 @@ section p + p {
   transform: translateY(-200%);
 }
 
+.skip-link:not(:focus) {
+  opacity: 0;  /* belt and braces: invisible even if overscroll reveals it */
+}
+
 .skip-link:focus {
   transform: translateY(0);
 }
 
 /* ==========================================================================
-   15. Reduced motion
-   People can ask their OS to minimize motion (macOS/iOS: Settings →
-   Accessibility → Display/Motion → Reduce motion), e.g. because animation
-   triggers dizziness. This switches every animation and transition off.
-   Durations become ~0 rather than "none" so animationend/transitionend
-   events still fire (the intro gate relies on one).
+   17. Reduced motion
+   Visitors can ask their OS to minimize motion (Mac/iPhone: Settings →
+   Accessibility → Reduce motion). Durations become ~0 rather than "none"
+   so animationend/transitionend events still fire.
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -651,16 +951,13 @@ section p + p {
     transition-delay: 0s !important;
   }
 
-  /* Reveal content immediately, with no slide */
   .js .reveal {
     opacity: 1;
     transform: none;
   }
 
-  /* No lift on hover/focus; the shadow alone is enough feedback */
   .card:hover,
-  .card:focus-within,
-  .gate-button:hover {
+  .button:hover {
     transform: none;
   }
 }

@@ -3,16 +3,39 @@
    Loaded with `defer`, so the whole HTML document exists when this runs.
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   Step 4: Scroll reveals
-   IntersectionObserver asks the browser to tell us when an element crosses
-   into the viewport. Unlike a "scroll" event listener (which fires dozens of
-   times per second), the callback only runs when visibility actually changes.
-   -------------------------------------------------------------------------- */
 // matchMedia lets JS read the same media queries CSS uses.
-// .matches is checked live, so it reflects the setting at the moment it's used.
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+/* --------------------------------------------------------------------------
+   1. Role tailoring: ?for=crc or ?for=ert
+   Send https://hvycreme.github.io/?for=crc with a clinical research
+   coordinator application and ?for=ert with an emergency room tech one.
+   Lists marked data-sortable get re-ordered by each item's data-crc /
+   data-ert number, and the matching "Seeking..." line in the intro shows.
+   We move the actual DOM nodes (instead of CSS `order`) so the reading
+   order for screen readers and keyboard Tab matches what's on screen.
+   -------------------------------------------------------------------------- */
+const ROLES = ['crc', 'ert'];
+const role = new URLSearchParams(window.location.search).get('for');
+
+if (ROLES.includes(role)) {
+  document.querySelectorAll('[data-sortable]').forEach((list) => {
+    const items = [...list.children];
+    items.sort((a, b) => Number(a.dataset[role]) - Number(b.dataset[role]));
+    items.forEach((item) => list.append(item)); // append() moves an existing node to the end
+  });
+
+  document.querySelectorAll('.hero-seeking [data-for]').forEach((line) => {
+    line.hidden = line.dataset.for !== role;
+  });
+}
+
+/* --------------------------------------------------------------------------
+   2. Scroll reveals
+   IntersectionObserver tells us when an element crosses into the viewport.
+   Unlike a "scroll" listener (dozens of calls per second), the callback only
+   runs when visibility actually changes.
+   -------------------------------------------------------------------------- */
 const revealEls = document.querySelectorAll('.reveal');
 
 if ('IntersectionObserver' in window) {
@@ -24,39 +47,35 @@ if ('IntersectionObserver' in window) {
         observer.unobserve(entry.target); // reveal once, then stop watching
       });
     },
-    {
-      // Shrink the viewport's bottom edge by 10%, so a section reveals once
-      // it's a little way onscreen rather than the instant its top pixel peeks in.
-      rootMargin: '0px 0px -10% 0px',
-      // 0 = fire as soon as any part is visible. (A ratio like 0.3 would never
-      // fire for a section taller than ~3 screens, since 30% can't fit at once.)
-      threshold: 0,
-    }
+    // Reveal once a section is a little way onscreen. threshold 0 (not e.g.
+    // 0.3) so very tall sections still trigger on small phone screens.
+    { rootMargin: '0px 0px -10% 0px', threshold: 0 }
   );
   revealEls.forEach((el) => revealObserver.observe(el));
 } else {
-  // Very old browser: just show everything.
   revealEls.forEach((el) => el.classList.add('is-visible'));
 }
 
 /* --------------------------------------------------------------------------
-   Step 5: Active nav highlighting
-   rootMargin '-50% 0px -50% 0px' shrinks the observed area to a zero-height
-   line across the middle of the screen. A section "intersects" only while
-   it's crossing that line, so exactly one section is active at a time.
+   3. Active nav highlighting
+   rootMargin '-50% 0px -50% 0px' shrinks the observed area to a line across
+   the middle of the screen; the section crossing it is the active one.
+   A second observer on the footer handles the very bottom of the page,
+   where the last (short) section can never reach the middle.
    -------------------------------------------------------------------------- */
 const nav = document.querySelector('.site-header nav');
 const navLinks = document.querySelectorAll('.nav-list a');
-// Every section with an id; includes the hero, so nothing is active at the top
 const trackedSections = document.querySelectorAll('main > section[id]');
+const lastSectionId = trackedSections[trackedSections.length - 1].id;
+let centerId = null;
+let atBottom = false;
 
 function setActiveLink(id) {
   navLinks.forEach((link) => {
     const isMatch = link.getAttribute('href') === `#${id}`;
     link.classList.toggle('is-active', isMatch);
-    // aria-current tells screen readers which link is "where you are"
     if (isMatch) {
-      link.setAttribute('aria-current', 'location');
+      link.setAttribute('aria-current', 'location'); // "you are here" for screen readers
       scrollNavToLink(link);
     } else {
       link.removeAttribute('aria-current');
@@ -65,9 +84,8 @@ function setActiveLink(id) {
 }
 
 // On phones the nav is a sideways-scrolling strip: keep the active link in view.
-// We scroll only the nav itself (not the page) so it can't fight the page scroll.
 function scrollNavToLink(link) {
-  if (nav.scrollWidth <= nav.clientWidth) return; // everything fits: nothing to do
+  if (nav.scrollWidth <= nav.clientWidth) return;
   const navBox = nav.getBoundingClientRect();
   const linkBox = link.getBoundingClientRect();
   const linkCenter = linkBox.left - navBox.left + nav.scrollLeft + linkBox.width / 2;
@@ -76,15 +94,6 @@ function scrollNavToLink(link) {
     behavior: prefersReducedMotion.matches ? 'auto' : 'smooth',
   });
 }
-
-// Two inputs decide the active link:
-//   centerId  - the section crossing the middle line of the screen
-//   atBottom  - whether the footer is fully visible (the page can't scroll further)
-// On tall screens the last section is too short to ever reach the middle,
-// so at the very bottom we force the last section active instead.
-let centerId = null;
-let atBottom = false;
-const lastSectionId = trackedSections[trackedSections.length - 1].id;
 
 function updateActiveLink() {
   setActiveLink(atBottom ? lastSectionId : centerId);
@@ -102,34 +111,48 @@ if ('IntersectionObserver' in window) {
   );
   trackedSections.forEach((section) => navObserver.observe(section));
 
-  // threshold: 1 = fire when 100% of the footer is visible (or stops being so)
   const bottomObserver = new IntersectionObserver(
     ([entry]) => {
       atBottom = entry.isIntersecting;
       updateActiveLink();
     },
-    { threshold: 1 }
+    { threshold: 1 } // fires when 100% of the footer is visible
   );
   bottomObserver.observe(document.querySelector('.site-footer'));
 }
 
 /* --------------------------------------------------------------------------
-   Step 7: Intro gate + background music
-   Browsers block audio until the visitor interacts with the page (so sites
-   can't blast sound at you). The gate's button click is that interaction.
-
-   Music runs through the Web Audio API (an AudioContext) instead of just
-   setting audio.volume, because iPhone Safari ignores audio.volume. A
-   GainNode is a volume knob that works everywhere, and can fade smoothly.
+   4. "Plain language / Scientific detail" toggle
+   Each project has two buttons and two panels. The `hidden` attribute
+   removes a panel from view AND from screen readers; aria-pressed tells
+   assistive tech which button is currently on.
    -------------------------------------------------------------------------- */
-const root = document.documentElement;
-const gate = document.getElementById('intro-gate');
+document.querySelectorAll('.project').forEach((project) => {
+  const buttons = project.querySelectorAll('.explain-toggle button');
+  const panels = project.querySelectorAll('.explain-panel');
+
+  function show(name) {
+    buttons.forEach((btn) => btn.setAttribute('aria-pressed', String(btn.dataset.show === name)));
+    panels.forEach((panel) => (panel.hidden = panel.dataset.panel !== name));
+  }
+
+  buttons.forEach((btn) => btn.addEventListener('click', () => show(btn.dataset.show)));
+  show('plain'); // start in plain language (without JS, both panels stay visible)
+});
+
+/* --------------------------------------------------------------------------
+   5. Optional ambient music (header toggle)
+   Browsers only allow audio to start from a user gesture; clicking the
+   toggle is that gesture. Music runs through the Web Audio API because
+   iPhone Safari ignores audio.volume, while a GainNode works everywhere
+   and can fade smoothly. The MP3 is only downloaded if someone turns it on.
+   -------------------------------------------------------------------------- */
 const soundToggle = document.getElementById('sound-toggle');
 const MUSIC_SRC = 'audio/background.mp3';
 const MUSIC_VOLUME = 0.25; // 0 = silent, 1 = full
 
-let audioCtx = null;   // created on first click (it must start inside a user gesture)
-let music = null;      // <audio> element, created only if the visitor wants sound
+let audioCtx = null;
+let music = null;
 let musicGain = null;
 let soundOn = false;
 
@@ -147,19 +170,16 @@ function startMusic() {
   const ctx = getAudioContext();
   if (!ctx) return;
   if (!music) {
-    // Created here (not at page load) so the MP3 is only downloaded if wanted
     music = new Audio(MUSIC_SRC);
     music.loop = true;
     musicGain = ctx.createGain();
     ctx.createMediaElementSource(music).connect(musicGain).connect(ctx.destination);
   }
-  // Fade in over 2 s from silence
   const now = ctx.currentTime;
   musicGain.gain.cancelScheduledValues(now);
   musicGain.gain.setValueAtTime(0.0001, now);
-  musicGain.gain.exponentialRampToValueAtTime(MUSIC_VOLUME, now + 2);
-  // play() returns a Promise; it rejects if blocked or the file is missing
-  music.play().catch(() => setSound(false));
+  musicGain.gain.exponentialRampToValueAtTime(MUSIC_VOLUME, now + 2); // 2 s fade-in
+  music.play().catch(() => setSound(false)); // rejects if blocked or file missing
 }
 
 function stopMusic() {
@@ -182,48 +202,11 @@ soundToggle.addEventListener('click', () => {
   else stopMusic();
 });
 
-// While the gate is up, everything behind it is "inert": not clickable,
-// not focusable, hidden from screen readers. Tab stays inside the gate.
-const pageParts = document.querySelectorAll('.site-header, main, .site-footer');
-
-function closeGate(withSound) {
-  try { sessionStorage.setItem('entered', '1'); } catch (e) {}
-  if (withSound) {
-    setSound(true);
-    startMusic();
-  }
-  pageParts.forEach((el) => (el.inert = false));
-  gate.classList.add('is-leaving');
-  root.classList.remove('gate-open'); // unlocks scroll + starts the hero animation
-
-  // Hand keyboard/screen-reader focus to the page's main heading, so the
-  // next Tab continues from the top of the content instead of getting lost.
-  document.querySelector('.hero-title').focus({ preventScroll: true });
-
-  // Remove the gate from the page once its fade finishes. The timeout is a
-  // safety net in case transitionend never fires (e.g. the tab is hidden).
-  const removeGate = () => gate.remove();
-  gate.addEventListener('transitionend', removeGate, { once: true });
-  setTimeout(removeGate, 1200);
-}
-
-if (root.classList.contains('gate-open')) {
-  pageParts.forEach((el) => (el.inert = true));
-  document.getElementById('gate-enter').addEventListener('click', () => closeGate(true));
-  document.getElementById('gate-skip').addEventListener('click', () => closeGate(false));
-  document.getElementById('gate-enter').focus();
-} else {
-  gate.remove(); // returning visitor this session: no gate
-}
-
 /* --------------------------------------------------------------------------
-   Step 8: Subtle UI click sounds
-   Each click builds a brand-new oscillator ("tone generator") + gain node,
-   plays a ~0.1 s blip, then stops. Web Audio nodes are single-use and very
-   cheap, so creating one per event is the intended pattern, and it means
-   rapid clicks overlap naturally instead of cutting each other off.
-   (Reusing ONE <audio> element would restart it on every click instead.)
-   No sound file is needed: the tone is synthesized.
+   6. Subtle UI click sounds (only while sound is on)
+   Each click builds a brand-new oscillator + gain node for a ~0.1 s blip.
+   Web Audio nodes are single-use and cheap, so one per event is the
+   intended pattern, and rapid clicks overlap instead of cutting off.
    -------------------------------------------------------------------------- */
 function playClickSound() {
   const ctx = getAudioContext();
@@ -232,22 +215,20 @@ function playClickSound() {
 
   const osc = ctx.createOscillator();
   osc.type = 'sine';
-  osc.frequency.setValueAtTime(880, t);                        // starts at A5...
-  osc.frequency.exponentialRampToValueAtTime(520, t + 0.08);   // ...and dips: a soft "tick"
+  osc.frequency.setValueAtTime(880, t);
+  osc.frequency.exponentialRampToValueAtTime(520, t + 0.08);
 
   const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0.0001, t);                         // exponential ramps can't start at 0
-  gain.gain.exponentialRampToValueAtTime(0.06, t + 0.005);     // 5 ms attack (avoids a click/pop)
-  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);    // quick decay
+  gain.gain.setValueAtTime(0.0001, t);                      // exponential ramps can't start at 0
+  gain.gain.exponentialRampToValueAtTime(0.06, t + 0.005);  // 5 ms attack avoids a pop
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
 
   osc.connect(gain).connect(ctx.destination);
   osc.start(t);
-  osc.stop(t + 0.13); // after stop() the nodes are garbage-collected automatically
+  osc.stop(t + 0.13); // nodes are garbage-collected after they stop
 }
 
-// Event delegation: ONE listener on the document handles clicks on every
-// link and button, including ones added later, instead of one listener each.
+// Event delegation: one listener handles clicks on every link, button, and summary
 document.addEventListener('click', (event) => {
-  if (!soundOn) return;
-  if (event.target.closest('a, button')) playClickSound();
+  if (soundOn && event.target.closest('a, button, summary')) playClickSound();
 });

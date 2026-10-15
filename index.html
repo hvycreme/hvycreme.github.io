@@ -4,61 +4,57 @@
   <meta charset="UTF-8">
   <!-- Makes phones render at device width instead of a zoomed-out desktop view -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Your Name — Portfolio</title>
-  <meta name="description" content="Portfolio of Your Name: projects, experience, and contact.">
-  <!-- Tells the browser the page is dark, so scrollbars and form controls match -->
-  <meta name="color-scheme" content="dark">
-  <!-- Colors the browser's toolbar on phones (Safari, Chrome Android) -->
-  <meta name="theme-color" content="#16120f">
+  <title>Your Name — Pre-medical student, Biochemistry &amp; Psychology</title>
+  <meta name="description" content="Your Name: future physician studying Biochemistry and Psychology at USC, seeking summer clinical care and research experience.">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f6f1e6">
   <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
   <!-- Open Graph: the title/description shown when your link is shared (iMessage, LinkedIn, Slack) -->
-  <meta property="og:title" content="Your Name — Portfolio">
-  <meta property="og:description" content="Biochemistry & Psychology student at USC. Projects, experience, and contact.">
+  <meta property="og:title" content="Your Name — Pre-medical student">
+  <meta property="og:description" content="Biochemistry & Psychology at USC. Seeking summer clinical care and research experience.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://hvycreme.github.io/">
-  <!-- Runs instantly, before the page paints:
-       - "js" tells CSS that JavaScript is on. Reveal styles only hide content
-         when this class exists, so the page is never stuck invisible if JS fails.
-       - "gate-open" shows the intro gate, unless the visitor already entered
-         during this browser session (sessionStorage clears when the tab closes). -->
-  <script>
-    document.documentElement.classList.add('js');
-    try {
-      if (!sessionStorage.getItem('entered')) document.documentElement.classList.add('gate-open');
-    } catch (e) { /* storage blocked (private mode): skip the gate */ }
-  </script>
+  <!-- Start downloading the heading font right away instead of waiting
+       for the CSS to be parsed and discover it. -->
+  <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- Runs before the page paints: tells CSS "JavaScript is on", so effects
+       that hide content (reveals, toggles) only apply when JS can undo them. -->
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="css/style.css">
   <!-- defer: download in parallel, run after the HTML is parsed (so the DOM exists) -->
   <script src="js/main.js" defer></script>
 </head>
 <body>
 
-  <!-- Intro gate (Step 7). Browsers only allow audio to start from a user
-       gesture, so this click is what unlocks the background music. -->
-  <div class="intro-gate" id="intro-gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
-    <div class="gate-inner">
-      <p class="eyebrow" id="gate-title">Your Name · Portfolio</p>
-      <button class="gate-button" id="gate-enter" type="button">Click to begin</button>
-      <button class="gate-skip" id="gate-skip" type="button">Enter without sound</button>
-    </div>
-  </div>
+  <!-- The botanical motif, defined ONCE as a <symbol>. Every leaf on the page
+       is a <use href="#leaf"> pointing here. It draws in currentColor, so CSS
+       `color` decides its color wherever it's used. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="leaf" viewBox="0 0 24 24">
+      <path d="M4 20C4 11 9.5 4 20 4c0 10.5-7 16-16 16Z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M4 20 15 9M9.2 14.8l-.6-4M12 12l3.6.6M11.6 12.4l-.4-3.4M7 17l4 .2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    </symbol>
+  </svg>
 
   <header class="site-header">
     <!-- Skip link: the first thing a keyboard user reaches. Hidden until focused. -->
     <a class="skip-link" href="#main">Skip to content</a>
-    <a class="logo" href="#home">YN</a>
+    <a class="logo" href="#intro" aria-label="Your Name, back to top">
+      <svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg>
+      <span>YN</span>
+    </a>
     <nav aria-label="Primary">
       <ol class="nav-list">
-        <li><a href="#about"><span class="nav-num">01</span> About</a></li>
-        <li><a href="#projects"><span class="nav-num">02</span> Projects</a></li>
-        <li><a href="#experience"><span class="nav-num">03</span> Experience</a></li>
-        <li><a href="#leadership"><span class="nav-num">04</span> Leadership</a></li>
+        <li><a href="#experience"><span class="nav-num">01</span> Experience</a></li>
+        <li><a href="#work"><span class="nav-num">02</span> Work</a></li>
+        <li><a href="#skills"><span class="nav-num">03</span> Skills</a></li>
+        <li><a href="#about"><span class="nav-num">04</span> About</a></li>
         <li><a href="#contact"><span class="nav-num">05</span> Contact</a></li>
       </ol>
     </nav>
-    <!-- aria-pressed="true" means sound is on. Screen readers announce it as a toggle. -->
-    <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false" aria-label="Sound">
-      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+    <!-- Optional ambient music. aria-pressed="true" means sound is on. -->
+    <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false" aria-label="Ambient sound">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
         <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
         <path class="icon-on" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         <path class="icon-off" d="M16.5 9.5l5 5M21.5 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -68,87 +64,282 @@
 
   <main id="main" tabindex="-1">
 
-    <!-- Hero: the first screen. Not numbered; it's the intro, not a topic. -->
-    <section id="home" class="hero">
-      <p class="eyebrow">Hi, I'm</p>
-      <h1 class="hero-title" tabindex="-1">Your Name</h1>
-      <p class="hero-tagline">Biochemistry &amp; Psychology student at USC</p>
-      <a class="button" href="#projects">See my work</a>
+    <!-- ===== Introduction ===== -->
+    <section id="intro" class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">Biochemistry &amp; Psychology · USC</p>
+        <h1 class="hero-title" tabindex="-1">Your Name</h1>
+        <p class="hero-statement">
+          Future physician interested in both the <em>biological mechanisms</em> of illness
+          and the <em>human experience</em> of it.
+        </p>
+
+        <!-- Role-specific lines: JavaScript shows the one matching ?for=crc or ?for=ert
+             in the URL. With no parameter, the general line shows. -->
+        <p class="hero-seeking">
+          <span data-for="all">Seeking summer 2027 experience in <strong>clinical research</strong> and <strong>emergency care</strong>.</span>
+          <span data-for="crc" hidden>Seeking a summer 2027 role as a <strong>clinical research coordinator</strong>.</span>
+          <span data-for="ert" hidden>Seeking a summer 2027 role as an <strong>emergency room technician</strong>.</span>
+        </p>
+
+        <ul class="bring-list" aria-label="What I bring">
+          <li><svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg> Careful, well-documented work</li>
+          <li><svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg> Curiosity that follows a question to its mechanism</li>
+          <li><svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg> Clear, patient communication</li>
+        </ul>
+
+        <div class="hero-actions">
+          <a class="button button-primary" href="files/resume.pdf" target="_blank" rel="noopener">View résumé<span class="sr-only"> (PDF, opens in a new tab)</span></a>
+          <a class="button" href="#contact">Contact</a>
+        </div>
+      </div>
+
+      <figure class="hero-figure">
+        <!-- Decorative: alt="" tells screen readers to skip it -->
+        <img src="images/specimen.svg" alt="" width="420" height="540">
+      </figure>
     </section>
 
+    <!-- ===== 01 Relevant experience =====
+         data-crc / data-ert = this entry's position when the page is opened
+         with ?for=crc or ?for=ert. Lower numbers appear first. -->
+    <section id="experience" class="reveal">
+      <h2 class="section-title"><span class="section-num">01</span> Relevant experience</h2>
+      <ol class="timeline" data-sortable>
+        <li data-crc="1" data-ert="3">
+          <svg class="leaf-icon timeline-leaf" aria-hidden="true"><use href="#leaf"/></svg>
+          <article class="card">
+            <p class="card-meta">[Jan 2025 – Present] · Research</p>
+            <h3>[Undergraduate Research Assistant]</h3>
+            <p class="card-org">[Lab name, Department · USC]</p>
+            <ul class="points">
+              <li>[What you were responsible for, e.g. "Prepared and logged 200+ samples using a standardized protocol."]</li>
+              <li>[A concrete contribution, e.g. "Built a spreadsheet tracker that cut data-entry errors."]</li>
+              <li>[Communication, e.g. "Presented weekly progress to the PI and two graduate students."]</li>
+            </ul>
+          </article>
+        </li>
+        <li data-crc="3" data-ert="1">
+          <svg class="leaf-icon timeline-leaf" aria-hidden="true"><use href="#leaf"/></svg>
+          <article class="card">
+            <p class="card-meta">[2024 – Present] · Clinical volunteering</p>
+            <h3>[Hospital / Clinic Volunteer]</h3>
+            <p class="card-org">[Hospital name · Department]</p>
+            <ul class="points">
+              <li>[Patient-facing duties, e.g. "Supported nursing staff with patient transport and room turnover."]</li>
+              <li>[Hours and setting, e.g. "~100 hours in a fast-paced emergency department."]</li>
+            </ul>
+          </article>
+        </li>
+        <li data-crc="2" data-ert="2">
+          <svg class="leaf-icon timeline-leaf" aria-hidden="true"><use href="#leaf"/></svg>
+          <article class="card">
+            <p class="card-meta">[2024 – Present] · Employment</p>
+            <h3>[Job title]</h3>
+            <p class="card-org">[Employer]</p>
+            <ul class="points">
+              <li>[Responsibility that shows reliability, documentation, or working with people.]</li>
+              <li>[A specific situation you handled and what you did.]</li>
+            </ul>
+          </article>
+        </li>
+        <li data-crc="4" data-ert="4">
+          <svg class="leaf-icon timeline-leaf" aria-hidden="true"><use href="#leaf"/></svg>
+          <article class="card">
+            <p class="card-meta">[2023 – 2025] · Leadership &amp; service</p>
+            <h3>[Leadership or service role]</h3>
+            <p class="card-org">[Organization]</p>
+            <ul class="points">
+              <li>[Who you led or served, and what changed because of it.]</li>
+            </ul>
+          </article>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ===== 02 Selected work ===== -->
+    <section id="work" class="reveal">
+      <h2 class="section-title"><span class="section-num">02</span> Selected work</h2>
+
+      <article class="card project">
+        <div class="project-text">
+          <p class="card-meta">[Course name or Independent] · [2025]</p>
+          <h3>[Project title: e.g. "Sleep duration and reaction time in college students"]</h3>
+
+          <!-- The main finding is ALWAYS visible; the toggle only changes the explanation -->
+          <p class="finding"><span class="finding-label">Key finding</span>
+            [One sentence result, e.g. "Students sleeping under 6 hours responded ~40 ms slower on average."]</p>
+
+          <div class="explain-toggle" role="group" aria-label="Explanation style">
+            <button type="button" aria-pressed="true" data-show="plain">Plain language</button>
+            <button type="button" aria-pressed="false" data-show="detail">Scientific detail</button>
+          </div>
+          <div class="explain-panel" data-panel="plain">
+            <p class="panel-label">Plain language</p>
+            <p>[Explain the question, what you did, and why it matters, as you would to a patient or a friend. Two or three sentences, no jargon.]</p>
+          </div>
+          <div class="explain-panel" data-panel="detail">
+            <p class="panel-label">Scientific detail</p>
+            <p>[Methods: design, sample size, measures, analysis (e.g. linear regression in R, α = 0.05).]</p>
+            <p>[Interpretation: effect size, confidence interval, limitations, what you'd do next.]</p>
+          </div>
+
+          <ul class="tags" aria-label="Skills used">
+            <li>[R]</li><li>[Statistics]</li><li>[Study design]</li>
+          </ul>
+          <p class="project-links"><a href="#">[Read the report (PDF)]</a></p>
+        </div>
+        <figure class="project-figure">
+          <img src="images/figure-placeholder.svg" alt="[Describe what your chart shows, e.g. scatter plot of sleep hours vs. reaction time with a downward trend]" width="480" height="320" loading="lazy" decoding="async">
+          <figcaption>Fig. 2 · [Caption for your figure]</figcaption>
+        </figure>
+      </article>
+
+      <article class="card project">
+        <div class="project-text">
+          <p class="card-meta">[Course name or Independent] · [2025]</p>
+          <h3>[Project title: e.g. a lab, data, or software project]</h3>
+
+          <p class="finding"><span class="finding-label">Key finding</span>
+            [One sentence result or outcome.]</p>
+
+          <div class="explain-toggle" role="group" aria-label="Explanation style">
+            <button type="button" aria-pressed="true" data-show="plain">Plain language</button>
+            <button type="button" aria-pressed="false" data-show="detail">Scientific detail</button>
+          </div>
+          <div class="explain-panel" data-panel="plain">
+            <p class="panel-label">Plain language</p>
+            <p>[Accessible explanation.]</p>
+          </div>
+          <div class="explain-panel" data-panel="detail">
+            <p class="panel-label">Scientific detail</p>
+            <p>[Methods and technical interpretation.]</p>
+          </div>
+
+          <ul class="tags" aria-label="Skills used">
+            <li>[Python]</li><li>[Data cleaning]</li><li>[Visualization]</li>
+          </ul>
+          <p class="project-links"><a href="#">[View code on GitHub]</a></p>
+        </div>
+        <figure class="project-figure">
+          <img src="images/figure-placeholder.svg" alt="[Describe your figure]" width="480" height="320" loading="lazy" decoding="async">
+          <figcaption>Fig. 3 · [Caption for your figure]</figcaption>
+        </figure>
+      </article>
+    </section>
+
+    <!-- ===== 03 Skills & certifications ===== -->
+    <section id="skills" class="reveal">
+      <h2 class="section-title"><span class="section-num">03</span> Skills &amp; certifications</h2>
+      <p class="section-intro">Only what I actually hold, with an honest level:
+        <strong>Proficient</strong> = use independently ·
+        <strong>Working</strong> = use with reference ·
+        <strong>Familiar</strong> = coursework exposure.</p>
+
+      <div class="card-grid" data-sortable>
+        <article class="card skill-group" data-crc="3" data-ert="1">
+          <h3>Clinical &amp; certifications</h3>
+          <ul class="skill-list">
+            <li><span>[BLS / CPR, American Heart Association]</span><span class="level">Certified · exp. [MM/YYYY]</span></li>
+            <li><span>[Vital signs]</span><span class="level">[Working]</span></li>
+            <li><span>[HIPAA training]</span><span class="level">[Completed YYYY]</span></li>
+          </ul>
+        </article>
+        <article class="card skill-group" data-crc="1" data-ert="3">
+          <h3>Research methods</h3>
+          <ul class="skill-list">
+            <li><span>[CITI Human Subjects Research]</span><span class="level">[Completed YYYY]</span></li>
+            <li><span>[Lab technique, e.g. pipetting, gel electrophoresis]</span><span class="level">[Proficient]</span></li>
+            <li><span>[Informed consent / documentation]</span><span class="level">[Familiar]</span></li>
+          </ul>
+        </article>
+        <article class="card skill-group" data-crc="2" data-ert="4">
+          <h3>Data &amp; computing</h3>
+          <ul class="skill-list">
+            <li><span>[Excel / Google Sheets]</span><span class="level">[Proficient]</span></li>
+            <li><span>[R or Python]</span><span class="level">[Working]</span></li>
+            <li><span>[REDCap]</span><span class="level">[Familiar]</span></li>
+          </ul>
+        </article>
+        <article class="card skill-group" data-crc="4" data-ert="2">
+          <h3>Communication</h3>
+          <ul class="skill-list">
+            <li><span>[Languages, e.g. Spanish]</span><span class="level">[Conversational]</span></li>
+            <li><span>[Peer support / de-escalation training]</span><span class="level">[Completed YYYY]</span></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===== 04 About me ===== -->
     <section id="about" class="reveal">
-      <h2 class="section-title"><span class="section-num">01</span> About</h2>
+      <h2 class="section-title"><span class="section-num">04</span> About me</h2>
       <div class="about-grid">
         <div class="about-text">
-          <p>A few sentences about who you are, what you study, and what you're curious about.</p>
-          <p>A second paragraph about what you're looking for: research, internships, collaborations.</p>
+          <p>[Why medicine: two or three sentences. Concrete beats abstract: a patient interaction, a question you couldn't stop thinking about, a person who shaped your path.]</p>
+
+          <!-- <details> is a built-in, accessible show/hide. The leaf "unfurls" when opened. -->
+          <details class="unfurl">
+            <summary>
+              <svg class="leaf-icon unfurl-leaf" aria-hidden="true"><use href="#leaf"/></svg>
+              How psychology connects to my science
+            </summary>
+            <div class="unfurl-body">
+              <p>[E.g. how studying behavior and cognition changes the way you think about biochemistry, patients, adherence, or the experience of illness.]</p>
+            </div>
+          </details>
+          <details class="unfurl">
+            <summary>
+              <svg class="leaf-icon unfurl-leaf" aria-hidden="true"><use href="#leaf"/></svg>
+              Why plants (and computers)?
+            </summary>
+            <div class="unfurl-body">
+              <p>[A short, personal note: what growing things teaches you about patience and observation, and what you like about building things with code.]</p>
+            </div>
+          </details>
         </div>
-        <img class="about-photo" src="images/placeholder.svg" alt="Portrait of Your Name" width="320" height="320" loading="lazy" decoding="async">
+        <figure class="about-photo">
+          <img src="images/plant-photo.svg" alt="[Describe your photo, e.g. a pothos trailing from a shelf in my apartment]" width="400" height="500" loading="lazy" decoding="async">
+          <figcaption>[One of my plants: name]</figcaption>
+        </figure>
       </div>
-    </section>
 
-    <section id="projects" class="reveal">
-      <h2 class="section-title"><span class="section-num">02</span> Projects</h2>
-      <div class="card-grid">
+      <h3 class="subsection-title">Currently growing</h3>
+      <div class="card-grid growing">
         <article class="card">
-          <h3>Project One</h3>
-          <p>One-line description of what it is and why it matters.</p>
-          <a href="#">View project</a>
+          <p class="card-meta">In the window</p>
+          <h4>[Plant name]</h4>
+          <p>[What you're growing and one thing you've noticed about it.]</p>
         </article>
         <article class="card">
-          <h3>Project Two</h3>
-          <p>One-line description of what it is and why it matters.</p>
-          <a href="#">View project</a>
+          <p class="card-meta">On my mind</p>
+          <h4>[A scientific question]</h4>
+          <p>[A question you're curious about right now and why.]</p>
         </article>
         <article class="card">
-          <h3>Project Three</h3>
-          <p>One-line description of what it is and why it matters.</p>
-          <a href="#">View project</a>
-        </article>
-      </div>
-    </section>
-
-    <section id="experience" class="reveal">
-      <h2 class="section-title"><span class="section-num">03</span> Insights &amp; Experience</h2>
-      <div class="card-grid">
-        <article class="card">
-          <p class="card-meta">2025 – Present</p>
-          <h3>Role · Organization</h3>
-          <p>What you did and one concrete result or insight.</p>
-        </article>
-        <article class="card">
-          <p class="card-meta">2024</p>
-          <h3>Role · Organization</h3>
-          <p>What you did and one concrete result or insight.</p>
+          <p class="card-meta">On my laptop</p>
+          <h4>[A computer project]</h4>
+          <p>[What you're building and what you're learning from it.]</p>
         </article>
       </div>
     </section>
 
-    <section id="leadership" class="reveal">
-      <h2 class="section-title"><span class="section-num">04</span> Leadership</h2>
-      <div class="card-grid">
-        <article class="card">
-          <p class="card-meta">2025 – Present</p>
-          <h3>Position · Group</h3>
-          <p>Who you led and what changed because of it.</p>
-        </article>
-      </div>
-    </section>
-
+    <!-- ===== 05 Contact ===== -->
     <section id="contact" class="reveal">
       <h2 class="section-title"><span class="section-num">05</span> Contact</h2>
-      <p>I'm always happy to talk. The fastest way to reach me is email.</p>
+      <p>I'd be glad to talk about summer clinical or research roles. Email is the fastest way to reach me.</p>
       <ul class="contact-links">
-        <li><a href="mailto:you@example.com">you@example.com</a></li>
-        <li><a href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a></li>
-        <li><a href="files/resume.pdf" target="_blank" rel="noopener">Résumé (PDF)<span class="sr-only"> (opens in a new tab)</span></a></li>
+        <li><a class="button button-primary" href="mailto:you@example.com">you@example.com</a></li>
+        <li><a class="button" href="files/resume.pdf" download>Download résumé (PDF)</a></li>
+        <li><a class="button" href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a></li>
       </ul>
     </section>
 
   </main>
 
   <footer class="site-footer">
-    <p>© 2026 Your Name</p>
+    <svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg>
+    <p>© 2026 Your Name · Hand-built with HTML, CSS &amp; JavaScript</p>
   </footer>
 
 </body>
