@@ -5,12 +5,15 @@
    ========================================================================== */
 :root {
   /* Colors */
-  --color-bg: #0b0f17;          /* page background: near-black navy */
-  --color-surface: #131a26;     /* cards sit one step lighter than the page */
-  --color-border: #222c3d;
-  --color-text: #e6e9ef;        /* main text: off-white is easier on eyes than #fff */
-  --color-muted: #9aa4b2;       /* secondary text */
-  --color-accent: #5eead4;      /* the ONE accent color: swap this to re-theme */
+  --color-bg: #16120f;          /* page background: espresso */
+  --color-surface: #1f1a16;     /* cards sit one step lighter than the page */
+  --color-border: #342c25;
+  --color-text: #f2e8d5;        /* main text: cream (softer on the eyes than #fff) */
+  --color-muted: #b5a991;       /* secondary text: muted latte */
+  --color-accent: #e0b77a;      /* the ONE accent color (caramel): swap this to re-theme */
+  /* Derived colors: color-mix() blends two colors, so these follow the tokens above */
+  --color-header: color-mix(in srgb, var(--color-bg) 85%, transparent);
+  --color-accent-soft: color-mix(in srgb, var(--color-accent) 12%, transparent);
 
   /* Fonts: system stacks load instantly (no download) */
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -122,7 +125,7 @@ a {
   height: var(--header-height);
   padding: var(--space-2) var(--gutter);
   /* Semi-transparent so content blurs underneath */
-  background: rgb(11 15 23 / 0.85);
+  background: var(--color-header);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
@@ -264,7 +267,7 @@ section p + p {
 }
 
 .button:hover {
-  background: rgb(94 234 212 / 0.1);
+  background: var(--color-accent-soft);
 }
 
 /* ==========================================================================
