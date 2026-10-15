@@ -483,3 +483,113 @@ section p + p {
 .card:focus-within::after {
   opacity: 1;
 }
+
+/* ==========================================================================
+   13. Intro gate + sound toggle (Step 7)
+   ========================================================================== */
+/* Hidden by default; shown only when JS is on AND this is a first visit */
+.intro-gate {
+  display: none;
+}
+
+.js.gate-open .intro-gate,
+.intro-gate.is-leaving {
+  display: grid;
+  place-items: center;   /* centers .gate-inner both ways */
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  padding: var(--gutter);
+  background: var(--color-bg);
+  transition: opacity var(--dur-slow) var(--ease);
+}
+
+/* Leaving: fade out, and let clicks pass through immediately */
+.intro-gate.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gate-inner {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.gate-button {
+  padding: 1em 2.25em;
+  border: 1px solid var(--color-accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.gate-button:hover {
+  background: var(--color-accent-soft);
+  transform: scale(1.04);
+}
+
+.gate-skip {
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+/* While the gate is up: no page scrolling, and the hero entrance waits */
+.gate-open,
+.gate-open body {
+  overflow: hidden;
+}
+
+.gate-open .hero > * {
+  animation-play-state: paused;
+}
+
+/* Sound toggle: only useful with JS, so hidden otherwise */
+.sound-toggle {
+  display: none;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-left: auto;   /* pushes it to the far right */
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.js .sound-toggle {
+  display: grid;
+}
+
+.sound-toggle:hover {
+  color: var(--color-text);
+}
+
+/* Show the "waves" icon when on, the "x" icon when off */
+.sound-toggle[aria-pressed="true"] {
+  color: var(--color-accent);
+}
+
+.sound-toggle[aria-pressed="true"] .icon-off,
+.sound-toggle[aria-pressed="false"] .icon-on {
+  display: none;
+}
+
+/* Elements focused by script (tabindex="-1") don't need a visible ring */
+[tabindex="-1"]:focus {
+  outline: none;
+}

@@ -9,12 +9,29 @@
   <!-- Runs instantly, before the page paints: tells CSS "JavaScript is on".
        Reveal styles only hide content when this class exists, so the page
        is never stuck invisible if JS fails to load. -->
-  <script>document.documentElement.classList.add('js');</script>
+  <!-- "gate-open" shows the intro gate, unless the visitor already entered
+       during this browser session (sessionStorage clears when the tab closes). -->
+  <script>
+    document.documentElement.classList.add('js');
+    try {
+      if (!sessionStorage.getItem('entered')) document.documentElement.classList.add('gate-open');
+    } catch (e) { /* storage blocked (private mode): skip the gate */ }
+  </script>
   <link rel="stylesheet" href="css/style.css">
   <!-- defer: download in parallel, run after the HTML is parsed (so the DOM exists) -->
   <script src="js/main.js" defer></script>
 </head>
 <body>
+
+  <!-- Intro gate (Step 7). Browsers only allow audio to start from a user
+       gesture, so this click is what unlocks the background music. -->
+  <div class="intro-gate" id="intro-gate">
+    <div class="gate-inner">
+      <p class="eyebrow">Your Name · Portfolio</p>
+      <button class="gate-button" id="gate-enter" type="button">Click to begin</button>
+      <button class="gate-skip" id="gate-skip" type="button">Enter without sound</button>
+    </div>
+  </div>
 
   <header class="site-header">
     <a class="logo" href="#home">YN</a>
@@ -27,6 +44,14 @@
         <li><a href="#contact"><span class="nav-num">05</span> Contact</a></li>
       </ol>
     </nav>
+    <!-- aria-pressed="true" means sound is on. Screen readers announce it as a toggle. -->
+    <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="false" aria-label="Sound">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+        <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
+        <path class="icon-on" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path class="icon-off" d="M16.5 9.5l5 5M21.5 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
   </header>
 
   <main>
@@ -34,7 +59,7 @@
     <!-- Hero: the first screen. Not numbered; it's the intro, not a topic. -->
     <section id="home" class="hero">
       <p class="eyebrow">Hi, I'm</p>
-      <h1 class="hero-title">Your Name</h1>
+      <h1 class="hero-title" tabindex="-1">Your Name</h1>
       <p class="hero-tagline">Biochemistry &amp; Psychology student at USC</p>
       <a class="button" href="#projects">See my work</a>
     </section>
