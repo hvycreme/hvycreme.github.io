@@ -61,6 +61,7 @@
     pushStrength: 22,     // how far dots get pushed (CSS px)
     introSeconds: 2.2,
     morphSeconds: 2.2,    // how long one plant takes to become the next
+    autoSeconds: 20,      // advance to the next plant on its own after this long (0 = off)
     arc: 26,              // how far particles swing sideways mid-morph (frame units)
     fill: 0.94,           // how much of its box the plant fills (1 = edge to edge)
   };
@@ -365,6 +366,8 @@
   let target = 0;         // plant being morphed toward
   let morphStart = null;  // timestamp when the current morph began
   let queued = null;      // a choice made mid-morph waits its turn
+  let autoTimer = 0;      // seconds the current plant has been on screen
+  let holdAuto = false;   // true while the mouse is over the figure or focus is in it
 
   function morphTo(index) {
     if (index === target && morphStart === null) return;
@@ -412,6 +415,16 @@
     gl.uniform1f(u.uTime, elapsed);
     gl.uniform1f(u.uIntro, Math.min(elapsed / CONFIG.introSeconds, 1));
     stepMorph(now);
+
+    // Auto-advance: count only on-screen, unhovered, between-morph time.
+    // This loop only runs while the figure is visible, so time spent
+    // scrolled away doesn't count and nobody misses a morph.
+    if (CONFIG.autoSeconds && switcher && !holdAuto && morphStart === null) {
+      autoTimer += dt;
+      if (autoTimer >= CONFIG.autoSeconds) {
+        select((target + 1) % PLANTS.length, { auto: true });
+      }
+    }
     gl.uniform3fv(u.uTrail, trail);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -442,7 +455,11 @@
   const captionName = document.querySelector('.figure-plant');
   const captionCredit = document.querySelector('.figure-credit');
 
-  function select(index, { focus = false } = {}) {
+  function select(index, { focus = false, auto = false } = {}) {
+    autoTimer = 0;  // a manual choice gets a full interval before the next auto change
+    // Screen readers announce plants people choose, but not the automatic
+    // changes (otherwise they'd hear a new caption every 20 seconds).
+    captionName.closest('figcaption').setAttribute('aria-live', auto ? 'off' : 'polite');
     const buttons = switcher.querySelectorAll('button');
     buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(i === index)));
     if (focus) buttons[index].focus();
@@ -465,6 +482,13 @@
       });
     });
     switcher.hidden = false;        // only shown once the particles actually work
+
+    // Hold the auto-advance while someone is looking closely or using the switch
+    const figure = switcher.closest('figure');
+    figure.addEventListener('pointerenter', () => { holdAuto = true; });
+    figure.addEventListener('pointerleave', () => { holdAuto = false; });
+    figure.addEventListener('focusin', () => { holdAuto = true; });
+    figure.addEventListener('focusout', () => { holdAuto = false; });
   }
 
   /* ---------- Start: only when the Contact section gets close ----------- */
