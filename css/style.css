@@ -388,3 +388,22 @@ section p + p {
 .site-footer p {
   max-width: none;
 }
+
+/* ==========================================================================
+   10. Scroll reveal (Step 4)
+   Elements with .reveal start invisible and 2rem lower. JavaScript adds
+   .is-visible when they scroll into view, and the transition animates
+   between the two states. Gated behind .js so no-JS visitors see everything.
+   ========================================================================== */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition:
+    opacity var(--dur-slow) var(--ease),
+    transform var(--dur-slow) var(--ease);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}

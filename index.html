@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Your Name — Portfolio</title>
   <meta name="description" content="Portfolio of Your Name: projects, experience, and contact.">
+  <!-- Runs instantly, before the page paints: tells CSS "JavaScript is on".
+       Reveal styles only hide content when this class exists, so the page
+       is never stuck invisible if JS fails to load. -->
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="css/style.css">
   <!-- defer: download in parallel, run after the HTML is parsed (so the DOM exists) -->
   <script src="js/main.js" defer></script>
@@ -35,7 +39,7 @@
       <a class="button" href="#projects">See my work</a>
     </section>
 
-    <section id="about">
+    <section id="about" class="reveal">
       <h2 class="section-title"><span class="section-num">01</span> About</h2>
       <div class="about-grid">
         <div class="about-text">
@@ -46,7 +50,7 @@
       </div>
     </section>
 
-    <section id="projects">
+    <section id="projects" class="reveal">
       <h2 class="section-title"><span class="section-num">02</span> Projects</h2>
       <div class="card-grid">
         <article class="card">
@@ -67,7 +71,7 @@
       </div>
     </section>
 
-    <section id="experience">
+    <section id="experience" class="reveal">
       <h2 class="section-title"><span class="section-num">03</span> Insights &amp; Experience</h2>
       <div class="card-grid">
         <article class="card">
@@ -83,7 +87,7 @@
       </div>
     </section>
 
-    <section id="leadership">
+    <section id="leadership" class="reveal">
       <h2 class="section-title"><span class="section-num">04</span> Leadership</h2>
       <div class="card-grid">
         <article class="card">
@@ -94,7 +98,7 @@
       </div>
     </section>
 
-    <section id="contact">
+    <section id="contact" class="reveal">
       <h2 class="section-title"><span class="section-num">05</span> Contact</h2>
       <p>I'm always happy to talk. The fastest way to reach me is email.</p>
       <ul class="contact-links">
