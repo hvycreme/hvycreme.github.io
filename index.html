@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Makes phones render at device width instead of a zoomed-out desktop view -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Name — Portfolio</title>
+  <meta name="description" content="Portfolio of Your Name: projects, experience, and contact.">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- defer: download in parallel, run after the HTML is parsed (so the DOM exists) -->
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="logo" href="#home">YN</a>
+    <nav aria-label="Primary">
+      <ol class="nav-list">
+        <li><a href="#about"><span class="nav-num">01</span> About</a></li>
+        <li><a href="#projects"><span class="nav-num">02</span> Projects</a></li>
+        <li><a href="#experience"><span class="nav-num">03</span> Experience</a></li>
+        <li><a href="#leadership"><span class="nav-num">04</span> Leadership</a></li>
+        <li><a href="#contact"><span class="nav-num">05</span> Contact</a></li>
+      </ol>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- Hero: the first screen. Not numbered; it's the intro, not a topic. -->
+    <section id="home" class="hero">
+      <p class="eyebrow">Hi, I'm</p>
+      <h1 class="hero-title">Your Name</h1>
+      <p class="hero-tagline">Biochemistry &amp; Psychology student at USC</p>
+      <a class="button" href="#projects">See my work</a>
+    </section>
+
+    <section id="about">
+      <h2 class="section-title"><span class="section-num">01</span> About</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>A few sentences about who you are, what you study, and what you're curious about.</p>
+          <p>A second paragraph about what you're looking for: research, internships, collaborations.</p>
+        </div>
+        <img class="about-photo" src="images/placeholder.svg" alt="Portrait of Your Name" width="320" height="320">
+      </div>
+    </section>
+
+    <section id="projects">
+      <h2 class="section-title"><span class="section-num">02</span> Projects</h2>
+      <div class="card-grid">
+        <article class="card">
+          <h3>Project One</h3>
+          <p>One-line description of what it is and why it matters.</p>
+          <a href="#">View project</a>
+        </article>
+        <article class="card">
+          <h3>Project Two</h3>
+          <p>One-line description of what it is and why it matters.</p>
+          <a href="#">View project</a>
+        </article>
+        <article class="card">
+          <h3>Project Three</h3>
+          <p>One-line description of what it is and why it matters.</p>
+          <a href="#">View project</a>
+        </article>
+      </div>
+    </section>
+
+    <section id="experience">
+      <h2 class="section-title"><span class="section-num">03</span> Insights &amp; Experience</h2>
+      <div class="card-grid">
+        <article class="card">
+          <p class="card-meta">2025 – Present</p>
+          <h3>Role · Organization</h3>
+          <p>What you did and one concrete result or insight.</p>
+        </article>
+        <article class="card">
+          <p class="card-meta">2024</p>
+          <h3>Role · Organization</h3>
+          <p>What you did and one concrete result or insight.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="leadership">
+      <h2 class="section-title"><span class="section-num">04</span> Leadership</h2>
+      <div class="card-grid">
+        <article class="card">
+          <p class="card-meta">2025 – Present</p>
+          <h3>Position · Group</h3>
+          <p>Who you led and what changed because of it.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2 class="section-title"><span class="section-num">05</span> Contact</h2>
+      <p>I'm always happy to talk. The fastest way to reach me is email.</p>
+      <ul class="contact-links">
+        <li><a href="mailto:you@example.com">you@example.com</a></li>
+        <li><a href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="files/resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2026 Your Name</p>
+  </footer>
+
+</body>
+</html>
