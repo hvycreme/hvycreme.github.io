@@ -1,5 +1,7 @@
 /* ==========================================================================
-   particles.js: the rose plate as interactive particles in the Contact section.
+   particles.js: botanical plates as interactive particles in the Contact
+   section. A switch above the figure morphs the same ~24,000 particles
+   between a rose, a hyacinth, and a lady's slipper orchid.
 
    Same technique as Codrops' "Interactive Particles with Three.js"
    (Bruno Imbrizi, 2019), written in plain WebGL so the site stays
@@ -17,9 +19,32 @@
      Intro animation                  uIntro: dots fly in from a scatter
    ========================================================================== */
 (() => {
+  // Each plant: its cut-out image (see tools/prepare_plate.py) and the
+  // caption/credit shown under the figure when it's selected.
+  const PLANTS = [
+    {
+      id: 'rose',
+      image: 'images/rose-plate.webp',
+      name: '<em>Rosa × centifolia</em>, the cabbage rose',
+      credit: 'After Pierre-Joseph Redouté, <cite>Les Roses</cite> (1817–1824). Public domain.',
+    },
+    {
+      id: 'hyacinth',
+      image: 'images/hyacinth-plate.webp',
+      name: '<em>Hyacinthus orientalis</em>, the hyacinth (blue variety)',
+      credit: 'After Pierre-Joseph Redouté, <cite>Les Liliacées</cite> (1802–1816). Public domain. Via Old Book Illustrations.',
+    },
+    {
+      id: 'orchid',
+      image: 'images/orchid-plate.webp',
+      name: '<em>Cypripedium calceolus</em>, the lady’s slipper orchid',
+      credit: 'After Pierre-Joseph Redouté, <cite>Les Liliacées</cite> (1802–1816). Public domain. Via <a href="https://www.oldbookillustrations.com/illustrations/cypripedium-calceolus/" target="_blank" rel="noopener">Old Book Illustrations<span class="sr-only"> (opens in a new tab)</span></a>.',
+    },
+  ];
+
   const CONFIG = {
-    image: 'images/rose-plate.webp',
-    step: 2,              // sample every Nth pixel (bigger = fewer, sparser dots)
+    count: 24000,         // particles (every plant uses the same number, so they can morph)
+    frame: [450, 604],    // shared frame every plant is fitted into (the rose's shape)
     minAlpha: 0.6,        // skip pixels more transparent than this
     pointSize: 1.8,       // dot diameter in CSS pixels
     opacity: 0.85,        // overall strength of the effect
@@ -35,7 +60,9 @@
     pushRadius: 55,       // pointer/finger influence radius (CSS px)
     pushStrength: 22,     // how far dots get pushed (CSS px)
     introSeconds: 2.2,
-    fill: 0.94,           // how much of its box the rose fills (1 = edge to edge)
+    morphSeconds: 2.2,    // how long one plant takes to become the next
+    arc: 26,              // how far particles swing sideways mid-morph (frame units)
+    fill: 0.94,           // how much of its box the plant fills (1 = edge to edge)
   };
   const TRAIL_LENGTH = 24; // must match the array size in the shader
 
@@ -49,8 +76,10 @@
 
   /* ---------- Shaders (GLSL: the C-like language GPUs run) ---------------- */
   const VERTEX_SHADER = `
-    attribute vec2 aBase;    // the dot's home position, in plate pixels
-    attribute vec3 aColor;
+    attribute vec2 aPosA;    // home position in the current plant (frame units)
+    attribute vec3 aColA;    // color in the current plant
+    attribute vec2 aPosB;    // home position in the next plant
+    attribute vec3 aColB;
     attribute vec2 aRand;    // two random numbers per dot, 0..1
 
     uniform vec2 uRes;       // canvas size (device px)
@@ -59,6 +88,8 @@
     uniform float uPixelRatio;
     uniform float uTime;
     uniform float uIntro;    // 0 -> 1 during the fly-in
+    uniform float uMorph;    // 0 -> 1 while one plant becomes the next
+    uniform float uArc;
     uniform float uPointSize;
     uniform float uDrift;
     uniform float uFizz;
@@ -83,6 +114,18 @@
     }
 
     void main() {
+      // 0. Morph: blend each dot from its spot (and color) in the current
+      //    plant to its spot in the next. Each dot leaves at a slightly
+      //    different moment (aRand.x) and swings along a gentle arc, so the
+      //    particles visibly rearrange instead of cross-fading.
+      float mk = clamp(uMorph * 1.6 - aRand.x * 0.6, 0.0, 1.0);
+      float me = mk * mk * (3.0 - 2.0 * mk);            // ease in and out
+      vec2 travel = aPosB - aPosA;
+      vec2 side = normalize(vec2(-travel.y, travel.x) + vec2(0.0001));
+      vec2 aBase = mix(aPosA, aPosB, me)
+                 + side * sin(3.14159 * me) * (aRand.y - 0.5) * 2.0 * uArc;
+      vec3 aColor = mix(aColA, aColB, me);
+
       vec2 p = uOffset + aBase * uScale;
 
       // 1. Drift: each dot wanders slowly around its home position
@@ -165,7 +208,7 @@
   gl.useProgram(program);
 
   const u = {};
-  ['uRes', 'uOffset', 'uScale', 'uPixelRatio', 'uTime', 'uIntro', 'uPointSize', 'uDrift',
+  ['uRes', 'uOffset', 'uScale', 'uPixelRatio', 'uTime', 'uIntro', 'uMorph', 'uArc', 'uPointSize', 'uDrift',
    'uFizz', 'uTwinkle', 'uBreathe', 'uSway', 'uPivot',
    'uPushRadius', 'uPushStrength', 'uTrail', 'uOpacity'].forEach((name) => {
     u[name] = gl.getUniformLocation(program, name);
@@ -174,51 +217,92 @@
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-  /* ---------- Image -> particles ----------------------------------------- */
-  let count = 0;
-  let plateW = 0;
-  let plateH = 0;
+  /* ---------- Images -> particles ---------------------------------------- */
+  // Every plant becomes exactly CONFIG.count dots, fitted into the same frame.
+  // Dot i in one plant is paired with dot i in every other plant; sorting each
+  // plant's dots top-to-bottom before pairing means dots travel short,
+  // sensible paths (top of the rose -> top of the hyacinth, and so on).
+  const [frameW, frameH] = CONFIG.frame;
+  const N = CONFIG.count;
+  const posBuffers = [];
+  const colBuffers = [];
 
-  function buildParticles(img) {
-    plateW = img.naturalWidth;
-    plateH = img.naturalHeight;
+  function samplePlant(img) {
+    const w = img.naturalWidth;
+    const h = img.naturalHeight;
     const c = document.createElement('canvas');
-    c.width = plateW;
-    c.height = plateH;
+    c.width = w;
+    c.height = h;
     const ctx = c.getContext('2d', { willReadFrequently: true });
     ctx.drawImage(img, 0, 0);
-    const px = ctx.getImageData(0, 0, plateW, plateH).data; // [r,g,b,a, r,g,b,a, ...]
+    const px = ctx.getImageData(0, 0, w, h).data; // [r,g,b,a, r,g,b,a, ...]
 
-    const base = [];
-    const color = [];
-    const rand = [];
-    for (let y = 0; y < plateH; y += CONFIG.step) {
-      for (let x = 0; x < plateW; x += CONFIG.step) {
-        const i = (y * plateW + x) * 4;
-        if (px[i + 3] / 255 < CONFIG.minAlpha) continue;
-        base.push(x + Math.random() * CONFIG.step, y + Math.random() * CONFIG.step);
-        for (let ch = 0; ch < 3; ch++) {
-          const original = px[i + ch] / 255;
-          color.push(original * (1 - CONFIG.inkMix) + CONFIG.ink[ch] * CONFIG.inkMix);
-        }
-        rand.push(Math.random(), Math.random());
-      }
+    // Fit this plant into the shared frame ("contain"), centered
+    const s = Math.min(frameW / w, frameH / h);
+    const ox = (frameW - w * s) / 2;
+    const oy = (frameH - h * s) / 2;
+
+    // Every opaque enough pixel is a candidate
+    const opaque = [];
+    for (let i = 3; i < px.length; i += 4) if (px[i] / 255 >= CONFIG.minAlpha) opaque.push((i - 3) / 4);
+
+    // Pick N of them at random (repeats allowed if the plant is small), place
+    // each somewhere inside its pixel, and give it a sort key.
+    const dots = [];
+    for (let k = 0; k < N; k++) {
+      const idx = opaque[Math.floor(Math.random() * opaque.length)];
+      const x = (idx % w) + Math.random();
+      const y = Math.floor(idx / w) + Math.random();
+      const fx = ox + x * s;
+      const fy = oy + y * s;
+      const j = idx * 4;
+      const col = [0, 1, 2].map((ch) => (px[j + ch] / 255) * (1 - CONFIG.inkMix) + CONFIG.ink[ch] * CONFIG.inkMix);
+      dots.push({ fx, fy, col, key: fy + Math.random() * 25 }); // a little jitter mixes the paths
     }
-    count = base.length / 2;
+    dots.sort((a, b) => a.key - b.key);
 
-    // Each attribute lives in its own GPU buffer
-    const attribute = (name, data, size) => {
-      const buffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
-      const loc = gl.getAttribLocation(program, name);
-      gl.enableVertexAttribArray(loc);
-      gl.vertexAttribPointer(loc, size, gl.FLOAT, false, 0, 0);
-    };
-    attribute('aBase', base, 2);
-    attribute('aColor', color, 3);
-    attribute('aRand', rand, 2);
-    canvas.dataset.particles = count; // handy for debugging
+    const pos = new Float32Array(N * 2);
+    const colr = new Float32Array(N * 3);
+    dots.forEach((d, i) => {
+      pos[i * 2] = d.fx;
+      pos[i * 2 + 1] = d.fy;
+      colr.set(d.col, i * 3);
+    });
+    return { pos, colr };
+  }
+
+  function upload(data) {
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+    return buffer;
+  }
+
+  function point(name, buffer, size) {
+    const loc = gl.getAttribLocation(program, name);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, size, gl.FLOAT, false, 0, 0);
+  }
+
+  // Point the A attributes at plant `a` and the B attributes at plant `b`
+  function bindPlants(a, b) {
+    point('aPosA', posBuffers[a], 2);
+    point('aColA', colBuffers[a], 3);
+    point('aPosB', posBuffers[b], 2);
+    point('aColB', colBuffers[b], 3);
+  }
+
+  function buildParticles(images) {
+    images.forEach((img) => {
+      const { pos, colr } = samplePlant(img);
+      posBuffers.push(upload(pos));
+      colBuffers.push(upload(colr));
+    });
+    const rand = new Float32Array(N * 2).map(() => Math.random());
+    point('aRand', upload(rand), 2);
+    bindPlants(0, 0);
+    canvas.dataset.particles = N; // handy for debugging
   }
 
   /* ---------- Layout: size the canvas, fit the rose inside it ------------- */
@@ -232,9 +316,9 @@
     gl.viewport(0, 0, canvas.width, canvas.height);
 
     // "contain" fit: as large as possible without cropping, centered
-    const s = Math.min(rect.width / plateW, rect.height / plateH) * CONFIG.fill;
-    const offsetX = (rect.width - plateW * s) / 2;
-    const offsetY = (rect.height - plateH * s) / 2;
+    const s = Math.min(rect.width / frameW, rect.height / frameH) * CONFIG.fill;
+    const offsetX = (rect.width - frameW * s) / 2;
+    const offsetY = (rect.height - frameH * s) / 2;
 
     gl.uniform2f(u.uRes, canvas.width, canvas.height);
     gl.uniform2f(u.uOffset, offsetX * dpr, offsetY * dpr);
@@ -247,7 +331,8 @@
     gl.uniform1f(u.uTwinkle, reduceMotion ? 0 : CONFIG.twinkle);
     gl.uniform1f(u.uBreathe, reduceMotion ? 0 : CONFIG.breathe);
     gl.uniform1f(u.uSway, reduceMotion ? 0 : CONFIG.sway);
-    gl.uniform2f(u.uPivot, (offsetX + (plateW * s) / 2) * dpr, (offsetY + plateH * s) * dpr);
+    gl.uniform2f(u.uPivot, (offsetX + (frameW * s) / 2) * dpr, (offsetY + frameH * s) * dpr);
+    gl.uniform1f(u.uArc, reduceMotion ? 0 : CONFIG.arc);
     gl.uniform1f(u.uPushRadius, CONFIG.pushRadius * dpr);
     gl.uniform1f(u.uPushStrength, CONFIG.pushStrength * dpr);
     gl.uniform1f(u.uOpacity, CONFIG.opacity);
@@ -275,6 +360,40 @@
     wake();
   }
 
+  /* ---------- Morph state ------------------------------------------------ */
+  let current = 0;        // plant shown now
+  let target = 0;         // plant being morphed toward
+  let morphStart = null;  // timestamp when the current morph began
+  let queued = null;      // a choice made mid-morph waits its turn
+
+  function morphTo(index) {
+    if (index === target && morphStart === null) return;
+    if (morphStart !== null) { queued = index; return; }
+    if (index === current) return;
+    target = index;
+    if (reduceMotion) {             // no animation: swap instantly
+      current = target;
+      bindPlants(current, current);
+      gl.uniform1f(u.uMorph, 0);
+      drawStill();
+      return;
+    }
+    bindPlants(current, target);
+    morphStart = performance.now();
+    wake();
+  }
+
+  function stepMorph(now) {
+    if (morphStart === null) return;
+    const t = (now - morphStart) / 1000 / CONFIG.morphSeconds;
+    if (t < 1) { gl.uniform1f(u.uMorph, t); return; }
+    current = target;               // arrived: next plant becomes "current"
+    bindPlants(current, current);
+    gl.uniform1f(u.uMorph, 0);
+    morphStart = null;
+    if (queued !== null) { const q = queued; queued = null; morphTo(q); }
+  }
+
   /* ---------- Render loop ------------------------------------------------ */
   let start = 0;
   let last = 0;
@@ -292,10 +411,11 @@
 
     gl.uniform1f(u.uTime, elapsed);
     gl.uniform1f(u.uIntro, Math.min(elapsed / CONFIG.introSeconds, 1));
+    stepMorph(now);
     gl.uniform3fv(u.uTrail, trail);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.POINTS, 0, count);
+    gl.drawArrays(gl.POINTS, 0, N);
 
     if (running && visible) requestAnimationFrame(frame);
     else running = false;
@@ -314,19 +434,53 @@
     gl.uniform3fv(u.uTrail, trail);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.POINTS, 0, count);
+    gl.drawArrays(gl.POINTS, 0, N);
+  }
+
+  /* ---------- Plant switch + caption ---------------------------------------- */
+  const switcher = document.querySelector('.plant-switch');
+  const captionName = document.querySelector('.figure-plant');
+  const captionCredit = document.querySelector('.figure-credit');
+
+  function select(index, { focus = false } = {}) {
+    const buttons = switcher.querySelectorAll('button');
+    buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(i === index)));
+    if (focus) buttons[index].focus();
+    captionName.innerHTML = PLANTS[index].name;
+    captionCredit.innerHTML = PLANTS[index].credit;
+    morphTo(index);
+  }
+
+  function setUpSwitch() {
+    const buttons = [...switcher.querySelectorAll('button')];
+    buttons.forEach((btn, i) => {
+      btn.addEventListener('click', () => select(i));
+      // Arrow keys / Home / End move between plants, like the project toggle
+      btn.addEventListener('keydown', (event) => {
+        const last = buttons.length - 1;
+        const next = { ArrowRight: i === last ? 0 : i + 1, ArrowLeft: i === 0 ? last : i - 1, Home: 0, End: last }[event.key];
+        if (next === undefined) return;
+        event.preventDefault();
+        select(next, { focus: true });
+      });
+    });
+    switcher.hidden = false;        // only shown once the particles actually work
   }
 
   /* ---------- Start: only when the Contact section gets close ----------- */
-  // Nothing (not even the image) loads until the visitor scrolls near
-  // Contact, and the fly-in starts when the rose is actually on screen.
+  // Nothing (not even the images) loads until the visitor scrolls near
+  // Contact, and the fly-in starts when the plant is actually on screen.
   function init() {
-    const img = new Image();
-    img.src = CONFIG.image;
-    img.decode().then(() => {
-      buildParticles(img);
+    const images = PLANTS.map((plant) => {
+      const img = new Image();
+      img.src = plant.image;
+      return img;
+    });
+    Promise.all(images.map((img) => img.decode())).then(() => {
+      buildParticles(images);
       layout();
       canvas.classList.add('is-ready');
+      if (switcher) setUpSwitch();
 
       if (reduceMotion) {
         drawStill();                      // a still image: no intro, drift, or interaction

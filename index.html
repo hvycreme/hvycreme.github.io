@@ -412,11 +412,19 @@
         <!-- The rose plate as interactive particles (js/particles.js). The canvas is
              decorative (hidden from screen readers); the caption below is real text. -->
         <figure class="contact-figure">
+          <!-- Plant switch: the same particles morph between three plates.
+               Hidden until the particle effect is running (js/particles.js). -->
+          <div class="explain-toggle plant-switch" role="group" aria-label="Choose a plant" hidden>
+            <button type="button" aria-pressed="true">Rose</button>
+            <button type="button" aria-pressed="false">Hyacinth</button>
+            <button type="button" aria-pressed="false">Orchid</button>
+          </div>
           <div class="contact-art" aria-hidden="true">
             <canvas class="particles"></canvas>
           </div>
-          <figcaption>
-            <p class="figure-caption"><em>Rosa × centifolia</em>, the cabbage rose, redrawn in about 24,000 particles. Move your cursor or finger through it.</p>
+          <!-- aria-live: screen readers hear the new caption when the plant changes -->
+          <figcaption aria-live="polite">
+            <p class="figure-caption"><span class="figure-plant"><em>Rosa × centifolia</em>, the cabbage rose</span>, redrawn in about 24,000 particles. Move your cursor or finger through it.</p>
             <p class="figure-credit">After Pierre-Joseph Redouté, <cite>Les Roses</cite> (1817–1824). Public domain.</p>
           </figcaption>
         </figure>

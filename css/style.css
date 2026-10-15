@@ -959,6 +959,23 @@ figcaption {
   box-shadow: var(--shadow-raised);
 }
 
+/* Plant switch above the particle figure: reuses the recessed-track toggle.
+   [hidden] must win over the toggle's display rule until JS reveals it. */
+.js .plant-switch {  /* same specificity as ".js .explain-toggle", so this wins */
+  margin: 0 auto var(--space-3);
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.plant-switch[hidden] {
+  display: none !important;
+}
+
+.plant-switch button {
+  white-space: nowrap;
+}
+
 .contact-art {
   position: relative;
   width: 100%;

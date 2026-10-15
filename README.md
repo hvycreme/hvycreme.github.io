@@ -76,6 +76,8 @@ Nothing loads until a visitor scrolls near Contact; the fly-in plays when it com
 
 **Mouse trail ("pollen"):** `js/pollen.js` releases a few small yellow and mustard dots wherever the mouse moves; they drift up and fade in about a second. It only runs while dots are visible, is mouse/trackpad only (not touch), and is off for Reduce motion. Tune it with `MAX_PARTICLES`, `SPACING`, `COLORS`, and the `globalAlpha` line in `frame()`.
 
+**Plant morph:** a switch above the Contact figure (Rose · Hyacinth · Orchid) morphs the same 24,000 particles between three plates. Each plant is fitted into one shared frame, and dots are paired by position so they travel short paths while changing color. Plants, captions, and credits are the `PLANTS` list at the top of `js/particles.js`; to add one, cut it out with `tools/prepare_plate.py`, add an entry there, and add a button to `.plant-switch` in `index.html`. `morphSeconds` and `arc` tune the transition.
+
 **Rose source image:** P.-J. Redouté, *Rosa centifolia*, from *Les Roses* (1817–1824). The artwork is in the public domain; the specific scan's source is not recorded yet; track it in `TODO.private.md` and add a source link to the credit (or swap in a scan with a documented source, e.g. from the Biodiversity Heritage Library) before publishing. To process a new scan: `pip install pillow numpy scipy`, then `python3 tools/prepare_plate.py my-scan.jpg images/rose-plate.webp`.
 
 ## Customizing the look
