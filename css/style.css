@@ -254,6 +254,32 @@ section p + p {
   color: var(--color-muted);
 }
 
+/* --- Entrance animation (Step 3) ---------------------------------------
+   @keyframes defines the motion once; any element can then use it.
+   Only opacity and transform change: the browser can animate both on
+   the GPU without recalculating layout, so it stays smooth. */
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* "both" = hold the "from" state during the delay and keep the "to" state
+   after finishing, so nothing flashes visible before its turn. */
+.hero > * {
+  animation: fade-rise var(--dur-slow) var(--ease) both;
+}
+
+/* Stagger: each hero line starts 0.12s after the one before it */
+.hero > :nth-child(2) { animation-delay: 0.12s; }
+.hero > :nth-child(3) { animation-delay: 0.24s; }
+.hero > :nth-child(4) { animation-delay: 0.36s; }
+
 .button {
   align-self: flex-start;
   margin-top: var(--space-3);
