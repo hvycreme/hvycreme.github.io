@@ -11,7 +11,7 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
    Send https://hvycreme.github.io/?for=crc with a clinical research
    coordinator application and ?for=ert with an emergency room tech one.
    Lists marked data-sortable get re-ordered by each item's data-crc /
-   data-ert number, and the matching "Seeking..." line in the intro shows.
+   data-ert number, so the most relevant evidence comes first.
    We move the actual DOM nodes (instead of CSS `order`) so the reading
    order for screen readers and keyboard Tab matches what's on screen.
    -------------------------------------------------------------------------- */
@@ -25,9 +25,6 @@ if (ROLES.includes(role)) {
     items.forEach((item) => list.append(item)); // append() moves an existing node to the end
   });
 
-  document.querySelectorAll('.hero-seeking [data-for]').forEach((line) => {
-    line.hidden = line.dataset.for !== role;
-  });
 }
 
 /* --------------------------------------------------------------------------
@@ -71,6 +68,8 @@ let centerId = null;
 let atBottom = false;
 
 function setActiveLink(id) {
+  // Back at the intro (no active section): return the phone nav strip to its start
+  if (!id && nav.scrollLeft > 0) nav.scrollTo({ left: 0, behavior: prefersReducedMotion.matches ? 'auto' : 'smooth' });
   navLinks.forEach((link) => {
     const isMatch = link.getAttribute('href') === `#${id}`;
     link.classList.toggle('is-active', isMatch);
@@ -139,122 +138,3 @@ document.querySelectorAll('.project').forEach((project) => {
   buttons.forEach((btn) => btn.addEventListener('click', () => show(btn.dataset.show)));
   show('plain'); // start in plain language (without JS, both panels stay visible)
 });
-
-/* --------------------------------------------------------------------------
-   5. Optional ambient music (header toggle)
-   Browsers only allow audio to start from a user gesture; clicking the
-   toggle is that gesture. Music runs through the Web Audio API because
-   iPhone Safari ignores audio.volume, while a GainNode works everywhere
-   and can fade smoothly. The MP3 is only downloaded if someone turns it on.
-   -------------------------------------------------------------------------- */
-const soundToggle = document.getElementById('sound-toggle');
-const MUSIC_SRC = 'audio/background.mp3';
-const MUSIC_VOLUME = 0.25; // 0 = silent, 1 = full
-
-let audioCtx = null;
-let music = null;
-let musicGain = null;
-let soundOn = false;
-
-function getAudioContext() {
-  if (!audioCtx) {
-    const Ctx = window.AudioContext || window.webkitAudioContext;
-    if (!Ctx) return null;
-    audioCtx = new Ctx();
-  }
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  return audioCtx;
-}
-
-function startMusic() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-  if (!music) {
-    music = new Audio(MUSIC_SRC);
-    music.loop = true;
-    musicGain = ctx.createGain();
-    ctx.createMediaElementSource(music).connect(musicGain).connect(ctx.destination);
-  }
-  const now = ctx.currentTime;
-  musicGain.gain.cancelScheduledValues(now);
-  musicGain.gain.setValueAtTime(0.0001, now);
-  musicGain.gain.exponentialRampToValueAtTime(MUSIC_VOLUME, now + 2); // 2 s fade-in
-  music.play().catch(() => setSound(false)); // rejects if blocked or file missing
-}
-
-function stopMusic() {
-  if (!music) return;
-  const now = audioCtx.currentTime;
-  musicGain.gain.cancelScheduledValues(now);
-  musicGain.gain.setValueAtTime(musicGain.gain.value, now);
-  musicGain.gain.linearRampToValueAtTime(0, now + 0.4);
-  setTimeout(() => { if (!soundOn) music.pause(); }, 450);
-}
-
-function setSound(on) {
-  soundOn = on;
-  soundToggle.setAttribute('aria-pressed', String(on));
-}
-
-soundToggle.addEventListener('click', () => {
-  setSound(!soundOn);
-  if (soundOn) startMusic();
-  else stopMusic();
-});
-
-/* --------------------------------------------------------------------------
-   6. Subtle UI click sounds (only while sound is on)
-   Each click builds a brand-new oscillator + gain node for a ~0.1 s blip.
-   Web Audio nodes are single-use and cheap, so one per event is the
-   intended pattern, and rapid clicks overlap instead of cutting off.
-   -------------------------------------------------------------------------- */
-function playClickSound() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-  const t = ctx.currentTime;
-
-  const osc = ctx.createOscillator();
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(880, t);
-  osc.frequency.exponentialRampToValueAtTime(520, t + 0.08);
-
-  const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0.0001, t);                      // exponential ramps can't start at 0
-  gain.gain.exponentialRampToValueAtTime(0.06, t + 0.005);  // 5 ms attack avoids a pop
-  gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
-
-  osc.connect(gain).connect(ctx.destination);
-  osc.start(t);
-  osc.stop(t + 0.13); // nodes are garbage-collected after they stop
-}
-
-// Event delegation: one listener handles clicks on every link, button, and summary
-document.addEventListener('click', (event) => {
-  if (soundOn && event.target.closest('a, button, summary')) playClickSound();
-});
-
-/* --------------------------------------------------------------------------
-   7. Botanical plate: hovering a name in the key highlights its marker
-   (and vice versa). Both carry the same data-part number, so one listener
-   on the whole figure can match them up.
-   -------------------------------------------------------------------------- */
-const plate = document.querySelector('.plate');
-
-// Hidden figures shouldn't cost a download. Their images keep the address in
-// data-href (which browsers ignore); copy it into href only when visible.
-document.querySelectorAll('image[data-href]').forEach((img) => {
-  if (!img.closest('[hidden]')) img.setAttribute('href', img.dataset.href);
-});
-
-if (plate) {
-  const highlight = (part) => {
-    plate.querySelectorAll('[data-part]').forEach((el) => {
-      el.classList.toggle('is-highlighted', el.dataset.part === part);
-    });
-  };
-  plate.addEventListener('pointerover', (event) => {
-    const target = event.target.closest('[data-part]');
-    highlight(target ? target.dataset.part : null);
-  });
-  plate.addEventListener('pointerleave', () => highlight(null));
-}

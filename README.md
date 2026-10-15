@@ -4,20 +4,19 @@ My personal portfolio: a single-page static site built with plain HTML, CSS, and
 
 **Live site:** https://hvycreme.github.io/
 
-Design: a cream-colored botanical-science aesthetic. Warm cream paper, charcoal text, forest-green accents with small touches of terracotta, Fraunces serif headings, and one leaf motif carried through the page.
+Design: a botanical field notebook with a clean professional layout. Warm cream paper, charcoal text, forest-green accents with small touches of terracotta, Fraunces serif headings, ruled section headings, and one leaf motif.
 
 ## Project structure
 
 ```
 index.html        All page content
 css/style.css     All styles; design tokens (colors, fonts, spacing, motion) at the top in :root
-js/main.js        Role tailoring, scroll reveals, active nav, explanation toggle, optional sound
-js/particles.js   Interactive particle rose behind the intro (WebGL)
+js/main.js        Role tailoring, scroll reveals, active nav, explanation toggle
+js/particles.js   Interactive particle rose in the Contact section (WebGL)
 fonts/            Fraunces (self-hosted, SIL Open Font License)
-images/           rose-plate.webp (hero plate), placeholders for figures and plant photos, favicon
+images/           headshot, rose-plate.webp (particle source), placeholders for figures and plant photos, favicon
 tools/            prepare_plate.py (botanical plate cut-out), prepare_headshot.py (portrait crop + color match)
 files/            PDFs: put resume.pdf here
-audio/            background.mp3 (optional ambient loop, off by default)
 .nojekyll         Tells GitHub Pages to serve files as-is (skip its Jekyll build step)
 ```
 
@@ -25,14 +24,15 @@ audio/            background.mp3 (optional ambient loop, off by default)
 
 | Section | id | What goes there |
 |---|---|---|
-| Introduction | `#intro` | Name, majors, interests, the summer roles you're seeking, "What I bring", résumé + contact buttons |
-| 01 Relevant experience | `#experience` | Research, employment, volunteering, leadership: responsibilities + concrete contributions |
-| 02 Selected work | `#work` | Two projects, each with an always-visible **Key finding** and a Plain language / Scientific detail toggle |
-| 03 Skills & certifications | `#skills` | Only what you hold, with an honest level (Proficient / Working / Familiar) |
-| 04 About me | `#about` | Why medicine, two "unfurling leaf" notes, a plant photo, and three **Currently growing** cards |
-| 05 Contact | `#contact` | Email, résumé download, LinkedIn |
+| Introduction | `#intro` | Name, majors, three-sentence introduction, résumé + contact buttons, headshot |
+| 01 Experience | `#experience` | Compact timeline: dates, role, organization, what you did |
+| 02 Selected work | `#work` | Projects: summary and result always visible; Plain language / Scientific detail toggle for the explanation |
+| 03 Skills & certifications | `#skills` | Four groups: clinical, research & lab, data & computing, communication |
+| 04 About me | `#about` | Why medicine, two "unfurling leaf" notes, a plant photo, and **Currently growing** |
+| 05 Contact | `#contact` | Email, résumé download, LinkedIn, and the interactive particle rose |
 
-Everything in **[square brackets]** is a placeholder to replace.
+### Draft placeholders
+Everything still waiting for real information is in **[square brackets]** with `class="draft"`, which shows a dashed terracotta highlight on the page. Search `index.html` for `class="draft"` to find them all; when you replace one, delete the brackets and the class. Nothing should be published while any remain.
 
 ## Tailoring for each application
 
@@ -50,8 +50,6 @@ The order is set in `index.html` by numbers on each experience entry and skill g
 <li data-crc="1" data-ert="3">   <!-- 1st for CRC links, 3rd for ERT links -->
 ```
 
-The "Seeking…" line in the intro also has one version per role (`<span data-for="crc">` etc.).
-
 ## Common edits
 
 **Résumé:** save your PDF as **`files/resume.pdf`** (exact name). Both résumé buttons point there.
@@ -67,20 +65,14 @@ The "Seeking…" line in the intro also has one version per role (`<span data-fo
 
 **Headshot:** `images/headshot-800.webp` / `headshot-480.webp`, made from the original photo by `tools/prepare_headshot.py` (crops to 4:5, color-matches the wall to the site's cream, strips metadata such as GPS location). For a new photo: `python3 tools/prepare_headshot.py photo.jpg` (adjust `CROP` in the script so your face sits in the upper middle).
 
-**Particle rose (intro background):** `js/particles.js` turns `images/rose-plate.webp` into ~24,000 WebGL particles that drift and scatter away from the mouse (the technique from Codrops' *Interactive Particles with Three.js*, written in plain WebGL, no library). Everything adjustable is in the `CONFIG` object at the top of the file:
-- `opacity`: how strong the effect is; `inkMix`: 0 = the rose's own colors, 1 = all forest green
+**Particle rose (Contact section):** `js/particles.js` turns `images/rose-plate.webp` into ~24,000 WebGL particles that drift and move away from a mouse or finger (the technique from Codrops' *Interactive Particles with Three.js*, written in plain WebGL, no library). Adjust it in the `CONFIG` object at the top of the file:
+- `opacity`: strength; `inkMix`: 0 = the rose's own colors, 1 = all forest green
 - `step`: sample every Nth pixel (higher = fewer, sparser particles)
-- `pushRadius` / `pushStrength`: how the mouse disturbs the particles
-- `placement`: the rose's size (`scale`, a multiple of the portrait's height) and position (`x`, `y`, as fractions of the portrait box)
-It starts after the page has loaded, pauses when the intro is scrolled out of view, and shows a still image for visitors with Reduce motion on. Without WebGL the intro simply has no effect.
+- `pushRadius` / `pushStrength`: how a pointer or finger disturbs the particles
+- `fill`: how much of its box the rose fills
+Nothing loads until a visitor scrolls near Contact; the fly-in plays when it comes into view; it pauses offscreen and shows a still image for visitors with Reduce motion on. Without WebGL the box is simply empty.
 
-**Hero plate (currently hidden):** to show it again, remove `hidden` from `<figure class="hero-figure plate" hidden>` in `index.html` (and re-enable the commented-out preload in `<head>`). While hidden, its image isn't downloaded at all.
-
-**Hero plate:** P.-J. Redouté's *Rosa centifolia* (1817–24, public domain), cut out of its white paper by `tools/prepare_plate.py`. The numbered markers are an inline `<svg>` in `index.html`; the names are in the `<ol class="plate-key">` right below it.
-- *Move a marker:* each `<g class="plate-marker">` has a feature point (`x1,y1`, where the dashed line starts) and a badge position (the circle's `cx,cy`), in the image's own 450×604 pixel coordinates.
-- *Use a sharper scan or a different plate:* `pip install pillow numpy scipy`, then `python3 tools/prepare_plate.py my-scan.jpg images/rose-plate.webp`, and adjust the marker coordinates and the `viewBox`/`width`/`height` to the new image size (the script prints it).
-
-**Music:** off by default; visitors turn it on with the speaker button in the header. Replace `audio/background.mp3` with any MP3 you have the rights to use (under ~1 MB). To remove sound entirely, delete the `<button class="sound-toggle">` in `index.html`.
+**Rose source image:** P.-J. Redouté, *Rosa centifolia*, from *Les Roses* (1817–1824). The artwork is in the public domain; the specific scan's source is not recorded, so note where it came from (or swap in a scan with a documented source, e.g. from the Biodiversity Heritage Library) before publishing. To process a new scan: `pip install pillow numpy scipy`, then `python3 tools/prepare_plate.py my-scan.jpg images/rose-plate.webp`.
 
 ## Customizing the look
 
@@ -131,4 +123,4 @@ GitHub Pages lets browsers cache files for up to 10 minutes. Force a fresh copy:
 - All animations respect the OS **Reduce motion** setting (`prefers-reduced-motion`).
 - Animations only touch `transform` and `opacity`; scroll effects use `IntersectionObserver`, never scroll events.
 - Works without JavaScript: every section is visible and both project explanations show.
-- Sound is off by default; the music file is only downloaded if a visitor turns it on.
+- The particle rose is decorative (hidden from screen readers), loads only near the Contact section, and works with mouse and touch.

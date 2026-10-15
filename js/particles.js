@@ -1,5 +1,5 @@
 /* ==========================================================================
-   particles.js: the rose plate as interactive particles behind the intro.
+   particles.js: the rose plate as interactive particles in the Contact section.
 
    Same technique as Codrops' "Interactive Particles with Three.js"
    (Bruno Imbrizi, 2019), written in plain WebGL so the site stays
@@ -21,25 +21,21 @@
     image: 'images/rose-plate.webp',
     step: 2,              // sample every Nth pixel (bigger = fewer, sparser dots)
     minAlpha: 0.6,        // skip pixels more transparent than this
-    pointSize: 2.1,       // dot diameter in CSS pixels
-    opacity: 0.55,        // overall strength of the effect: keep it a background
+    pointSize: 1.8,       // dot diameter in CSS pixels
+    opacity: 0.85,        // overall strength of the effect
     inkMix: 0.3,          // 0 = original colors, 1 = all forest-green ink
     ink: [0x2f / 255, 0x5d / 255, 0x3a / 255],
     drift: 2.2,           // how far dots wander (plate pixels)
-    pushRadius: 70,       // cursor influence radius (CSS px)
-    pushStrength: 28,     // how far dots get pushed (CSS px)
+    pushRadius: 55,       // pointer/finger influence radius (CSS px)
+    pushStrength: 22,     // how far dots get pushed (CSS px)
     introSeconds: 2.2,
-    // Where the rose sits, relative to the portrait: its height as a multiple
-    // of the portrait's height, and where the plate's center lands (0..1 of
-    // the portrait box; values outside 0..1 move it beyond the photo).
-    placement: { scale: 1.6, x: 0.8, y: 0.42 },
+    fill: 0.94,           // how much of its box the rose fills (1 = edge to edge)
   };
   const TRAIL_LENGTH = 24; // must match the array size in the shader
 
-  const hero = document.querySelector('.hero');
-  const portrait = document.querySelector('.portrait');
-  const canvas = document.querySelector('.hero-particles');
-  if (!hero || !portrait || !canvas) return;
+  const box = document.querySelector('.contact-art');  // sized by CSS
+  const canvas = box && box.querySelector('.particles');
+  if (!canvas) return;
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const gl = canvas.getContext('webgl', { premultipliedAlpha: true, antialias: false });
@@ -99,7 +95,7 @@
       float k = clamp(uIntro * 1.5 - aRand.y * 0.5, 0.0, 1.0);
       float e = 1.0 - pow(1.0 - k, 3.0);  // ease-out cubic
       float angle = aRand.x * 6.2832;
-      p += vec2(cos(angle), sin(angle)) * (120.0 + aRand.y * 260.0) * uPixelRatio * (1.0 - e);
+      p += vec2(cos(angle), sin(angle)) * (60.0 + aRand.y * 160.0) * uPixelRatio * (1.0 - e);
 
       // Device pixels -> clip space (-1..1, y up)
       vec2 clip = (p / uRes) * 2.0 - 1.0;
@@ -195,26 +191,23 @@
     canvas.dataset.particles = count; // handy for debugging
   }
 
-  /* ---------- Layout: size the canvas, place the rose -------------------- */
+  /* ---------- Layout: size the canvas, fit the rose inside it ------------- */
   let dpr = 1;
 
   function layout() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const box = canvas.getBoundingClientRect();
-    canvas.width = Math.round(box.width * dpr);
-    canvas.height = Math.round(box.height * dpr);
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
     gl.viewport(0, 0, canvas.width, canvas.height);
 
-    // Portrait box, relative to the canvas
-    const pBox = portrait.getBoundingClientRect();
-    const { scale, x, y } = CONFIG.placement;
-    const plateCssH = pBox.height * scale;
-    const s = plateCssH / plateH;                 // CSS px per plate px
-    const centerX = pBox.left - box.left + pBox.width * x;
-    const centerY = pBox.top - box.top + pBox.height * y;
+    // "contain" fit: as large as possible without cropping, centered
+    const s = Math.min(rect.width / plateW, rect.height / plateH) * CONFIG.fill;
+    const offsetX = (rect.width - plateW * s) / 2;
+    const offsetY = (rect.height - plateH * s) / 2;
 
     gl.uniform2f(u.uRes, canvas.width, canvas.height);
-    gl.uniform2f(u.uOffset, (centerX - (plateW * s) / 2) * dpr, (centerY - plateCssH / 2) * dpr);
+    gl.uniform2f(u.uOffset, offsetX * dpr, offsetY * dpr);
     gl.uniform1f(u.uScale, s * dpr);
     gl.uniform1f(u.uPixelRatio, dpr);
     gl.uniform1f(u.uPointSize, CONFIG.pointSize * dpr);
@@ -232,11 +225,13 @@
   let lastX = -1e4;
   let lastY = -1e4;
 
-  function onPointerMove(event) {
-    const box = canvas.getBoundingClientRect();
-    const x = (event.clientX - box.left) * dpr;
-    const y = (event.clientY - box.top) * dpr;
-    if (Math.hypot(x - lastX, y - lastY) < 6 * dpr) return; // skip tiny moves
+  // Works for mouse, pen, and touch alike (Pointer Events). A tap
+  // (pointerdown) disturbs the spot under the finger; dragging leaves a trail.
+  function onPointer(event) {
+    const rect = canvas.getBoundingClientRect();
+    const x = (event.clientX - rect.left) * dpr;
+    const y = (event.clientY - rect.top) * dpr;
+    if (event.type === 'pointermove' && Math.hypot(x - lastX, y - lastY) < 6 * dpr) return;
     lastX = x;
     lastY = y;
     trail.set([x, y, 1], trailIndex * 3);
@@ -248,7 +243,7 @@
   let start = 0;
   let last = 0;
   let running = false;
-  let visible = true;
+  let visible = false;
 
   function frame(now) {
     if (!start) start = now;
@@ -286,7 +281,9 @@
     gl.drawArrays(gl.POINTS, 0, count);
   }
 
-  /* ---------- Start (after the page has loaded, so it never delays it) --- */
+  /* ---------- Start: only when the Contact section gets close ----------- */
+  // Nothing (not even the image) loads until the visitor scrolls near
+  // Contact, and the fly-in starts when the rose is actually on screen.
   function init() {
     const img = new Image();
     img.src = CONFIG.image;
@@ -297,21 +294,26 @@
 
       if (reduceMotion) {
         drawStill();                      // a still image: no intro, drift, or interaction
-        new ResizeObserver(() => { layout(); drawStill(); }).observe(hero);
+        new ResizeObserver(() => { layout(); drawStill(); }).observe(box);
         return;
       }
 
-      new ResizeObserver(layout).observe(hero);
-      hero.addEventListener('pointermove', onPointerMove);
+      new ResizeObserver(layout).observe(box);
+      box.addEventListener('pointermove', onPointer);
+      box.addEventListener('pointerdown', onPointer);
 
-      // Only animate while the intro is on screen (no work when scrolled away)
+      // Animate only while visible; the first time it appears, play the fly-in
       new IntersectionObserver(([entry]) => {
         visible = entry.isIntersecting;
-        wake();
-      }).observe(hero);
+        wake();  // the first frame that runs sets the fly-in's start time
+      }, { threshold: 0.15 }).observe(box);
     }).catch(() => {});
   }
 
-  if (document.readyState === 'complete') init();
-  else window.addEventListener('load', init, { once: true });
+  const nearby = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    nearby.disconnect();
+    init();
+  }, { rootMargin: '400px 0px' });
+  nearby.observe(box);
 })();
