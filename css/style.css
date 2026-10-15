@@ -14,6 +14,7 @@
   /* Derived colors: color-mix() blends two colors, so these follow the tokens above */
   --color-header: color-mix(in srgb, var(--color-bg) 85%, transparent);
   --color-accent-soft: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  --shadow-lift: 0 14px 30px -12px rgb(0 0 0 / 0.7);  /* card hover shadow */
 
   /* Fonts: system stacks load instantly (no download) */
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -438,4 +439,47 @@ section p + p {
 
 .nav-list a.is-active::after {
   transform: scaleX(1);
+}
+
+/* ==========================================================================
+   12. Card hover (Step 6)
+   The lift is a transform. The shadow lives on a ::after layer and fades
+   in with opacity, instead of transitioning box-shadow directly:
+   box-shadow changes force a repaint every frame; opacity doesn't.
+   ========================================================================== */
+.card {
+  position: relative;  /* anchor for the ::after shadow layer */
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;                    /* cover the card exactly */
+  border-radius: inherit;
+  box-shadow: var(--shadow-lift);
+  opacity: 0;
+  pointer-events: none;        /* never block clicks on the card's link */
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+/* (hover: hover) = devices with a real pointer. Without this, a tap on a
+   phone leaves the card stuck in its "hovered" state. */
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-4px);
+  }
+
+  .card:hover::after {
+    opacity: 1;
+  }
+}
+
+/* Keyboard users get the same lift when they tab to a link inside a card */
+.card:focus-within {
+  transform: translateY(-4px);
+}
+
+.card:focus-within::after {
+  opacity: 1;
 }
