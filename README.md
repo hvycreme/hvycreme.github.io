@@ -73,7 +73,7 @@ The order is set in `index.html` by numbers on each experience entry and skill g
 - `fill`: how much of its box the rose fills
 Nothing loads until a visitor scrolls near Contact; the fly-in plays when it comes into view; it pauses offscreen and shows a still image for visitors with Reduce motion on. Without WebGL the box is simply empty.
 
-**Mouse trail ("pollen"):** `js/pollen.js` releases a few small green and terracotta dots wherever the mouse moves; they drift up and fade in about a second. It only runs while dots are visible, is mouse/trackpad only (not touch), and is off for Reduce motion. Tune it with `MAX_PARTICLES`, `SPACING`, `COLORS`, and the `globalAlpha` line in `frame()`.
+**Mouse trail ("pollen"):** `js/pollen.js` releases a few small yellow and mustard dots wherever the mouse moves; they drift up and fade in about a second. It only runs while dots are visible, is mouse/trackpad only (not touch), and is off for Reduce motion. Tune it with `MAX_PARTICLES`, `SPACING`, `COLORS`, and the `globalAlpha` line in `frame()`.
 
 **Rose source image:** P.-J. Redouté, *Rosa centifolia*, from *Les Roses* (1817–1824). The artwork is in the public domain; the specific scan's source is not recorded, so note where it came from (or swap in a scan with a documented source, e.g. from the Biodiversity Heritage Library) before publishing. To process a new scan: `pip install pillow numpy scipy`, then `python3 tools/prepare_plate.py my-scan.jpg images/rose-plate.webp`.
 
