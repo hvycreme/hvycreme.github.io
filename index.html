@@ -33,6 +33,15 @@
       <path d="M4 20C4 11 9.5 4 20 4c0 10.5-7 16-16 16Z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
       <path d="M4 20 15 9M9.2 14.8l-.6-4M12 12l3.6.6M11.6 12.4l-.4-3.4M7 17l4 .2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
     </symbol>
+    <!-- Line icons (visual cues for scanning); stroke in currentColor -->
+    <symbol id="i-cap" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5-10-5Z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/></g></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></g></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.6 19a1.4 1.4 0 0 0 1.2 2h12.4a1.4 1.4 0 0 0 1.2-2L14 9V3"/><path d="M7 15h10"/></g></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6l8-3Z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></g></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/></g></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></g></symbol>
+    <symbol id="i-hex" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.8 4.5v9L12 21l-7.8-4.5v-9Z"/><circle cx="12" cy="12" r="2.5"/></g></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></g></symbol>
   </svg>
 
   <!-- Mouse-trail "pollen" behind the whole page (js/pollen.js). Decorative. -->
@@ -93,6 +102,16 @@
              sizes="(max-width: 40rem) 11rem, 17rem"
              alt="Headshot of Gavin Eubanks" width="800" height="1000" fetchpriority="high">
       </figure>
+    </section>
+
+    <!-- At a glance: the key facts up top, for people who scan -->
+    <section class="glance" aria-label="At a glance">
+      <ul class="glance-list">
+        <li><svg class="glance-icon" aria-hidden="true"><use href="#i-cap"/></svg><p class="glance-label">Studying</p><p>B.S. Biochemistry &amp; Molecular Biology and B.S. Psychology</p></li>
+        <li><svg class="glance-icon" aria-hidden="true"><use href="#i-calendar"/></svg><p class="glance-label">Graduating</p><p>Expected May 2027, University of South Carolina</p></li>
+        <li><svg class="glance-icon" aria-hidden="true"><use href="#i-flask"/></svg><p class="glance-label">Research</p><p>Psychology, organic chemistry, and biochemistry labs</p></li>
+        <li><svg class="glance-icon" aria-hidden="true"><use href="#i-shield"/></svg><p class="glance-label">Certified</p><p>BLS (American Red Cross) · CITI human research</p></li>
+      </ul>
     </section>
 
     <!-- ===== 01 Research =====
@@ -309,19 +328,19 @@
       <h2 class="section-title"><span class="section-num">03</span> Methods</h2>
       <dl class="methods">
         <div>
-          <dt>Research with people <span class="method-where">Palomares Lab</span></dt>
+          <dt><svg class="method-icon" aria-hidden="true"><use href="#i-people"/></svg>Research with people <span class="method-where">Palomares Lab</span></dt>
           <dd><ul class="tags"><li>Experimental design</li><li>Running participants</li><li>Human-subjects data management</li><li>Qualtrics</li></ul></dd>
         </div>
         <div>
-          <dt>Data &amp; computing <span class="method-where">Palomares Lab</span></dt>
+          <dt><svg class="method-icon" aria-hidden="true"><use href="#i-code"/></svg>Data &amp; computing <span class="method-where">Palomares Lab</span></dt>
           <dd><ul class="tags"><li>Python (audio and lyric feature extraction)</li><li>Prompt generation for Suno</li></ul></dd>
         </div>
         <div>
-          <dt>Organic chemistry <span class="method-where">Wiskur Lab</span></dt>
+          <dt><svg class="method-icon" aria-hidden="true"><use href="#i-flask"/></svg>Organic chemistry <span class="method-where">Wiskur Lab</span></dt>
           <dd><ul class="tags"><li>Organic synthesis</li><li>TLC</li><li>Column chromatography</li><li>Extraction</li><li>Recrystallization</li><li>Distillation</li><li>¹H and ¹³C NMR</li></ul></dd>
         </div>
         <div>
-          <dt>Biochemistry <span class="method-where">Outten Lab</span></dt>
+          <dt><svg class="method-icon" aria-hidden="true"><use href="#i-hex"/></svg>Biochemistry <span class="method-where">Outten Lab</span></dt>
           <dd><ul class="tags"><li>Protein purification</li><li>Iron-sulfur cluster reconstitution</li><li>UV-visible spectroscopy</li><li>IR spectroscopy</li></ul></dd>
         </div>
       </dl>
@@ -534,6 +553,7 @@
   <footer class="site-footer">
     <svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg>
     <p>© 2026 Gavin Eubanks</p>
+    <a class="to-top" href="#intro"><svg aria-hidden="true"><use href="#i-up"/></svg>Back to top</a>
   </footer>
 
 </body>

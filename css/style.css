@@ -2179,3 +2179,188 @@ h2,
     opacity: 0.5;
   }
 }
+
+
+/* ==========================================================================
+   Scanning aids (UX laws applied)
+   ========================================================================== */
+
+/* At a glance — key facts at the top, where scanning starts (F-pattern);
+   four short chunks instead of one paragraph (Miller's law) */
+main > .glance {
+  padding-block: 0 var(--space-4);
+}
+
+.glance-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  list-style: none;
+  padding: var(--space-2);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
+}
+
+.glance-list li {
+  display: grid;
+  align-content: start;
+  gap: 0.15rem;
+  max-width: none;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+}
+
+.glance-list li + li {
+  border-left: 1px solid var(--color-border);
+}
+
+.glance-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-bottom: var(--space-2);
+  color: var(--color-accent);
+}
+
+.glance-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-terracotta);
+}
+
+section .glance-list p + p {
+  margin-top: 0;
+}
+
+/* Two-up on tablets, a single stack on phones: dividers follow the rows */
+@media (max-width: 60rem) {
+  .glance-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .glance-list li + li {
+    border-left: 0;
+  }
+
+  .glance-list li:nth-child(even) {
+    border-left: 1px solid var(--color-border);
+  }
+
+  .glance-list li:nth-child(n + 3) {
+    border-top: 1px solid var(--color-border);
+  }
+}
+
+@media (max-width: 30rem) {
+  .glance-list {
+    grid-template-columns: 1fr;
+  }
+
+  .glance-list li:nth-child(even) {
+    border-left: 0;
+  }
+
+  .glance-list li + li {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .glance-list li {
+    grid-template-columns: auto 1fr;
+    column-gap: var(--space-3);
+    padding: var(--space-3);
+  }
+
+  .glance-icon {
+    grid-row: span 2;
+    margin-bottom: 0;
+  }
+}
+
+/* Method cards: an icon cue beside each area's name */
+.methods dt {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--space-3);
+  align-items: center;
+}
+
+.method-icon {
+  grid-row: span 2;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.4rem;
+  border-radius: 50%;
+  background: var(--color-mint-soft);
+  color: var(--color-accent);
+}
+
+/* Recognition over recall: after a "see Projects" link, the card you land
+   on glows mint briefly, so your eye finds it */
+.project {
+  position: relative;
+}
+
+.project:target::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 3px var(--color-mint), 0 0 0 9px var(--color-mint-soft);
+  pointer-events: none;
+  opacity: 0;
+  animation: land 1.8s var(--ease);
+}
+
+@keyframes land {
+  15%,
+  60% { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Fitts's law: the copy control gets a full 44px touch target */
+.copy-email {
+  min-height: 2.75rem;
+}
+
+/* Peak-end: the page ends on a clear next step back up */
+.to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 2.75rem;
+  margin-top: var(--space-2);
+  padding: 0.3em 1em;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition:
+    transform var(--dur-control) var(--ease),
+    box-shadow var(--dur-control) var(--ease);
+}
+
+.to-top svg {
+  width: 1em;
+  height: 1em;
+}
+
+.to-top:hover {
+  box-shadow: var(--shadow-raised);
+  transform: translateY(-1px);
+}
+
+.to-top:active {
+  box-shadow: var(--shadow-pressed);
+  transform: translateY(1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .to-top:hover,
+  .to-top:active {
+    transform: none;
+  }
+}
