@@ -68,8 +68,9 @@ let centerId = null;
 let atBottom = false;
 
 function setActiveLink(id) {
-  // Back at the intro (no active section): return the phone nav strip to its start
-  if (!id && nav.scrollLeft > 0) nav.scrollTo({ left: 0, behavior: prefersReducedMotion.matches ? 'auto' : 'smooth' });
+  // Back at the intro (no section with a nav link): return the phone nav strip to its start
+  const hasLink = [...navLinks].some((link) => link.getAttribute('href') === `#${id}`);
+  if (!hasLink && nav.scrollLeft > 0) nav.scrollTo({ left: 0, behavior: prefersReducedMotion.matches ? 'auto' : 'smooth' });
   navLinks.forEach((link) => {
     const isMatch = link.getAttribute('href') === `#${id}`;
     link.classList.toggle('is-active', isMatch);
@@ -93,6 +94,19 @@ function scrollNavToLink(link) {
     behavior: prefersReducedMotion.matches ? 'auto' : 'smooth',
   });
 }
+
+// Phone strip: tell the CSS which end is reached, so only the edge with
+// more links behind it fades
+function updateNavEdge() {
+  const max = nav.scrollWidth - nav.clientWidth;
+  if (max <= 1) delete nav.dataset.edge;
+  else if (nav.scrollLeft <= 1) nav.dataset.edge = 'start';
+  else if (nav.scrollLeft >= max - 1) nav.dataset.edge = 'end';
+  else nav.dataset.edge = 'middle';
+}
+nav.addEventListener('scroll', updateNavEdge, { passive: true });
+window.addEventListener('resize', updateNavEdge);
+updateNavEdge();
 
 function updateActiveLink() {
   setActiveLink(atBottom ? lastSectionId : centerId);

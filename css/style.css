@@ -321,8 +321,8 @@ a:hover {
   }
 
   .nav-list {
-    padding-left: 1.25rem;
-    padding-right: 3.5rem;  /* clears the 2rem right fade so 06 Contact can scroll fully into view */
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;  /* the fade drops away at each end (see "Nav strip" below) */
   }
 }
 
@@ -1432,8 +1432,8 @@ figcaption {
   color: var(--color-muted);
 }
 
-/* Phones: a vertical sequence with downward arrows */
-@media (max-width: 40rem) {
+/* Phones and tablets: a vertical sequence with downward arrows */
+@media (max-width: 56rem) {
   .flow {
     flex-direction: column;
   }
@@ -1580,7 +1580,7 @@ figcaption {
   box-shadow: var(--shadow-raised-sm);
 }
 
-@media (min-width: 48rem) {
+@media (min-width: 60rem) {
   .mol-project.has-model {
     grid-template-columns: minmax(0, 1fr) minmax(0, 17rem);
     align-items: start;
@@ -1762,7 +1762,7 @@ figcaption {
   color: var(--color-muted);
 }
 
-@media (max-width: 48rem) {
+@media (max-width: 60rem) {
   .mol-figure {
     max-width: 22rem;
   }
@@ -1773,4 +1773,121 @@ figcaption {
   .mol-controls button:active {
     transform: none;
   }
+}
+
+
+/* ==========================================================================
+   UI polish pass
+   ========================================================================== */
+
+/* Wrapping: no single-word last lines in prose; balanced headings.
+   Browsers without text-wrap support simply ignore these. */
+/* (text-wrap-style, not the text-wrap shorthand: the shorthand would also
+   reset nowrap, e.g. in the nav strip) */
+p,
+li,
+dd,
+figcaption {
+  text-wrap-style: pretty;
+}
+
+h1,
+h2,
+.project-head h3,
+.subsection-title,
+.mol-text h4,
+.mol-caption {
+  text-wrap-style: balance;
+}
+
+/* Timeline titles on phones: the organization gets its own line, without
+   the separator dot */
+@media (max-width: 40rem) {
+  .entry-org {
+    display: block;
+    margin-top: 0.1rem;
+  }
+
+  .entry-sep {
+    display: none;
+  }
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* Project facts: one reading width for every answer, matching the
+   findings box, so text edges line up down the page */
+.facts dd > p,
+.facts dd > .points,
+.facts dd > .points li {
+  max-width: 44rem;
+}
+
+/* A status that wraps on narrow screens looks wrong as a pill */
+.project-status {
+  border-radius: var(--radius-sm);
+}
+
+/* Flow steps (wider screens): content starts at the top of each card and
+   the step number sits on its own line, so numbers and titles line up
+   across the row however the titles wrap */
+@media (min-width: 56.01rem) {
+  .flow li {
+    justify-content: flex-start;
+  }
+
+  .flow-step::before {
+    display: block;
+    margin-bottom: 0.1rem;
+  }
+}
+
+/* Molecule well: the canvas paints over the stage's own inset shadow, so
+   the recess is drawn on an overlay above it (it ignores the mouse, so
+   dragging still reaches the viewer) */
+.mol-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  box-shadow: var(--shadow-recessed);
+  pointer-events: none;
+}
+
+.mol-stage canvas {
+  border-radius: inherit;
+}
+
+/* Plant switch: a little tighter so all three names fit the narrow card
+   with even padding */
+.plant-switch button {
+  padding-inline: 0.85em;
+}
+
+#contact .contact-figure {
+  width: min(100%, 18.5rem);
+}
+
+/* Nav strip (whenever it is too wide to fit): fade only the edge that
+   has more links behind it */
+.site-header nav[data-edge="middle"] {
+  mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 2rem), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 2rem), transparent 100%);
+}
+
+.site-header nav[data-edge="start"] {
+  mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent 100%);
+}
+
+.site-header nav[data-edge="end"] {
+  mask-image: linear-gradient(to right, transparent 0, #000 1.25rem);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.25rem);
+}
+
+.mol-status {
+  white-space: nowrap;
 }
