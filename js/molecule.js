@@ -65,6 +65,7 @@
 
   // 3D unavailable: show the static drawing (if it exists) instead
   function showFallback() {
+    stage.classList.remove('is-loading');
     viewerEl.hidden = true;
     card.querySelector('.mol-controls').hidden = true;
     fallback.addEventListener('error', () => { figure.hidden = true; card.classList.remove('has-model'); });
@@ -135,9 +136,10 @@
     let sdf;
     try {
       const res = await fetch(modelUrl, { cache: 'no-cache' });
-      if (!res.ok) return;
+      if (!res.ok) { withdraw(); return; }
       sdf = await res.text();
     } catch (e) {
+      withdraw();
       return;
     }
     let meta = null;
@@ -146,8 +148,6 @@
       if (res.ok) meta = await res.json();
     } catch (e) { /* details stay as they are */ }
 
-    figure.hidden = false;
-    card.classList.add('has-model');
     fillDetails(meta);
 
     if (!hasWebGL()) { showFallback(); return; }
@@ -190,6 +190,22 @@
     // Keep the canvas sized to its box
     new ResizeObserver(() => { viewer.resize(); viewer.render(); }).observe(viewerEl);
     updateSpin();
+  }
+
+  // The structure file couldn't be loaded: give the space back
+  function withdraw() {
+    stage.classList.remove('is-loading');
+    figure.hidden = true;
+    card.classList.remove('has-model');
+  }
+
+  // Reserve the figure's space right away (with the loading shimmer), so
+  // nothing below it jumps when the model arrives: in-page links to later
+  // sections then land where they should.
+  if (card.dataset.model) {
+    figure.hidden = false;
+    card.classList.add('has-model');
+    stage.classList.add('is-loading');
   }
 
   // Load nothing until the visitor gets near the project

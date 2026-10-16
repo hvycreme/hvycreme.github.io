@@ -54,59 +54,56 @@ if ('IntersectionObserver' in window) {
 }
 
 /* --------------------------------------------------------------------------
-   3. Active nav highlighting
-   rootMargin '-50% 0px -50% 0px' shrinks the observed area to a line across
-   the middle of the screen; the section crossing it is the active one.
-   A second observer on the footer handles the very bottom of the page,
-   where the last (short) section can never reach the middle.
+   3. Navigation: phone menu + active link
+   Phones: the four links sit behind a "Menu" button (a disclosure:
+   aria-expanded says open/closed, aria-controls names the list). Escape or
+   choosing a link closes it, and focus returns to the button on Escape.
+   Active link: rootMargin '-50% 0px -50% 0px' shrinks the observed area to a
+   line across the middle of the screen; the section crossing it is active.
+   A section can borrow a link with data-nav (Skills & Education -> Experience).
+   A second observer on the footer handles the very bottom of the page.
    -------------------------------------------------------------------------- */
-const nav = document.querySelector('.site-header nav');
+const header = document.querySelector('.site-header');
+const menuButton = document.querySelector('.menu-toggle');
 const navLinks = document.querySelectorAll('.nav-list a');
 const trackedSections = document.querySelectorAll('main > section[id]');
 const lastSectionId = trackedSections[trackedSections.length - 1].id;
 let centerId = null;
 let atBottom = false;
 
+function setMenu(open) {
+  menuButton.setAttribute('aria-expanded', String(open));
+  header.classList.toggle('menu-open', open);
+}
+
+menuButton.addEventListener('click', () => {
+  setMenu(menuButton.getAttribute('aria-expanded') !== 'true');
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && header.classList.contains('menu-open')) {
+    setMenu(false);
+    menuButton.focus();
+  }
+});
+navLinks.forEach((link) => link.addEventListener('click', () => setMenu(false)));
+// Close when focus or a tap leaves the header
+document.addEventListener('click', (event) => {
+  if (!header.contains(event.target)) setMenu(false);
+});
+header.addEventListener('focusout', (event) => {
+  if (event.relatedTarget && !header.contains(event.relatedTarget)) setMenu(false);
+});
+
 function setActiveLink(id) {
-  // Back at the intro (no section with a nav link): return the phone nav strip to its start
-  const hasLink = [...navLinks].some((link) => link.getAttribute('href') === `#${id}`);
-  if (!hasLink && nav.scrollLeft > 0) nav.scrollTo({ left: 0, behavior: prefersReducedMotion.matches ? 'auto' : 'smooth' });
+  const section = id && document.getElementById(id);
+  const target = section ? section.dataset.nav || id : null;
   navLinks.forEach((link) => {
-    const isMatch = link.getAttribute('href') === `#${id}`;
+    const isMatch = link.getAttribute('href') === `#${target}`;
     link.classList.toggle('is-active', isMatch);
-    if (isMatch) {
-      link.setAttribute('aria-current', 'location'); // "you are here" for screen readers
-      scrollNavToLink(link);
-    } else {
-      link.removeAttribute('aria-current');
-    }
+    if (isMatch) link.setAttribute('aria-current', 'location'); // "you are here" for screen readers
+    else link.removeAttribute('aria-current');
   });
 }
-
-// On phones the nav is a sideways-scrolling strip: keep the active link in view.
-function scrollNavToLink(link) {
-  if (nav.scrollWidth <= nav.clientWidth) return;
-  const navBox = nav.getBoundingClientRect();
-  const linkBox = link.getBoundingClientRect();
-  const linkCenter = linkBox.left - navBox.left + nav.scrollLeft + linkBox.width / 2;
-  nav.scrollTo({
-    left: linkCenter - nav.clientWidth / 2,
-    behavior: prefersReducedMotion.matches ? 'auto' : 'smooth',
-  });
-}
-
-// Phone strip: tell the CSS which end is reached, so only the edge with
-// more links behind it fades
-function updateNavEdge() {
-  const max = nav.scrollWidth - nav.clientWidth;
-  if (max <= 1) delete nav.dataset.edge;
-  else if (nav.scrollLeft <= 1) nav.dataset.edge = 'start';
-  else if (nav.scrollLeft >= max - 1) nav.dataset.edge = 'end';
-  else nav.dataset.edge = 'middle';
-}
-nav.addEventListener('scroll', updateNavEdge, { passive: true });
-window.addEventListener('resize', updateNavEdge);
-updateNavEdge();
 
 function updateActiveLink() {
   setActiveLink(atBottom ? lastSectionId : centerId);

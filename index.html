@@ -15,7 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://hvycreme.github.io/">
   <!-- Runs before the page paints: tells CSS "JavaScript is on", so effects
-       that hide content (reveals, toggles) only apply when JS can undo them. -->
+       that hide content (reveals, toggles, the phone menu) only apply when JS can undo them. -->
   <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="css/style.css">
   <!-- defer: download in parallel, run after the HTML is parsed (so the DOM exists) -->
@@ -26,21 +26,15 @@
 </head>
 <body>
 
-  <!-- The leaf motif, defined ONCE as a <symbol> and reused with <use href="#leaf">.
-       It draws in currentColor, so CSS `color` decides its color. -->
+  <!-- Icons, defined once as <symbol>s and reused with <use href="#…">.
+       They draw in currentColor, so CSS `color` decides their color. -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <symbol id="leaf" viewBox="0 0 24 24">
       <path d="M4 20C4 11 9.5 4 20 4c0 10.5-7 16-16 16Z" fill="currentColor" fill-opacity="0.16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
       <path d="M4 20 15 9M9.2 14.8l-.6-4M12 12l3.6.6M11.6 12.4l-.4-3.4M7 17l4 .2" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
     </symbol>
-    <!-- Line icons (visual cues for scanning); stroke in currentColor -->
-    <symbol id="i-cap" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5-10-5Z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5M22 9v6"/></g></symbol>
-    <symbol id="i-calendar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></g></symbol>
-    <symbol id="i-flask" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.6 19a1.4 1.4 0 0 0 1.2 2h12.4a1.4 1.4 0 0 0 1.2-2L14 9V3"/><path d="M7 15h10"/></g></symbol>
-    <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6l8-3Z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></g></symbol>
-    <symbol id="i-people" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/></g></symbol>
-    <symbol id="i-code" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></g></symbol>
-    <symbol id="i-hex" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.8 4.5v9L12 21l-7.8-4.5v-9Z"/><circle cx="12" cy="12" r="2.5"/></g></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.6 10.6 0 0 1 12 5c6 0 9.5 7 9.5 7a17 17 0 0 1-3 3.9M6.6 6.6C3.9 8.3 2.5 12 2.5 12s3.5 7 9.5 7a9.8 9.8 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></g></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7Z"/><circle cx="12" cy="12" r="3"/></g></symbol>
     <symbol id="i-up" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></g></symbol>
   </svg>
 
@@ -50,22 +44,22 @@
   <header class="site-header">
     <!-- Skip link: the first thing a keyboard user reaches. Hidden until focused. -->
     <a class="skip-link" href="#main">Skip to content</a>
-    <a class="logo" href="#intro" aria-label="Back to top">
+    <a class="logo" href="#intro" aria-label="Gavin Eubanks, back to top">
       <svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg>
-      <span>GE</span>
+      <span>Gavin Eubanks</span>
     </a>
-    <nav aria-label="Primary">
-      <ol class="nav-list">
-        <li><a href="#research"><span class="nav-num">01</span> Research</a></li>
-        <li><a href="#work"><span class="nav-num">02</span> Projects</a></li>
-        <li><a href="#methods"><span class="nav-num">03</span> Skills</a></li>
-        <li><a href="#experience"><span class="nav-num">04</span> Experience</a></li>
-        <li><a href="#education"><span class="nav-num">05</span> Education</a></li>
-        <li><a href="#about"><span class="nav-num">06</span> About</a></li>
-        <li><a href="#contact"><span class="nav-num">07</span> Contact</a></li>
-      </ol>
+    <nav class="site-nav" aria-label="Primary">
+      <!-- Phones: the list collapses behind this button (js/main.js). Without JS the list simply shows. -->
+      <button type="button" class="menu-toggle" aria-expanded="false" aria-controls="nav-list">
+        <span class="menu-icon" aria-hidden="true"></span>Menu
+      </button>
+      <ul class="nav-list" id="nav-list">
+        <li><a href="#research">Research</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
     </nav>
-    <a class="header-resume" href="mailto:gavineub@gmail.com">Email</a>
   </header>
 
   <main id="main" tabindex="-1">
@@ -73,24 +67,15 @@
     <!-- ===== Introduction ===== -->
     <section id="intro" class="hero">
       <div class="hero-text">
-        <p class="eyebrow">Biochemistry &amp; Molecular Biology · Psychology · <abbr title="University of South Carolina">UofSC</abbr></p>
+        <p class="eyebrow">Biochemistry &amp; Molecular Biology · Psychology</p>
         <h1 class="hero-title" tabindex="-1">Gavin Eubanks</h1>
-        <p class="pronouns">he/him</p>
-        <p class="hero-lede">I’m an undergraduate researcher pursuing dual B.S. degrees in Biochemistry and Molecular Biology, and in Psychology, at the University of South Carolina. My experience includes human-participant research, organic synthesis, and Python tools for research.</p>
-        <p class="hero-sub">I’m seeking summer opportunities in clinical research or emergency care, bringing experience in participant sessions, study data management, and student support.</p>
-
-        <!-- Strongest qualifications first; each links to the project behind it -->
-        <ul class="highlights" aria-label="Highlights">
-          <li><a href="#p-music"><strong>First author</strong> · manuscript under review at PLOS&nbsp;ONE</a></li>
-          <li><a href="#research"><strong>Participant sessions</strong> and research data management</a></li>
-          <li><a href="#p-pipeline"><strong>Python development</strong> for research stimulus preparation</a></li>
-        </ul>
-
+        <p class="hero-lede">Undergraduate researcher at the University of South Carolina, working in human-participant research, organic synthesis, and Python tools for research.</p>
+        <p class="hero-para">I’m pursuing dual degrees in biochemistry and psychology because medicine sits where they meet: the biological mechanisms of illness, and how people understand and experience care.</p>
         <div class="hero-actions">
-          <a class="button button-primary" href="mailto:gavineub@gmail.com">Email me</a>
+          <a class="button button-primary" href="#research">Explore my research</a>
+          <a class="button" href="#contact">Contact me</a>
           <!-- Résumé: add files/resume.pdf, then uncomment this link.
                <a class="button" href="files/resume.pdf" download>Download résumé<span class="sr-only"> (PDF)</span></a> -->
-          <a class="button" href="https://www.linkedin.com/in/gavin-eubanks-4684912ba/" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
         </div>
       </div>
 
@@ -99,183 +84,116 @@
       <figure class="portrait">
         <img src="images/headshot-800.webp"
              srcset="images/headshot-480.webp 480w, images/headshot-800.webp 800w"
-             sizes="(max-width: 40rem) 11rem, 17rem"
+             sizes="(max-width: 48rem) 12rem, 17rem"
              alt="Headshot of Gavin Eubanks" width="800" height="1000" fetchpriority="high">
       </figure>
+
+      <!-- Compact supporting facts -->
+      <dl class="hero-facts">
+        <div>
+          <dt>University</dt>
+          <dd>University of South Carolina<br>B.S. in Biochemistry and Molecular Biology<br>B.S. in Psychology</dd>
+        </div>
+        <div>
+          <dt>Expected graduation</dt>
+          <dd>May 2027</dd>
+        </div>
+        <div>
+          <dt>Certification &amp; training</dt>
+          <dd>BLS (American Red Cross)<br>CITI human-subjects research training</dd>
+        </div>
+        <div>
+          <dt>Seeking</dt>
+          <dd>Summer opportunities in clinical research or emergency care</dd>
+        </div>
+      </dl>
     </section>
 
-    <!-- At a glance: the key facts up top, for people who scan -->
-    <section class="glance" aria-label="At a glance">
-      <ul class="glance-list">
-        <li><svg class="glance-icon" aria-hidden="true"><use href="#i-cap"/></svg><p class="glance-label">Education</p><p>B.S. in Biochemistry and Molecular Biology</p><p>B.S. in Psychology</p></li>
-        <li><svg class="glance-icon" aria-hidden="true"><use href="#i-calendar"/></svg><p class="glance-label">Expected graduation</p><p>May 2027</p></li>
-        <li><svg class="glance-icon" aria-hidden="true"><use href="#i-flask"/></svg><p class="glance-label">Research experience</p><p>Psychology, organic chemistry, and biochemistry labs</p></li>
-        <li><svg class="glance-icon" aria-hidden="true"><use href="#i-shield"/></svg><p class="glance-label">Certifications &amp; training</p><p>BLS · CITI human-subjects research training</p></li>
-      </ul>
-    </section>
+    <!-- ===== 01 Selected Research =====
+         (Old links: #work pointed to the projects; it lands here too.) -->
+    <section id="research" class="section reveal" aria-labelledby="research-title">
+      <span id="work" class="anchor-alias"></span>
+      <header class="section-head">
+        <p class="section-num" aria-hidden="true">01</p>
+        <h2 id="research-title">Selected Research</h2>
+      </header>
 
-    <!-- ===== 01 Research =====
-         data-crc / data-ert = this entry's position when the page is opened
-         with ?for=crc (clinical research coordinator) or ?for=ert (emergency
-         room tech). Lower numbers appear first. -->
-    <section id="research" class="reveal">
-      <h2 class="section-title"><span class="section-num">01</span> Research</h2>
-      <ol class="timeline" data-sortable>
-        <li class="entry" data-crc="1" data-ert="1">
-          <p class="entry-date">Jan 2024 – Present</p>
-          <div class="entry-body">
-            <h3>Undergraduate Researcher <span class="entry-org"><span class="entry-sep">·&nbsp;</span>Palomares Lab, Psychology</span></h3>
-            <p class="entry-type">Research with human participants&nbsp;· Supervisor Dr.&nbsp;Melanie&nbsp;Palomares</p>
-            <ul class="points">
-              <li>Investigate how labeling music as human-created or AI-generated influences listeners’ evaluations, with Dr.&nbsp;Emily&nbsp;Schwitzgebel (School of Music).</li>
-              <li>Co-led a <a href="#p-music">listener study</a> of human-created and AI-generated music and serve as first author on the resulting manuscript, currently under review at PLOS&nbsp;ONE.</li>
-              <li>Conduct participant sessions and manage study data.</li>
-              <li>Develop the Qualtrics experiment and lead stimulus preparation for a follow-up study.</li>
-              <li>Developed a <a href="#p-pipeline">Python pipeline</a> that extracts song features and generates prompts for research stimuli.</li>
-            </ul>
-          </div>
-        </li>
-        <li class="entry" data-crc="2" data-ert="2">
-          <p class="entry-date">Oct 2025 – Present</p>
-          <div class="entry-body">
-            <h3>Undergraduate Researcher <span class="entry-org"><span class="entry-sep">·&nbsp;</span>Wiskur Lab, Organic Chemistry</span></h3>
-            <p class="entry-type">Laboratory research&nbsp;· Supervisor Dr.&nbsp;Sheryl&nbsp;L.&nbsp;Wiskur</p>
-            <ul class="points">
-              <li>Synthesize, purify, and characterize <a href="#p-synthesis">silane polymers and catalysts</a>.</li>
-              <li>Document experimental procedures, observations, and results in laboratory records.</li>
-            </ul>
-
-            <!-- Individual synthesis project. The 3D viewer (js/molecule.js) only
-                 appears when a structure file exists in molecules/
-                 (made with tools/make_molecule_assets.py); until then this
-                 card is a single column with no viewer. -->
-            <section class="mol-project" data-model="molecules/target.sdf" aria-labelledby="mol-title">
-              <div class="mol-text">
-                <h4 id="mol-title">Individual synthesis project</h4>
-                <p class="mol-sub">Wiskur Lab · <span class="mol-status">In progress</span></p>
-                <p>My individual project focuses on synthesizing the target compound shown here.</p>
-                <details class="mol-details">
-                  <summary>Technical details</summary>
-                  <dl>
-                    <div>
-                      <dt>Target compound (IUPAC name)</dt>
-                      <dd class="iupac">7-((oxiran-2-ylmethoxy)methyl)-2,3-dihydrobenzo[d]imidazo[2,1-b]thiazole</dd>
-                    </div>
-                    <!-- Filled in from molecules/target.json when the structure files exist -->
-                    <div class="mol-meta" hidden>
-                      <dt>Molecular formula</dt>
-                      <dd data-mol="formula"></dd>
-                    </div>
-                    <div class="mol-meta" hidden>
-                      <dt>About the 3D model</dt>
-                      <dd data-mol="model"></dd>
-                    </div>
-                    <div class="mol-meta" hidden>
-                      <dt>How the model was made</dt>
-                      <dd class="mol-method" data-mol="method"></dd>
-                    </div>
-                  </dl>
-                </details>
-              </div>
-
-              <figure class="mol-figure" hidden>
-                <div class="mol-stage">
-                  <div class="mol-viewer" role="img" aria-label="Interactive 3D ball-and-stick model of the target compound, 7-((oxiran-2-ylmethoxy)methyl)-2,3-dihydrobenzo[d]imidazo[2,1-b]thiazole. Drag sideways to rotate."></div>
-                  <img class="mol-fallback" data-src="molecules/target-2d.svg" width="420" height="300" alt="2D structure drawing of the target compound, 7-((oxiran-2-ylmethoxy)methyl)-2,3-dihydrobenzo[d]imidazo[2,1-b]thiazole." hidden>
-                </div>
-                <div class="mol-controls">
-                  <button type="button" class="mol-pause">Pause rotation</button>
-                  <button type="button" class="mol-reset">Reset view</button>
-                </div>
-                <figcaption class="mol-caption">Target compound · computer-generated 3D model</figcaption>
-              </figure>
-            </section>
-          </div>
-        </li>
-        <li class="entry" data-crc="3" data-ert="3">
-          <p class="entry-date">Sep 2023 – Apr 2024</p>
-          <div class="entry-body">
-            <h3>Undergraduate Researcher <span class="entry-org"><span class="entry-sep">·&nbsp;</span>Outten Lab, Biochemistry</span></h3>
-            <p class="entry-type">Laboratory research&nbsp;· with Dr.&nbsp;Outten</p>
-            <ul class="points">
-              <li>Investigated iron–sulfur cluster biogenesis: how cells assemble iron–sulfur clusters, small metal cofactors that many proteins need in order to function.</li>
-              <li>Purified proteins, reconstituted iron–sulfur clusters, and characterized samples using UV–visible and infrared spectroscopy.</li>
-              <li>Prepared experimental buffers and solutions and documented procedures and observations.</li>
-            </ul>
-          </div>
-        </li>
-      </ol>
-    </section>
-
-    <!-- ===== 02 Projects ===== -->
-    <section id="work" class="reveal">
-      <h2 class="section-title"><span class="section-num">02</span> Projects</h2>
-
-      <!-- Each project: question/purpose, my contribution, approach, outcome/status -->
-      <article class="project" id="p-music">
+      <!-- Featured study. Order: question → finding → role → method -->
+      <article class="project project-featured" id="p-music" aria-labelledby="p-music-title">
         <header class="project-head">
-          <p class="project-meta">Palomares Lab&nbsp;· with Dr.&nbsp;Emily&nbsp;Schwitzgebel</p>
-          <h3>How source labels shape music judgments</h3>
+          <p class="project-meta">Featured study · Palomares Lab, Psychology · with Dr.&nbsp;Emily&nbsp;Schwitzgebel (School of Music)</p>
+          <h3 id="p-music-title">How source labels shape music judgments</h3>
           <p class="project-subtitle">A study of how identifying music as human-created or AI-generated affects listeners’ evaluations.</p>
-          <p class="project-status">First-author manuscript&nbsp;· under review at PLOS&nbsp;ONE</p>
+          <p class="project-status">First-author manuscript · under review at PLOS&nbsp;ONE</p>
         </header>
-        <dl class="facts">
-          <div>
-            <dt>The questions</dt>
-            <dd>Can listeners distinguish human-created songs from AI-generated versions designed to match them? How does revealing the source affect their evaluations?</dd>
+
+        <div class="study-block">
+          <h4 class="block-label">Research question</h4>
+          <p class="study-question">Can listeners distinguish human-created songs from AI-generated versions designed to match them? How does revealing the source affect their evaluations?</p>
+        </div>
+
+        <div class="study-block">
+          <h4 class="block-label">Key finding</h4>
+          <!-- Qualitative comparison only: no numbers, bars, or scales -->
+          <ul class="finding-compare" aria-label="Which songs listeners preferred, by condition">
+            <li>
+              <svg class="finding-icon" aria-hidden="true"><use href="#i-eye-off"/></svg>
+              <p class="finding-condition">Source hidden</p>
+              <p class="finding-result">AI-generated songs preferred</p>
+            </li>
+            <li>
+              <svg class="finding-icon" aria-hidden="true"><use href="#i-eye"/></svg>
+              <p class="finding-condition">Source disclosed</p>
+              <p class="finding-result">Human-created songs preferred</p>
+            </li>
+          </ul>
+          <p class="finding-note">Within this study’s sample and song set, listeners also did not reliably distinguish the human-created songs from their AI-generated counterparts.</p>
+        </div>
+
+        <div class="study-block">
+          <h4 class="block-label">My role</h4>
+          <ul class="points">
+            <li>Co-led the listener study and am first author on the manuscript.</li>
+            <li>Developed the <a href="#p-pipeline">Python pipeline</a> that generates the prompts for the AI-generated versions.</li>
+            <li>Lead stimulus preparation and develop the Qualtrics experiment for a follow-up study.</li>
+          </ul>
+        </div>
+
+        <div class="study-block">
+          <h4 class="block-label">Method</h4>
+          <ol class="flow" aria-label="Study process">
+            <li><span class="flow-step">Human-created songs</span></li>
+            <li><span class="flow-step">AI-generated versions</span><span class="flow-note">designed to match; generated in Suno from pipeline prompts</span></li>
+            <li><span class="flow-step">Listener study</span><span class="flow-note">source hidden or disclosed</span></li>
+            <li><span class="flow-step">Compare evaluations</span><span class="flow-note">source-identification accuracy; listener preferences</span></li>
+          </ol>
+          <div class="explain-toggle" role="group" aria-label="Explanation style">
+            <button type="button" aria-pressed="true" data-show="plain">Plain language</button>
+            <button type="button" aria-pressed="false" data-show="detail">Scientific detail</button>
           </div>
-          <div>
-            <dt>My contribution</dt>
-            <dd>
-              <ul class="points">
-                <li>Co-led the listener study and am first author on the manuscript.</li>
-                <li>Developed the <a href="#p-pipeline">Python pipeline</a> that generates the prompts for the AI-generated versions.</li>
-                <li>Lead stimulus preparation and develop the Qualtrics experiment for a follow-up study.</li>
-              </ul>
-            </dd>
+          <div class="explain-panel" data-panel="plain">
+            <p class="panel-label">Plain language</p>
+            <p>Listeners evaluated human-created songs and AI-generated versions designed to share selected musical features. The study compared their evaluations with the source hidden and with the source disclosed.</p>
           </div>
-          <div>
-            <dt>Approach</dt>
-            <dd>
-              <ol class="flow" aria-label="Study process">
-                <li><span class="flow-step">Human-created songs</span></li>
-                <li><span class="flow-step">AI-generated versions</span><span class="flow-note">designed to match; generated in Suno from pipeline prompts</span></li>
-                <li><span class="flow-step">Listener study</span><span class="flow-note">source hidden or disclosed</span></li>
-                <li><span class="flow-step">Compare evaluations</span><span class="flow-note">source-identification accuracy; listener preferences</span></li>
-              </ol>
-              <div class="explain-toggle" role="group" aria-label="Explanation style">
-                <button type="button" aria-pressed="true" data-show="plain">Plain language</button>
-                <button type="button" aria-pressed="false" data-show="detail">Scientific detail</button>
-              </div>
-              <div class="explain-panel" data-panel="plain">
-                <p class="panel-label">Plain language</p>
-                <p>Listeners evaluated human-created songs and AI-generated versions designed to share selected musical features. The study compared their evaluations with the source hidden and with the source disclosed.</p>
-              </div>
-              <div class="explain-panel" data-panel="detail">
-                <p class="panel-label">Scientific detail</p>
-                <p>For each human-created song, my pipeline extracted acoustic and lyric features and converted them into text prompts; Suno, an AI music generator, produced a version from each prompt.</p>
-                <p>The follow-up study tests a hypothesis: that genre prototypicality (how closely a song resembles a typical example of its genre) helps explain how AI-generated songs perform when listeners don’t know the source.</p>
-              </div>
-            </dd>
+          <div class="explain-panel" data-panel="detail">
+            <p class="panel-label">Scientific detail</p>
+            <p>For each human-created song, my pipeline extracted acoustic and lyric features and converted them into text prompts; Suno, an AI music generator, produced a version from each prompt.</p>
+            <p>The follow-up study tests a hypothesis: that genre prototypicality (how closely a song resembles a typical example of its genre) helps explain how AI-generated songs perform when listeners don’t know the source.</p>
           </div>
-          <div>
-            <dt>What we found</dt>
-            <dd>
-              <p class="finding">Within this study’s sample and song set, listeners did not reliably distinguish the human-created songs from their AI-generated counterparts. They preferred the AI-generated songs when the source was hidden and the human-created songs when the source was disclosed.</p>
-            </dd>
-          </div>
-        </dl>
+        </div>
+
         <!-- Personal motivation: kept separate from the study and its findings -->
         <section class="project-why" aria-labelledby="p1-why">
-          <h4 class="project-part-label" id="p1-why"><svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg>Why it interests me</h4>
+          <h4 id="p1-why"><svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg>Why it interests me</h4>
           <p>This work made me more interested in the expectations and experiences people bring to a judgment. That interest is also part of why I’m drawn to medicine: I want to understand both the biology of illness and the person experiencing it—their concerns, beliefs, and what matters to them.</p>
         </section>
       </article>
 
-      <article class="project" id="p-pipeline">
+      <!-- Related software -->
+      <article class="project" id="p-pipeline" aria-labelledby="p-pipeline-title">
         <header class="project-head">
-          <p class="project-meta">Palomares Lab · software</p>
-          <h3>Python pipeline for music analysis and stimulus preparation</h3>
+          <p class="project-meta">Related software · Palomares Lab</p>
+          <h3 id="p-pipeline-title">Python pipeline for music analysis and stimulus preparation</h3>
         </header>
         <dl class="facts">
           <div>
@@ -287,7 +205,7 @@
             <dd>Developed the feature-extraction and prompt-generation components in Python.</dd>
           </div>
           <div>
-            <dt>Approach</dt>
+            <dt>Workflow</dt>
             <dd>
               <ol class="flow" aria-label="Pipeline workflow">
                 <li><span class="flow-step">Source song</span></li>
@@ -305,10 +223,11 @@
         </dl>
       </article>
 
-      <article class="project" id="p-synthesis">
+      <!-- Organic chemistry, with the individual project's 3D model -->
+      <article class="project" id="p-synthesis" aria-labelledby="p-synthesis-title">
         <header class="project-head">
-          <p class="project-meta">Wiskur Lab · organic chemistry</p>
-          <h3>Synthesizing silane polymers and catalysts</h3>
+          <p class="project-meta">Wiskur Lab · Organic Chemistry · ongoing since October 2025</p>
+          <h3 id="p-synthesis-title">Synthesizing silane polymers and catalysts</h3>
         </header>
         <dl class="facts">
           <div>
@@ -326,46 +245,110 @@
               </ul>
             </dd>
           </div>
-          <div>
-            <dt>Status</dt>
-            <dd>Ongoing since October 2025.</dd>
-          </div>
         </dl>
+
+        <!-- Individual synthesis project. The 3D viewer (js/molecule.js) only
+             appears when a structure file exists in molecules/
+             (made with tools/make_molecule_assets.py); until then this
+             panel is a single column with no viewer. -->
+        <section class="mol-project" data-model="molecules/target.sdf" aria-labelledby="mol-title">
+          <div class="mol-text">
+            <h4 id="mol-title">Individual synthesis project</h4>
+            <p class="mol-sub">Wiskur Lab · <span class="mol-status">In progress</span></p>
+            <p>My individual project focuses on synthesizing the target compound shown here.</p>
+            <details class="mol-details">
+              <summary>Technical details</summary>
+              <dl>
+                <div>
+                  <dt>Target compound (IUPAC name)</dt>
+                  <dd class="iupac">7-((oxiran-2-ylmethoxy)methyl)-2,3-dihydrobenzo[d]imidazo[2,1-b]thiazole</dd>
+                </div>
+                <!-- Filled in from molecules/target.json when the structure files exist -->
+                <div class="mol-meta" hidden>
+                  <dt>Molecular formula</dt>
+                  <dd data-mol="formula"></dd>
+                </div>
+                <div class="mol-meta" hidden>
+                  <dt>About the 3D model</dt>
+                  <dd data-mol="model"></dd>
+                </div>
+                <div class="mol-meta" hidden>
+                  <dt>How the model was made</dt>
+                  <dd class="mol-method" data-mol="method"></dd>
+                </div>
+              </dl>
+            </details>
+          </div>
+
+          <figure class="mol-figure" hidden>
+            <div class="mol-stage">
+              <div class="mol-viewer" role="img" aria-label="Interactive 3D ball-and-stick model of the target compound, 7-((oxiran-2-ylmethoxy)methyl)-2,3-dihydrobenzo[d]imidazo[2,1-b]thiazole. Drag sideways to rotate."></div>
+              <img class="mol-fallback" data-src="molecules/target-2d.svg" width="420" height="300" alt="2D structure drawing of the target compound, 7-((oxiran-2-ylmethoxy)methyl)-2,3-dihydrobenzo[d]imidazo[2,1-b]thiazole." hidden>
+            </div>
+            <div class="mol-controls">
+              <button type="button" class="mol-pause">Pause rotation</button>
+              <button type="button" class="mol-reset">Reset view</button>
+            </div>
+            <figcaption class="mol-caption">Target compound · computer-generated 3D model</figcaption>
+          </figure>
+        </section>
       </article>
     </section>
 
-    <!-- ===== 03 Research & Technical Skills: methods actually used, by lab (anchor stays #methods) ===== -->
-    <section id="methods" class="reveal">
-      <h2 class="section-title"><span class="section-num">03</span> Research &amp; Technical Skills</h2>
-      <dl class="methods">
-        <div>
-          <dt><svg class="method-icon" aria-hidden="true"><use href="#i-people"/></svg>Human-participant research <span class="method-where">Palomares Lab</span></dt>
-          <dd><ul class="tags"><li>Conducting participant sessions</li><li>Human-subjects data management</li><li>Experimental design</li><li>Experiment development in Qualtrics</li></ul></dd>
-        </div>
-        <div>
-          <dt><svg class="method-icon" aria-hidden="true"><use href="#i-code"/></svg>Programming <span class="method-where">Palomares Lab</span></dt>
-          <dd><ul class="tags"><li>Python: audio and lyric feature extraction</li><li>Programmatic prompt generation for research stimuli</li></ul></dd>
-        </div>
-        <div>
-          <dt><svg class="method-icon" aria-hidden="true"><use href="#i-flask"/></svg>Organic chemistry <span class="method-where">Wiskur Lab</span></dt>
-          <dd><ul class="tags"><li>Organic synthesis</li><li>Thin-layer chromatography (TLC)</li><li>Column chromatography</li><li>Extraction</li><li>Recrystallization</li><li>Distillation</li><li>¹H and ¹³C NMR spectroscopy</li></ul></dd>
-        </div>
-        <div>
-          <dt><svg class="method-icon" aria-hidden="true"><use href="#i-hex"/></svg>Biochemistry <span class="method-where">Outten Lab</span></dt>
-          <dd><ul class="tags"><li>Protein purification</li><li>Iron–sulfur cluster reconstitution</li><li>UV–visible spectroscopy</li><li>Infrared (IR) spectroscopy</li></ul></dd>
-        </div>
-      </dl>
-    </section>
+    <!-- ===== 02 Experience =====
+         Lab appointments and other roles. Details of the research itself live
+         in Selected Research, so these entries stay short.
+         data-crc / data-ert = position when the page is opened with ?for=crc
+         (clinical research coordinator) or ?for=ert (emergency room tech). -->
+    <section id="experience" class="section reveal" aria-labelledby="experience-title">
+      <header class="section-head">
+        <p class="section-num" aria-hidden="true">02</p>
+        <h2 id="experience-title">Experience</h2>
+        <p class="section-jump">Also on this page: <a href="#skills">Skills</a> · <a href="#education">Education</a></p>
+      </header>
 
-    <!-- ===== 04 Experience =====
-         The Experience list uses the same data-crc / data-ert ordering as Research. -->
-    <section id="experience" class="reveal">
-      <h2 class="section-title"><span class="section-num">04</span> Experience</h2>
-      <ol class="timeline" data-sortable>
+      <h3 class="group-title">Research appointments</h3>
+      <ol class="entries" data-sortable>
+        <li class="entry" data-crc="1" data-ert="2">
+          <p class="entry-date">Jan 2024 – Present</p>
+          <div class="entry-body">
+            <h4>Undergraduate Researcher <span class="entry-org">Palomares Lab, Psychology · Supervisor Dr.&nbsp;Melanie&nbsp;Palomares</span></h4>
+            <ul class="points">
+              <li>Investigate how labeling music as human-created or AI-generated influences listeners’ evaluations, with Dr.&nbsp;Emily&nbsp;Schwitzgebel (School of Music); co-led the <a href="#p-music">listener study</a>.</li>
+              <li>Conduct participant sessions and manage study data.</li>
+              <li>Develop the Qualtrics experiment and lead stimulus preparation for a follow-up study.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="entry" data-crc="2" data-ert="3">
+          <p class="entry-date">Oct 2025 – Present</p>
+          <div class="entry-body">
+            <h4>Undergraduate Researcher <span class="entry-org">Wiskur Lab, Organic Chemistry · Supervisor Dr.&nbsp;Sheryl&nbsp;L.&nbsp;Wiskur</span></h4>
+            <ul class="points">
+              <li>Synthesize, purify, and characterize <a href="#p-synthesis">silane polymers and catalysts</a>.</li>
+              <li>Document experimental procedures, observations, and results in laboratory records.</li>
+            </ul>
+          </div>
+        </li>
+        <li class="entry" data-crc="3" data-ert="4">
+          <p class="entry-date">Sep 2023 – Apr 2024</p>
+          <div class="entry-body">
+            <h4>Undergraduate Researcher <span class="entry-org">Outten Lab, Biochemistry · with Dr.&nbsp;Outten</span></h4>
+            <ul class="points">
+              <li>Investigated iron–sulfur cluster biogenesis: how cells assemble iron–sulfur clusters, small metal cofactors that many proteins need in order to function.</li>
+              <li>Purified proteins, reconstituted iron–sulfur clusters, and characterized samples using UV–visible and infrared spectroscopy.</li>
+              <li>Prepared experimental buffers and solutions and documented procedures and observations.</li>
+            </ul>
+          </div>
+        </li>
+      </ol>
+
+      <h3 class="group-title">Leadership, teaching &amp; work</h3>
+      <ol class="entries" data-sortable>
         <li class="entry" data-crc="2" data-ert="1">
           <p class="entry-date">Mar 2025 – Present</p>
           <div class="entry-body">
-            <h3>Resident Assistant <span class="entry-org"><span class="entry-sep">·&nbsp;</span>East Quad, University Housing</span></h3>
+            <h4>Resident Assistant <span class="entry-org">East Quad, University Housing</span></h4>
             <ul class="points">
               <li>Conduct individual resident check-ins and host community programs.</li>
               <li>Serve on scheduled on-call rotations and conduct community walks (scheduled rounds of the residence hall).</li>
@@ -378,7 +361,7 @@
         <li class="entry" data-crc="1" data-ert="3">
           <p class="entry-date">PSYC 101</p>
           <div class="entry-body">
-            <h3>Teaching Assistant &amp; Supplemental Instructor <span class="entry-org"><span class="entry-sep">·&nbsp;</span>Introductory Psychology, with Professor&nbsp;Tristian&nbsp;Collier</span></h3>
+            <h4>Teaching Assistant &amp; Supplemental Instructor <span class="entry-org">Introductory Psychology, with Professor&nbsp;Tristian&nbsp;Collier</span></h4>
             <ul class="points">
               <li>Led review sessions on introductory psychology concepts and exam preparation.</li>
               <li>Worked with students individually to clarify course concepts and prepare for exams.</li>
@@ -388,7 +371,7 @@
         <li class="entry" data-crc="4" data-ert="4">
           <p class="entry-date">Mar 2025 – Mar 2026</p>
           <div class="entry-body">
-            <h3>NEXUS Living Learning Community Coordinator <span class="entry-org"><span class="entry-sep">·&nbsp;</span>University Housing</span></h3>
+            <h4>NEXUS Living Learning Community Coordinator <span class="entry-org">University Housing</span></h4>
             <ul class="points">
               <li>Supported East Quad residents in the NEXUS living-learning community and helped organize its community programs.</li>
             </ul>
@@ -397,7 +380,7 @@
         <li class="entry" data-crc="3" data-ert="5">
           <p class="entry-date">Apr 2025 – Apr 2026</p>
           <div class="entry-body">
-            <h3>Co-Vice President <span class="entry-org"><span class="entry-sep">·&nbsp;</span>American Chemical Society (ACS) Student Chapter</span></h3>
+            <h4>Co-Vice President <span class="entry-org">American Chemical Society (ACS) Student Chapter</span></h4>
             <ul class="points">
               <li>Collaborated on planning chapter meetings and events for students interested in chemistry.</li>
             </ul>
@@ -406,7 +389,7 @@
         <li class="entry" data-crc="5" data-ert="6">
           <p class="entry-date">Aug 2026 – Present</p>
           <div class="entry-body">
-            <h3>Community Volunteer <span class="entry-org"><span class="entry-sep">·&nbsp;</span>W.&nbsp;Gordon Belser Arboretum</span></h3>
+            <h4>Community Volunteer <span class="entry-org">W.&nbsp;Gordon Belser Arboretum</span></h4>
             <ul class="points">
               <li>Maintain arboretum grounds alongside students and staff during community service days.</li>
             </ul>
@@ -415,7 +398,7 @@
         <li class="entry" data-crc="6" data-ert="2">
           <p class="entry-date">Oct 2022 – May 2025</p>
           <div class="entry-body">
-            <h3>Barista <span class="entry-org"><span class="entry-sep">·&nbsp;</span>Starbucks, Columbia, SC, <span class="nowrap">part-time</span></span></h3>
+            <h4>Barista <span class="entry-org">Starbucks, Columbia, SC · <span class="nowrap">part-time</span></span></h4>
             <ul class="points">
               <li>Provided customer service in a high-volume store and coordinated shift tasks with team members.</li>
             </ul>
@@ -424,7 +407,7 @@
         <li class="entry" data-crc="7" data-ert="7">
           <p class="entry-date">Jul 2020 – Jan 2023</p>
           <div class="entry-body">
-            <h3>Customer Service Associate <span class="entry-org"><span class="entry-sep">·&nbsp;</span>Publix Super Markets, Charleston County, <span class="nowrap">part-time</span></span></h3>
+            <h4>Customer Service Associate <span class="entry-org">Publix Super Markets, Charleston County · <span class="nowrap">part-time</span></span></h4>
             <ul class="points">
               <li>Provided customer service and supported daily store operations.</li>
             </ul>
@@ -433,88 +416,97 @@
       </ol>
     </section>
 
-    <!-- ===== 05 Education ===== -->
-    <section id="education" class="reveal">
-      <h2 class="section-title"><span class="section-num">05</span> Education</h2>
-      <ol class="timeline">
-        <li class="entry">
-          <p class="entry-date">Expected May 2027</p>
-          <div class="entry-body">
-            <h3>University of South Carolina</h3>
-            <ul class="degrees" aria-label="Degrees (dual)">
-              <li>B.S. in Biochemistry and Molecular Biology</li>
-              <li>B.S. in Psychology</li>
-            </ul>
-            <ul class="points">
-              <li>Dean’s List: 2024, 2025, 2026</li>
-            </ul>
-          </div>
-        </li>
-        <li class="entry">
-          <p class="entry-date">2018 – 2023</p>
-          <div class="entry-body">
-            <h3>Trident Technical College <span class="entry-org"><span class="entry-sep">·&nbsp;</span>Associate of Science, General Studies</span></h3>
-          </div>
-        </li>
-      </ol>
+    <!-- ===== 03 Skills & Education ===== -->
+    <section id="skills" class="section reveal" aria-labelledby="skills-title" data-nav="experience">
+      <span id="methods" class="anchor-alias"></span><!-- old #methods links land here -->
+      <header class="section-head">
+        <p class="section-num" aria-hidden="true">03</p>
+        <h2 id="skills-title">Skills &amp; Education</h2>
+      </header>
 
-      <h3 class="subsection-title">Certifications &amp; training</h3>
-      <ul class="skill-list">
-        <li><span>Basic Life Support (BLS) — American Red Cross</span><span class="level">Certification · issued Sep 2026 · expires Sep 2028</span></li>
-        <li><span>Human Research: Social &amp; Behavioral Research — CITI Program</span><span class="level">Training · completed Jan 2024 · expires Jan 2027</span></li>
-        <li><span>Social and Behavioral Responsible Conduct of Research — CITI Program</span><span class="level">Training · completed Sep 2025 · expires Sep 2029</span></li>
-        <li><span>Chemical and Laboratory Safety Training — University of South Carolina</span><span class="level">Training · completed Feb 2024</span></li>
-        <li><span>Hazardous Waste Management Training — University of South Carolina</span><span class="level">Training · completed Feb 2024</span></li>
-      </ul>
+      <div class="skills-education">
+        <div class="skills-col">
+          <h3 class="group-title">Research &amp; technical skills</h3>
+          <dl class="skill-groups">
+            <div>
+              <dt>Human-participant research <span class="where">Palomares Lab</span></dt>
+              <dd><ul class="inline-list"><li>Conducting participant sessions</li><li>Human-subjects data management</li><li>Experimental design</li><li>Experiment development in Qualtrics</li></ul></dd>
+            </div>
+            <div>
+              <dt>Programming <span class="where">Palomares Lab</span></dt>
+              <dd><ul class="inline-list"><li>Python: audio and lyric feature extraction</li><li>Programmatic prompt generation for research stimuli</li></ul></dd>
+            </div>
+            <div>
+              <dt>Organic chemistry <span class="where">Wiskur Lab</span></dt>
+              <dd><ul class="inline-list"><li>Organic synthesis</li><li>Thin-layer chromatography (TLC)</li><li>Column chromatography</li><li>Extraction</li><li>Recrystallization</li><li>Distillation</li><li>¹H and ¹³C NMR spectroscopy</li></ul></dd>
+            </div>
+            <div>
+              <dt>Biochemistry <span class="where">Outten Lab</span></dt>
+              <dd><ul class="inline-list"><li>Protein purification</li><li>Iron–sulfur cluster reconstitution</li><li>UV–visible spectroscopy</li><li>Infrared (IR) spectroscopy</li></ul></dd>
+            </div>
+          </dl>
+        </div>
 
+        <div class="education-col" id="education">
+          <h3 class="group-title">Education</h3>
+          <ul class="edu-list">
+            <li>
+              <h4>University of South Carolina</h4>
+              <p class="edu-degree">B.S. in Biochemistry and Molecular Biology</p>
+              <p class="edu-degree">B.S. in Psychology</p>
+              <p class="edu-meta">Expected May 2027 · Dean’s List: 2024, 2025, 2026</p>
+            </li>
+            <li>
+              <h4>Trident Technical College</h4>
+              <p class="edu-degree">Associate of Science, General Studies</p>
+              <p class="edu-meta">2018 – 2023</p>
+            </li>
+          </ul>
+
+          <h3 class="group-title">Certifications &amp; training</h3>
+          <ul class="cert-list">
+            <li><span class="cert-name">Basic Life Support (BLS) — American Red Cross</span><span class="cert-meta">Certification · issued Sep 2026 · expires Sep 2028</span></li>
+            <li><span class="cert-name">Human Research: Social &amp; Behavioral Research — CITI Program</span><span class="cert-meta">Training · completed Jan 2024 · expires Jan 2027</span></li>
+            <li><span class="cert-name">Social and Behavioral Responsible Conduct of Research — CITI Program</span><span class="cert-meta">Training · completed Sep 2025 · expires Sep 2029</span></li>
+            <li><span class="cert-name">Chemical and Laboratory Safety Training — University of South Carolina</span><span class="cert-meta">Training · completed Feb 2024</span></li>
+            <li><span class="cert-name">Hazardous Waste Management Training — University of South Carolina</span><span class="cert-meta">Training · completed Feb 2024</span></li>
+          </ul>
+        </div>
+      </div>
     </section>
 
-    <!-- ===== 06 About ===== -->
-    <section id="about" class="reveal">
-      <h2 class="section-title"><span class="section-num">06</span> About</h2>
-      <div class="about-text">
-        <p>I grew up in South Carolina and hope to build a medical career serving communities here. Medicine is where my two majors meet: the biological mechanisms of illness, and how people understand and experience care. I value clear scientific communication; as a teaching assistant and supplemental instructor, I’ve worked to help students understand unfamiliar concepts well enough to ask informed questions.</p>
-
-        <!-- <details> is a built-in, accessible show/hide (keyboard and touch work
-             with no extra code). The leaf "unfurls" when opened. -->
-        <details class="unfurl">
-          <summary>
-            <svg class="leaf-icon unfurl-leaf" aria-hidden="true"><use href="#leaf"/></svg>
-            Plants and computers
-          </summary>
-          <div class="unfurl-body">
-            <p>I’m drawn to orchids, carnivorous plants, variegated and iridescent leaves, and how quickly different plants grow, and I pay attention to the small changes in a plant before new growth appears. On the computer side, I build small tools that make everyday tasks easier. Away from both, I swim, read, and spend time with friends.</p>
-          </div>
-        </details>
-      </div>
-
-      <h3 class="subsection-title">Currently growing</h3>
-      <ul class="growing">
-        <li>
+    <!-- ===== 04 About ===== -->
+    <section id="about" class="section reveal" aria-labelledby="about-title">
+      <header class="section-head">
+        <p class="section-num" aria-hidden="true">04</p>
+        <h2 id="about-title">About</h2>
+      </header>
+      <div class="about-layout">
+        <div class="about-text">
+          <p class="about-lead">I grew up in South Carolina and hope to build a medical career serving communities here.</p>
+          <p>I value clear scientific communication; as a teaching assistant and supplemental instructor, I’ve worked to help students understand unfamiliar concepts well enough to ask informed questions.</p>
+          <p>I’m drawn to orchids, carnivorous plants, variegated and iridescent leaves, and how quickly different plants grow, and I pay attention to the small changes in a plant before new growth appears. On the computer side, I build small tools that make everyday tasks easier. Away from both, I swim, read, and spend time with friends.</p>
+        </div>
+        <section class="growing" aria-labelledby="growing-title">
+          <svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg>
+          <h3 id="growing-title">Currently growing</h3>
           <p class="growing-label">In the window</p>
           <p class="growing-name">Whatever’s putting out new growth</p>
           <p>Watching for the first signs of a new leaf or root.</p>
-        </li>
-        <li>
-          <p class="growing-label">On my mind</p>
-          <p class="growing-name">Labels and expectations</p>
-          <p>Whether knowing a song is AI-generated changes how listeners evaluate it.</p>
-        </li>
-        <li>
-          <p class="growing-label">On my computer</p>
-          <p class="growing-name">My music-analysis pipeline</p>
-          <p>The Python tool behind our listener-study stimuli.</p>
-        </li>
-      </ul>
+        </section>
+      </div>
     </section>
 
-    <!-- ===== 07 Contact ===== -->
-    <section id="contact" class="reveal">
-      <h2 class="section-title"><span class="section-num">07</span> Contact</h2>
+    <!-- ===== 05 Contact ===== -->
+    <section id="contact" class="section reveal" aria-labelledby="contact-title">
+      <header class="section-head">
+        <p class="section-num" aria-hidden="true">05</p>
+        <h2 id="contact-title">Contact</h2>
+      </header>
       <div class="contact-grid">
         <div class="contact-text">
           <p class="contact-lede">Contact me about opportunities in clinical research or emergency care.</p>
-          <p class="contact-email"><span class="contact-label">Email</span> <a href="mailto:gavineub@gmail.com">gavineub@gmail.com</a>
+          <p class="contact-email"><a href="mailto:gavineub@gmail.com">gavineub@gmail.com</a>
             <!-- Shown by main.js only where copying is supported -->
             <button type="button" class="copy-email" data-copy="gavineub@gmail.com" hidden>Copy</button>
             <span class="sr-only copy-status" role="status"></span></p>
@@ -526,7 +518,7 @@
           </div>
           <p class="contact-location">Based in Columbia, South Carolina</p>
         </div>
-        <!-- The rose plate as interactive particles (js/particles.js). The canvas is
+        <!-- The botanical plates as interactive particles (js/particles.js). The canvas is
              decorative (hidden from screen readers); the caption below is real text. -->
         <figure class="contact-figure">
           <!-- Plant switch: the same particles morph between three plates.

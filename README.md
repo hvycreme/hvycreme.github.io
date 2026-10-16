@@ -24,14 +24,14 @@ files/            PDFs: put resume.pdf here
 
 | Section | id | Purpose |
 |---|---|---|
-| Introduction | `#intro` | Name, positioning statement, summer goal, three highlight links, Email / LinkedIn |
-| 01 Research | `#research` | Appointments, dates, concise responsibilities |
-| 02 Projects | `#work` | Each project: question/purpose, my contribution, approach (with a flow diagram), outcome/status. Anchors: `#p-music`, `#p-pipeline`, `#p-synthesis` |
-| 03 Research & Technical Skills (nav: Skills) | `#methods` | Methods actually used, grouped by lab; no proficiency ratings |
-| 04 Experience | `#experience` | Housing, teaching, leadership, volunteering, employment |
-| 05 Education | `#education` | Degrees, certifications and training |
-| 06 About | `#about` | Why medicine, personal notes, Currently growing |
-| 07 Contact | `#contact` | Invitation, readable email address, Email / LinkedIn, interactive plant figure |
+| Introduction | `#intro` | Name, short description, one paragraph, "Explore my research" / "Contact me", supporting facts row, arched portrait |
+| 01 Selected Research | `#research` (old `#work` lands here) | Featured music-labeling study (`#p-music`: question → key finding → role → method), the related Python pipeline (`#p-pipeline`), and the synthesis project with the 3D molecule (`#p-synthesis`) |
+| 02 Experience | `#experience` | Research appointments, then leadership, teaching & work, with thin dividers |
+| 03 Skills & Education | `#skills` (old `#methods` lands here), `#education` | Skills grouped by lab; degrees; certifications & training. Reached from the Experience heading and highlighted as "Experience" in the nav |
+| 04 About | `#about` | Background, communication, plants and computers, Currently growing |
+| 05 Contact | `#contact` | Invitation, email (with Copy), Email / LinkedIn, interactive plant figure |
+
+Main navigation: Research, Experience, About, Contact. Below 48rem the links fold into a labelled **Menu** button (`aria-expanded`; Escape closes it).
 
 ### Individual synthesis project (molecule viewer)
 The Wiskur Lab entry includes an "Individual synthesis project" card. Its 3D viewer (3Dmol.js, self-hosted in `vendor/3dmol/`, BSD-3-Clause) stays switched off until a **verified** structure is added, so nothing guessed is ever shown:
@@ -57,8 +57,8 @@ Send a different link with each application. The page re-orders itself so the mo
 | Link | Use for | Effect |
 |---|---|---|
 | `https://hvycreme.github.io/` | General | Default order: leads with clinical-research-relevant work |
-| `https://hvycreme.github.io/?for=crc` | Clinical research coordinator | Research and Experience reordered: research, data, and documentation first |
-| `https://hvycreme.github.io/?for=ert` | Emergency room tech | Research and Experience reordered: clinical training, service, and certifications first |
+| `https://hvycreme.github.io/?for=crc` | Clinical research coordinator | Experience lists reordered: research, data, and documentation first |
+| `https://hvycreme.github.io/?for=ert` | Emergency room tech | Experience lists reordered: resident support and service roles first |
 
 The order is set in `index.html` by numbers on each experience entry and skill group:
 
@@ -99,14 +99,12 @@ Nothing loads until a visitor scrolls near Contact; the fly-in plays when it com
 
 All in the `:root` block at the top of `css/style.css`:
 
-- `--color-bg`: the cream page background (`#F3EFE5`); `--color-surface`: lighter raised surfaces (cards, pill buttons) above it
-- `--color-text`, `--color-muted`, `--color-border`: text and edges; keep borders soft so surfaces read as clay, not outlines
-- `--color-accent` (mint, used for the selected toggle segment and the focus glow) and `--color-terracotta` (use sparingly)
-- Buttons: raised pill shape by default, sinking into a pressed state on `:active`; the toggle is a recessed track with a mint selected segment
-- Focus: a mint glow ring on `:focus-visible`; keep it visible on every interactive element
-- `--font-sans` (headings and body) and `--font-mono`: fonts; headings are sans-serif
-- `--space-section`: breathing room between sections
-- `--dur-fast`, `--dur-slow`, `--ease`: animation speed and feel (keep durations 0.3–0.9 s)
+- `--color-bg` (cream page, `#F3EFE5`) and `--color-surface` (the few panels: featured study, molecule panel; also the 3D viewer background)
+- `--color-text`, `--color-muted`, `--color-line`, `--color-line-strong`: ink and hairlines. Structure comes from hairlines and space, not shadows
+- `--color-accent` (forest green: links and primary actions), `--color-rust` (metadata only), `--color-mint` (selected states)
+- `--font-display` (serif headings), `--font-sans` (body text), `--font-mono` (only the IUPAC name)
+- `--measure`: reading width for long text; `--space-section`: room between sections
+- `--dur-control`, `--dur-slow`, `--ease`: control feedback and fade timing
 
 When changing colors, check text contrast is at least **4.5:1** with [webaim.org/resources/contrastchecker](https://webaim.org/resources/contrastchecker/).
 

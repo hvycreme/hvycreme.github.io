@@ -1,98 +1,77 @@
 /* ==========================================================================
-   0. Fonts
-   System UI sans-serif for everything, with monospace for dates and labels.
-   No web fonts are loaded, so there is nothing to download before text shows.
+   Gavin Eubanks — portfolio stylesheet
+   An editorial, botanical page: cream paper, forest-green ink for actions,
+   restrained rust for metadata, serif headings over a sans-serif text face.
+   Hierarchy comes from type and space; boxes are kept for the few things
+   that deserve one (the featured study, its finding, the molecule panel).
+
+   Contents
+     1. Tokens            7. Selected Research (featured study, projects)
+     2. Base              8. Molecule panel
+     3. Controls          9. Experience
+     4. Header + menu    10. Skills & Education
+     5. Introduction     11. About
+     6. Sections         12. Contact + botanical figure
+                         13. Footer, motion, utilities
    ========================================================================== */
 
 /* ==========================================================================
-   1. Design tokens
-   Every color, shadow, radius, and spacing value lives here. Change a value
-   once and it updates everywhere it's used via var(--name).
-   Style: a soft "clay" UI. Cream surfaces, gently raised controls, recessed
-   tracks, and a muted mint for selected, hover, and focus states.
+   1. Tokens
    ========================================================================== */
 :root {
-  /* Colors: cream surfaces, charcoal ink, forest green actions, muted mint */
+  /* Color */
   --color-bg: #f3efe5;          /* cream page */
-  --color-surface: #faf7f0;     /* raised sheet: cards, buttons, figures */
-  --color-surface-hi: #fffdf8;  /* brighter surface on hover */
-  --color-recess: #e9e3d5;      /* recessed track (toggle) */
-  --color-border: #ddd5c3;      /* hairlines */
-  --color-rule: #cbc1ac;        /* section rules, timeline line */
-  --color-text: #292d28;        /* soft charcoal ink (12:1 on bg) */
-  --color-muted: #5c6157;       /* secondary text (5.5:1 on bg, 4.97:1 on recess) */
+  --color-surface: #faf7f0;     /* panels; also the 3D viewer's background */
+  --color-line: #ddd5c3;        /* hairlines */
+  --color-line-strong: #c9bfa9; /* section rules */
+  --color-text: #292d28;        /* charcoal ink (12:1 on cream) */
+  --color-muted: #5c6157;       /* secondary text (5.5:1 on cream) */
   --color-accent: #2f5d3a;      /* forest green: links, primary actions */
   --color-accent-hover: #24492d;
-  --color-mint: #bfe6d2;        /* selected, hover, and focus states */
-  --color-terracotta: #8a3f28;  /* small labels only (6.5:1 on bg) */
-  /* Derived colors: color-mix() blends two colors, so these follow the tokens above */
-  --color-header: color-mix(in srgb, var(--color-bg) 88%, transparent);
-  --color-mint-soft: color-mix(in srgb, var(--color-mint) 40%, var(--color-surface));
-  --color-terracotta-soft: color-mix(in srgb, var(--color-terracotta) 9%, var(--color-surface));
+  --color-rust: #8a3f28;        /* metadata only (6.5:1 on cream) */
+  --color-mint: #bfe6d2;        /* selected states */
+  --color-tint: color-mix(in srgb, var(--color-accent) 6%, var(--color-surface));
+  --color-header: color-mix(in srgb, var(--color-bg) 90%, transparent);
 
-  /* Elevation: warm, ink-tinted shadows. A light top edge makes raised things
-     look lit from above; the lower shadow lifts them off the page. */
-  --shadow-raised:
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    0 1px 1px rgba(120, 100, 70, 0.10),
-    0 6px 14px -4px rgba(120, 100, 70, 0.28);
-  --shadow-raised-hover:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 2px 3px rgba(120, 100, 70, 0.12),
-    0 9px 18px -5px rgba(120, 100, 70, 0.32);
-  --shadow-raised-sm:
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    0 1px 2px rgba(120, 100, 70, 0.14),
-    0 3px 8px -3px rgba(120, 100, 70, 0.20);
-  --shadow-pressed:
-    inset 0 2px 4px rgba(120, 100, 70, 0.28),
-    inset 0 0 0 1px rgba(120, 100, 70, 0.06);
-  --shadow-recessed:
-    inset 0 2px 5px rgba(120, 100, 70, 0.22),
-    inset 0 0 0 1px rgba(120, 100, 70, 0.08),
-    0 1px 0 rgba(255, 255, 255, 0.7);
-  --focus-glow: 0 0 0 5px rgba(191, 230, 210, 0.75);  /* mint halo, added to the outline */
-
-  /* Shape: consistent radii */
-  --radius-sm: 10px;
-  --radius: 16px;
-  --radius-pill: 999px;
-
-  /* Fonts */
+  /* Type */
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  /* Type scale: clamp(min, preferred, max) grows smoothly with screen width */
-  --text-xs: 0.8rem;
+  --text-xs: 0.8125rem;
   --text-sm: 0.9rem;
   --text-base: 1.0625rem;
-  --text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.3rem);
-  --text-xl: clamp(1.6rem, 1.25rem + 1.6vw, 2.25rem);
-  --text-hero: clamp(2.6rem, 1.6rem + 4.5vw, 4.25rem);
+  --text-lg: clamp(1.15rem, 1.05rem + 0.4vw, 1.3rem);
+  --text-h3: clamp(1.45rem, 1.2rem + 1vw, 1.95rem);
+  --text-h2: clamp(1.9rem, 1.4rem + 1.9vw, 2.8rem);
+  --text-hero: clamp(2.8rem, 1.7rem + 4.6vw, 4.75rem);
 
-  /* Spacing scale */
+  /* Space */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 1rem;
   --space-4: 1.5rem;
   --space-5: 2.5rem;
   --space-6: 4rem;
-  --space-section: clamp(4rem, 3rem + 4vw, 7rem);
+  --space-section: clamp(4.5rem, 3rem + 5vw, 8rem);
 
   /* Layout */
-  --content-width: 66rem;
-  --gutter: clamp(1rem, 4vw, 2rem);
+  --page-width: 66rem;
+  --measure: 40rem;             /* comfortable reading width */
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
   --header-height: 4rem;
 
-  /* Motion: one easing curve. Controls use --dur-control (150-220ms). */
+  /* Shape and motion */
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-pill: 999px;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-control: 0.18s;
-  --dur-fast: 0.2s;
   --dur-slow: 0.7s;
 }
 
 /* ==========================================================================
-   2. Reset
+   2. Base
    ========================================================================== */
 *,
 *::before,
@@ -105,22 +84,12 @@
 }
 
 html {
-  overflow-x: clip;  /* nothing can cause sideways scrolling (unlike "hidden",
-                        "clip" doesn't break the sticky header) */
+  overflow-x: clip;                 /* nothing scrolls sideways (and sticky still works) */
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--header-height) + 1rem);  /* anchors land below the sticky bar, with air */
+  scroll-padding-top: calc(var(--header-height) + 1.25rem);  /* anchors land below the header */
   -webkit-text-size-adjust: 100%;
 }
 
-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-
-/* ==========================================================================
-   3. Base typography
-   ========================================================================== */
 body {
   background: var(--color-bg);
   color: var(--color-text);
@@ -130,20 +99,42 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3 {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.015em;
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+h1,
+h2,
 h3 {
-  font-size: var(--text-lg);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+h4 {
+  font-size: var(--text-base);
+  font-weight: 600;
 }
 
 p,
-li {
-  max-width: 65ch;  /* ~65 characters per line reads comfortably */
+li,
+dd {
+  text-wrap: pretty;
+}
+
+ul,
+ol {
+  padding: 0;
 }
 
 a {
@@ -154,21 +145,35 @@ a {
 
 a:hover {
   color: var(--color-accent-hover);
+  text-decoration-thickness: 2px;
 }
 
-/* Focus: a solid green outline (3:1+ on every surface) plus a soft mint halo.
-   Controls below add the halo to their own shadow list. */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
+  border-radius: 4px;
 }
 
-/* Elements focused by script (tabindex="-1") don't need a visible ring */
-[tabindex="-1"]:focus {
-  outline: none;
+::selection {
+  background: var(--color-mint);
 }
 
-/* The leaf motif. 1em = it scales with the surrounding text size. */
+/* Bulleted lists: small green bullets, comfortable width */
+.points {
+  display: grid;
+  gap: var(--space-1);
+  padding-left: 1.15em;
+  list-style: disc;
+}
+
+.points li {
+  max-width: var(--measure);
+}
+
+.points li::marker {
+  color: var(--color-accent);
+}
+
 .leaf-icon {
   width: 1em;
   height: 1em;
@@ -177,65 +182,204 @@ a:hover {
 }
 
 /* ==========================================================================
-   4. Header + numbered nav
+   3. Controls
+   Flat by design: a solid green primary, outlined secondaries, and small
+   pill buttons for in-page tools. No drop shadows.
    ========================================================================== */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
+.button {
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-4);
-  height: var(--header-height);
-  padding: var(--space-2) var(--gutter);
-  background: var(--color-header);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--color-border);
+  justify-content: center;
+  min-height: 2.875rem;
+  padding: 0.55em 1.35em;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-pill);
+  color: var(--color-accent);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color var(--dur-control) var(--ease), color var(--dur-control) var(--ease);
 }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.4em;
-  flex-shrink: 0;
-  font-family: var(--font-sans);
-  font-size: 1.15rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--color-text);
+.button:hover {
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
   text-decoration: none;
 }
 
-.logo .leaf-icon {
-  font-size: 1.35rem;
+.button-primary {
+  background: var(--color-accent);
+  color: var(--color-surface);
 }
 
-/* min-width: 0 lets the nav shrink and scroll inside itself
-   instead of pushing the page wider than the screen. */
-.site-header nav {
-  min-width: 0;
-  margin-left: auto;
-  overflow-x: auto;
-  scrollbar-width: none;
+.button-primary:hover {
+  background: var(--color-accent-hover);
+  color: var(--color-surface);
 }
 
-.site-header nav::-webkit-scrollbar {
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* Small tool buttons: Copy, Pause rotation, Reset view, Pause motion, Back to top */
+.copy-email,
+.mol-controls button,
+.motion-toggle,
+.to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 2.75rem;
+  padding: 0.3em 1em;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-control) var(--ease), border-color var(--dur-control) var(--ease);
+}
+
+.copy-email:hover,
+.mol-controls button:hover,
+.motion-toggle:hover,
+.to-top:hover {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+}
+
+.copy-email[hidden],
+.motion-toggle[hidden] {
   display: none;
+}
+
+/* Copy: turns mint with a check for two seconds (js/main.js) */
+.copy-email.is-done {
+  border-color: var(--color-mint);
+  background: var(--color-mint);
+}
+
+.copy-email.is-done::before {
+  content: "✓" / "";
+  animation: pop-in 0.2s var(--ease) both;
+}
+
+/* Segmented control (Plain language / Scientific detail; plant switch).
+   Hidden without JS, where both explanation panels simply show. */
+.explain-toggle {
+  display: none;
+  gap: 2px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 3px;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+}
+
+.js .explain-toggle {
+  display: inline-flex;
+}
+
+.explain-toggle button {
+  min-height: 2.75rem;
+  padding: 0.3em 1.05em;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-muted);
+  font: inherit;
+  font-size: var(--text-sm);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur-control) var(--ease), color var(--dur-control) var(--ease);
+}
+
+.explain-toggle button:hover {
+  color: var(--color-text);
+}
+
+.explain-toggle button[aria-pressed="true"] {
+  background: var(--color-mint);
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   4. Header + phone menu
+   ========================================================================== */
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 30;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  color: var(--color-surface);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:not(:focus) {
+  opacity: 0;
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: var(--header-height);
+  padding-inline: var(--gutter);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-header);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 2.75rem;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.logo:hover {
+  color: var(--color-text);
+}
+
+.logo .leaf-icon {
+  font-size: 1.25rem;
 }
 
 .nav-list {
   display: flex;
-  gap: var(--space-4);
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
   list-style: none;
-  padding: 0;
-  white-space: nowrap;
 }
 
 .nav-list a {
-  position: relative;  /* anchor for the ::after underline */
-  display: inline-block;
-  padding-block: var(--space-1);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  justify-content: center;
   color: var(--color-muted);
   font-size: var(--text-sm);
   text-decoration: none;
@@ -246,20 +390,13 @@ a:hover {
   color: var(--color-text);
 }
 
-.nav-num {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-terracotta);
-  margin-right: 0.15em;
-}
-
-/* Active underline: scaleX is a transform, so it animates smoothly */
+/* Active section: a short green underline (a transform, so it animates smoothly) */
 .nav-list a::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 0.55rem;
   height: 2px;
   border-radius: 2px;
   background: var(--color-accent);
@@ -272,1362 +409,713 @@ a:hover {
   transform: scaleX(1);
 }
 
-/* Résumé stays one click away from anywhere on the page: a small raised pill */
-.header-resume {
-  flex-shrink: 0;
-  padding: 0.4em 1em;
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
-  color: var(--color-accent);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  text-decoration: none;
-  transition:
-    transform var(--dur-control) var(--ease),
-    box-shadow var(--dur-control) var(--ease),
-    background-color var(--dur-control) var(--ease);
+.menu-toggle {
+  display: none;
 }
 
-.header-resume:hover {
-  background: var(--color-surface-hi);
-  box-shadow: var(--shadow-raised-hover);
-  transform: translateY(-1px);
-}
-
-.header-resume:active {
-  box-shadow: var(--shadow-pressed);
-  transform: translateY(1px);
-}
-
-.header-resume:focus-visible {
-  box-shadow: var(--shadow-raised-sm), var(--focus-glow);
-}
-
-@media (max-width: 40rem) {
-  .site-header {
-    gap: var(--space-3);
+/* Phones: the links fold into a labelled "Menu" disclosure (JS only;
+   without JS the short list just wraps under the name) */
+@media (max-width: 47.99rem) {
+  .js .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    min-height: 2.75rem;
+    padding: 0.3em 1em;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-text);
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
   }
 
-  .logo span {
-    display: none;  /* just the leaf on phones: more room for the nav */
+  /* Three lines that become an × when open */
+  .menu-icon,
+  .menu-icon::before,
+  .menu-icon::after {
+    display: block;
+    width: 1rem;
+    height: 1.5px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform var(--dur-control) var(--ease), opacity var(--dur-control) var(--ease);
   }
 
-  /* Both ends fade when the strip scrolls; padding keeps the first item clear at rest */
-  .site-header nav {
-    margin-right: var(--space-2);
-    mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 2rem), transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 2rem), transparent 100%);
+  .menu-icon {
+    position: relative;
   }
 
-  .nav-list {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;  /* the fade drops away at each end (see "Nav strip" below) */
+  .menu-icon::before,
+  .menu-icon::after {
+    content: "";
+    position: absolute;
+    left: 0;
+  }
+
+  .menu-icon::before {
+    transform: translateY(-5px);
+  }
+
+  .menu-icon::after {
+    transform: translateY(5px);
+  }
+
+  .menu-open .menu-icon {
+    background: transparent;
+  }
+
+  .menu-open .menu-icon::before {
+    transform: rotate(45deg);
+  }
+
+  .menu-open .menu-icon::after {
+    transform: rotate(-45deg);
+  }
+
+  .js .nav-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    padding: var(--space-2) var(--gutter) var(--space-4);
+    border-bottom: 1px solid var(--color-line);
+    background: var(--color-bg);
+  }
+
+  .js .menu-open .nav-list {
+    display: flex;
+  }
+
+  .js .nav-list li + li {
+    border-top: 1px solid var(--color-line);
+  }
+
+  .js .nav-list a {
+    display: flex;
+    justify-content: flex-start;
+    min-height: 3rem;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--color-text);
+  }
+
+  .js .nav-list a::after {
+    display: none;
+  }
+
+  .js .nav-list a.is-active {
+    color: var(--color-accent);
   }
 }
 
 /* ==========================================================================
-   5. Sections: notebook-style headings
+   5. Introduction
+   Open layout: name, short description, one paragraph, two actions; the
+   arched portrait beside; a row of supporting facts underneath.
    ========================================================================== */
 main > section {
-  width: min(100% - 2 * var(--gutter), var(--content-width));
+  width: min(100% - 2 * var(--gutter), var(--page-width));
   margin-inline: auto;
-  padding-block: var(--space-section);
 }
 
-main > section + section {
-  padding-top: 0;  /* sections share space instead of doubling it */
-}
-
-/* Number + title, ruled underneath like a page in a field notebook */
-.section-title {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
-  padding-bottom: var(--space-3);
-  margin-bottom: var(--space-5);
-  border-bottom: 1px solid var(--color-rule);
-  font-size: var(--text-xl);
-}
-
-.section-num {
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  font-weight: 400;
-  color: var(--color-terracotta);
-}
-
-.subsection-title {
-  margin-top: var(--space-6);
-  margin-bottom: var(--space-4);
-  font-size: var(--text-lg);
-}
-
-section p + p {
-  margin-top: var(--space-3);
-}
-
-/* ==========================================================================
-   6. Introduction
-   ========================================================================== */
 .hero {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  grid-template-areas:
+    "text portrait"
+    "facts facts";
   align-items: center;
   gap: var(--space-5) var(--space-6);
-  padding-block: clamp(2rem, 1rem + 4vw, 4.5rem);  /* actions stay in the first screen */
-}
-
-@media (min-width: 56rem) {
-  .hero {
-    grid-template-columns: 1.5fr 1fr;
-  }
+  padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) 0;
 }
 
 .hero-text {
-  display: flex;
-  flex-direction: column;
+  grid-area: text;
+  display: grid;
   gap: var(--space-3);
 }
 
-/* UofSC: the full name shows on hover; no dotted underline in the label */
-.eyebrow abbr {
-  text-decoration: none;
-  text-transform: none;  /* keep "UofSC" as written, not "UOFSC" */
-  cursor: help;
-}
-
 .eyebrow {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-terracotta);
+  color: var(--color-rust);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .hero-title {
   font-size: var(--text-hero);
-  letter-spacing: -0.025em;
-  line-height: 1.1;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
 }
 
-.hero-intro {
-  font-size: var(--text-lg);
-  line-height: 1.6;
+.hero-title:focus {
+  outline: none;
 }
 
-.hero-intro p + p {
-  margin-top: var(--space-3);
+.hero-lede {
+  max-width: 34rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.6rem);
+  line-height: 1.35;
 }
 
-/* The last line is the personal one: set it a little quieter */
-.hero-intro p:last-child {
+.hero-para {
+  max-width: 34rem;
   color: var(--color-muted);
 }
 
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-3);
+.hero .hero-actions {
+  margin-top: var(--space-2);
 }
 
-/* --- Portrait --------------------------------------------------------------
-   One treatment: an arched top (like a greenhouse window) set in a soft raised
-   frame. The frame is the element itself: surface-colored padding plus a
-   raised shadow. In border-radius, values before "/" are horizontal radii and
-   after it vertical: 50% of the width across and 40% of the height down
-   (= half the width for a 4:5 photo), so the top is a perfect semicircle. */
+/* Arched portrait */
 .portrait {
   --arch: 50% 50% var(--radius) var(--radius) / 40% 40% var(--radius) var(--radius);
+  grid-area: portrait;
   justify-self: center;
   width: min(100%, 17rem);
-  padding: 10px;
+  padding: 8px;
+  border: 1px solid var(--color-line);
   border-radius: var(--arch);
   background: var(--color-surface);
-  box-shadow: var(--shadow-raised);
-  animation: fade-rise var(--dur-slow) var(--ease) 0.15s both;
 }
 
 .portrait img {
   border-radius: var(--arch);
 }
 
-/* Phones: portrait above the name, smaller, aligned with the text */
-@media (max-width: 40rem) {
-  .portrait {
-    order: -1;
-    justify-self: start;
-    width: min(45%, 11rem);
-    margin: var(--space-2) 0 0 0;
-  }
-}
-
-/* ==========================================================================
-   7. Buttons
-   Raised pills. Hover lifts a little and brightens; :active sinks in.
-   Text colors never change on hover, so only transform, shadow, and
-   background move (150-220ms).
-   ========================================================================== */
-.button {
-  display: inline-block;
-  min-height: 2.75rem;  /* 44px touch target */
-  padding: 0.6em 1.4em;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised);
-  color: var(--color-accent);
+/* Supporting facts: one quiet row under a hairline */
+.hero-facts {
+  grid-area: facts;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-line);
   font-size: var(--text-sm);
-  font-weight: 500;
-  line-height: 1.6;
-  text-align: center;
-  text-decoration: none;
-  transition:
-    transform var(--dur-control) var(--ease),
-    box-shadow var(--dur-control) var(--ease),
-    background-color var(--dur-control) var(--ease);
+  line-height: 1.5;
 }
 
-.button:hover {
-  background: var(--color-surface-hi);
-  box-shadow: var(--shadow-raised-hover);
-  transform: translateY(-1px);
-}
-
-.button:active {
-  box-shadow: var(--shadow-pressed);
-  transform: translateY(1px);
-}
-
-.button:focus-visible {
-  box-shadow: var(--shadow-raised), var(--focus-glow);
-}
-
-.button-primary {
-  background: var(--color-accent);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 6px 14px -4px rgba(47, 93, 58, 0.45);
-  color: var(--color-surface);
-}
-
-.button-primary:hover {
-  background: var(--color-accent-hover);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 9px 18px -5px rgba(47, 93, 58, 0.5);
-  color: var(--color-surface);
-}
-
-.button-primary:active {
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.25);
-}
-
-/* ==========================================================================
-   8. Experience: a compact timeline
-   One thin vertical line; each entry is a dot on it, with the date in a
-   left column on wide screens. Entries are separated by dashed rules
-   instead of boxes. Kept flat on purpose.
-   ========================================================================== */
-.timeline {
-  list-style: none;
-  padding: 0;
-  border-left: 1px solid var(--color-rule);
-  margin-left: 0.3rem;
-}
-
-.entry {
-  position: relative;
-  display: grid;
-  grid-template-columns: 10rem 1fr;
-  gap: var(--space-1) var(--space-4);
-  max-width: none;
-  padding: var(--space-4) 0 var(--space-4) var(--space-4);
-}
-
-.entry + .entry {
-  border-top: 1px dashed var(--color-border);
-}
-
-/* The dot on the line */
-.entry::before {
-  content: "";
-  position: absolute;
-  left: -5px;
-  top: calc(var(--space-4) + 0.55em);
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--color-accent);
-  box-shadow: 0 0 0 3px var(--color-bg);  /* small gap around the dot */
-}
-
-.entry-date {
-  align-self: start;
-  justify-self: start;
-  white-space: nowrap;
-  font-family: var(--font-mono);
+.hero-facts dt {
+  margin-bottom: 0.2rem;
+  color: var(--color-rust);
   font-size: var(--text-xs);
-  line-height: 2.2;
-  color: var(--color-terracotta);
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
-.entry-org {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  font-weight: 400;
-  color: var(--color-muted);
+.hero-facts dd {
+  margin: 0;
 }
 
-.entry-type {
-  display: inline-block;
-  margin-top: var(--space-1);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-muted);
+@media (max-width: 56rem) {
+  .hero-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-.points {
-  display: grid;
-  gap: var(--space-1);
-  margin-top: var(--space-2);
-  padding-left: 1.1em;
-}
-
-.points li::marker {
-  color: var(--color-accent);
-}
-
-@media (max-width: 40rem) {
-  .entry {
+/* Phones: name and introduction first, then the portrait, then the facts */
+@media (max-width: 47.99rem) {
+  .hero {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "text"
+      "portrait"
+      "facts";
+    gap: var(--space-5);
+  }
+
+  .portrait {
+    justify-self: start;
+    width: min(70%, 12rem);
+  }
+}
+
+@media (max-width: 30rem) {
+  .hero-facts {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
   }
 }
 
 /* ==========================================================================
-   9. Selected work + Plain language / Scientific detail toggle
+   6. Sections
+   Generous space between sections; a subtle rust number, a serif title,
+   and one hairline under the heading.
+   ========================================================================== */
+.section {
+  padding-top: var(--space-section);
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-line-strong);
+}
+
+.section-num {
+  color: var(--color-rust);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-variant-numeric: lining-nums;
+}
+
+.section-head h2 {
+  font-size: var(--text-h2);
+}
+
+.section-jump {
+  margin-left: auto;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+@media (max-width: 40rem) {
+  .section-jump {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+}
+
+/* Old deep links (#work, #methods) point at these */
+.anchor-alias {
+  display: block;
+  height: 0;
+}
+
+/* Small headings inside a section */
+.group-title {
+  margin: var(--space-5) 0 var(--space-3);
+  font-size: var(--text-lg);
+}
+
+.section-head + .group-title,
+.skills-col > .group-title:first-child,
+.education-col > .group-title:first-child {
+  margin-top: 0;
+}
+
+/* ==========================================================================
+   7. Selected Research
    ========================================================================== */
 .project {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-  gap: var(--space-5);
-  align-items: start;
+  position: relative;
 }
 
 .project + .project {
-  margin-top: var(--space-5);
+  margin-top: var(--space-6);
   padding-top: var(--space-5);
-  border-top: 1px dashed var(--color-border);
-}
-
-.project-text {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.project-text > p + p {
-  margin-top: 0;  /* the flex gap already spaces them */
-}
-
-.project-meta {
-  align-self: flex-start;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-terracotta);
-}
-
-/* The result: always visible, set off like a margin note on a light sheet */
-.finding {
-  padding: var(--space-3);
-  border-left: 3px solid var(--color-accent);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
-}
-
-.finding-label {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-
-/* Segmented control: a recessed track with one raised, mint-selected segment.
-   Hidden without JS (both panels show instead). */
-.explain-toggle {
-  display: none;
-  align-self: flex-start;
-  gap: 2px;
-  padding: 4px;
-  border-radius: var(--radius-pill);
-  background: var(--color-recess);
-  box-shadow: var(--shadow-recessed);
-}
-
-.js .explain-toggle {
-  display: inline-flex;
-}
-
-.explain-toggle button {
-  min-height: 2.75rem;  /* 44px touch target */
-  padding: 0.35em 1.1em;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--color-muted);
-  font: inherit;
-  font-size: var(--text-sm);
-  cursor: pointer;
-  transition:
-    transform var(--dur-control) var(--ease),
-    box-shadow var(--dur-control) var(--ease),
-    background-color var(--dur-control) var(--ease);
-}
-
-.explain-toggle button:hover {
-  background: var(--color-surface-hi);
-  color: var(--color-text);
-}
-
-.explain-toggle button:active {
-  transform: translateY(1px);
-}
-
-.explain-toggle button:focus-visible {
-  box-shadow: var(--shadow-raised-sm), var(--focus-glow);
-}
-
-.explain-toggle button[aria-pressed="true"] {
-  background: var(--color-mint);
-  box-shadow: var(--shadow-raised);
-  color: var(--color-text);
-  font-weight: 600;
-}
-
-.explain-toggle button[aria-pressed="true"]:hover {
-  background: var(--color-mint);
-}
-
-.panel-label {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-terracotta);
-}
-
-/* With JS, the toggle replaces the labels */
-.js .panel-label {
-  display: none;
-}
-
-.explain-panel:not([hidden]) {
-  animation: fade-in var(--dur-fast) var(--ease);
-}
-
-/* Tags: small mint chips */
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  list-style: none;
-  padding: 0;
-}
-
-.tags li {
-  padding: 0.15em 0.75em;
-  border-radius: var(--radius-pill);
-  background: var(--color-mint-soft);
-  color: var(--color-accent);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-}
-
-.project-links {
-  font-size: var(--text-sm);
-}
-
-figcaption {
-  margin-top: var(--space-2);
-  font-family: var(--font-sans);
-  font-style: normal;
-  font-size: var(--text-sm);
-  color: var(--color-muted);
-}
-
-/* ==========================================================================
-   10. Skills
-   ========================================================================== */
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
-  gap: var(--space-5) var(--space-4);
-}
-
-.skill-group h3 {
-  font-size: var(--text-base);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.skill-list {
-  display: grid;
-  gap: var(--space-3);
-  list-style: none;
-  padding: 0;
-  margin-top: var(--space-3);
-  font-size: var(--text-sm);
-}
-
-.skill-list li {
-  display: grid;
-  justify-items: start;
-  gap: 0.2rem;
-}
-
-.level {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-muted);
-}
-
-/* ==========================================================================
-   11. About + leaf "unfurl" + Currently growing
-   ========================================================================== */
-.unfurl {
-  margin-top: var(--space-4);
-  border-top: 1px dashed var(--color-border);
-  padding-top: var(--space-3);
-}
-
-/* <summary> is the clickable line: a light raised pill. Remove the default ▸ triangle. */
-.unfurl summary {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: 2.75rem;  /* 44px touch target */
-  padding: 0.3em var(--space-3) 0.3em var(--space-2);
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  font-weight: 600;
-  cursor: pointer;
-  list-style: none;
-  transition:
-    transform var(--dur-control) var(--ease),
-    box-shadow var(--dur-control) var(--ease),
-    background-color var(--dur-control) var(--ease);
-}
-
-.unfurl summary:hover {
-  background: var(--color-surface-hi);
-  box-shadow: var(--shadow-raised);
-  transform: translateY(-1px);
-}
-
-.unfurl summary:active {
-  box-shadow: var(--shadow-pressed);
-  transform: translateY(1px);
-}
-
-.unfurl summary:focus-visible {
-  box-shadow: var(--shadow-raised-sm), var(--focus-glow);
-}
-
-.unfurl summary::-webkit-details-marker {
-  display: none;
-}
-
-/* Closed: the leaf is curled (rotated, smaller). Open: it unfurls. */
-.unfurl-leaf {
-  font-size: 1.4rem;
-  transform: rotate(-70deg) scale(0.75);
-  transition: transform var(--dur-control) var(--ease);
-}
-
-.unfurl[open] .unfurl-leaf {
-  transform: rotate(0deg) scale(1);
-}
-
-.unfurl[open] .unfurl-body {
-  animation: fade-in var(--dur-slow) var(--ease);
-}
-
-.unfurl-body {
-  padding: var(--space-3) 0 0 calc(1.4rem + var(--space-2));
-  color: var(--color-muted);
-}
-
-/* Currently growing: three short notes, each a small raised sheet */
-.growing {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
-  gap: var(--space-4);
-  list-style: none;
-  padding: 0;
-}
-
-.growing li {
-  padding: var(--space-3);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
-  font-size: var(--text-sm);
-  color: var(--color-muted);
-}
-
-.growing li > p + p {
-  margin-top: var(--space-1);
-}
-
-.growing-label {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-terracotta);
-}
-
-.growing-name {
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-/* ==========================================================================
-   12. Contact (with the particle rose)
-   ========================================================================== */
-.contact-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-  gap: var(--space-5);
-  align-items: center;
-}
-
-.contact-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  list-style: none;
-  padding: 0;
-  margin-top: var(--space-4);
-}
-
-/* Contact links use the same raised pill as the buttons */
-.contact-links a {
-  display: inline-block;
-  min-height: 2.75rem;  /* 44px touch target */
-  padding: 0.6em 1.2em;
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised);
-  color: var(--color-accent);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  text-decoration: none;
-  overflow-wrap: anywhere;
-  transition:
-    transform var(--dur-control) var(--ease),
-    box-shadow var(--dur-control) var(--ease),
-    background-color var(--dur-control) var(--ease);
-}
-
-.contact-links a:hover {
-  background: var(--color-surface-hi);
-  box-shadow: var(--shadow-raised-hover);
-  color: var(--color-accent);
-  transform: translateY(-1px);
-}
-
-.contact-links a:active {
-  box-shadow: var(--shadow-pressed);
-  transform: translateY(1px);
-}
-
-.contact-links a:focus-visible {
-  box-shadow: var(--shadow-raised), var(--focus-glow);
-}
-
-/* The canvas fills this box; the box keeps the plate's 450:604 shape.
-   touch-action: pan-y = a finger dragging sideways disturbs the particles,
-   while vertical swipes still scroll the page. */
-.contact-figure {
-  justify-self: center;
-  width: min(100%, 22rem);
-  padding: var(--space-3);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised);
-}
-
-/* Plant switch above the particle figure: reuses the recessed-track toggle.
-   [hidden] must win over the toggle's display rule until JS reveals it. */
-.js .plant-switch {  /* same specificity as ".js .explain-toggle", so this wins */
-  margin: 0 auto var(--space-3);
-  display: flex;
-  width: fit-content;
-  max-width: 100%;
-}
-
-.plant-switch[hidden] {
-  display: none !important;
-}
-
-.plant-switch button {
-  white-space: nowrap;
-}
-
-.contact-art {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 450 / 604;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  touch-action: pan-y;
-}
-
-/* Caption + credit, set like a figure legend in a field notebook */
-.contact-figure figcaption {
-  margin-top: var(--space-3);
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--color-border);
-}
-
-/* Upright caption so the species name (in <em>) reads as italic, by convention */
-.figure-caption {
-  font-style: normal;
-}
-
-.figure-credit {
-  margin-top: var(--space-1);
-  font-family: var(--font-sans);
-  font-style: normal;
-  font-size: var(--text-xs);
-  line-height: 1.5;
-}
-
-.particles {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity var(--dur-slow) var(--ease);
-}
-
-.particles.is-ready {
-  opacity: 1;
-}
-
-@media (max-width: 40rem) {
-  .contact-figure {
-    width: min(85%, 18rem);
-  }
-}
-
-/* Mouse-trail pollen: fixed to the screen, behind all content, and it
-   ignores the mouse itself so every link and button stays clickable. */
-.pollen {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* ==========================================================================
-   13. Footer
-   ========================================================================== */
-.site-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-5) var(--gutter);
-  border-top: 1px solid var(--color-border);
-  color: var(--color-muted);
-  font-size: var(--text-sm);
-  text-align: center;
-}
-
-.site-footer .leaf-icon {
-  font-size: 1.4rem;
-}
-
-
-/* --- Small additions for the content pass -------------------------------- */
-.pronouns {
-  margin-top: var(--space-1);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--color-muted);
-}
-
-/* Project status: a small mint pill, like the tags */
-/* Music project: subtitle and its three labeled parts */
-.project-subtitle {
-  margin-top: calc(-1 * var(--space-2));
-  color: var(--color-muted);
-}
-
-.project-part {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.project-part-label {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-
-.project-note {
-  font-size: var(--text-sm);
-  color: var(--color-muted);
-}
-
-/* "Why it interests me" is personal motivation, set apart from the study */
-.project-why {
-  margin-top: var(--space-2);
-  padding: var(--space-3) var(--space-4);
-  border-left: 3px solid var(--color-mint, #BFE6D2);
-  border-radius: 0 var(--radius-sm, 10px) var(--radius-sm, 10px) 0;
-  background: color-mix(in srgb, var(--color-mint, #BFE6D2) 22%, transparent);
-  max-width: 44rem;  /* same reading width as the findings box above */
-}
-
-.project-status {
-  align-self: flex-start;
-  padding: 0.15em 0.75em;
-  border-radius: var(--radius-pill);
-  background: var(--color-mint-soft);
-  color: var(--color-accent);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-}
-
-/* Workflow steps: numbered in mono, in the accent color */
-.steps {
-  display: grid;
-  gap: var(--space-1);
-  padding-left: 1.4em;
-}
-
-.steps li::marker {
-  font-family: var(--font-mono);
-  color: var(--color-accent);
-}
-
-.contact-location {
-  font-size: var(--text-sm);
-  color: var(--color-muted);
-}
-
-/* The email button keeps its solid primary look inside the contact pill list */
-.contact-links a.button-primary,
-.contact-links a.button-primary:hover {
-  background: var(--color-accent);
-  color: var(--color-surface);
-}
-
-.contact-links a.button-primary:hover {
-  background: var(--color-accent-hover);
-}
-
-/* ==========================================================================
-   14. Motion (restrained): one entrance, gentle section reveals
-   Only opacity and transform animate: the browser can do both on the GPU
-   without recalculating layout.
-   ========================================================================== */
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fade-rise {
-  from {
-    opacity: 0;
-    transform: translateY(0.75rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.hero-text {
-  animation: fade-rise var(--dur-slow) var(--ease) both;
-}
-
-/* Scroll reveal: JS adds .is-visible when a section enters the viewport */
-/* Opacity only: a translate on the section would shift its top edge while
-   it's still hidden, so anchor jumps would land 1rem short of the header. */
-.js .reveal {
-  opacity: 0;
-  transition: opacity var(--dur-slow) var(--ease);
-}
-
-.js .reveal.is-visible {
-  opacity: 1;
-}
-
-/* ==========================================================================
-   15. Accessibility helpers
-   ========================================================================== */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.skip-link {
-  position: absolute;
-  top: var(--space-2);
-  left: var(--space-2);
-  z-index: 20;
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-sm);
-  background: var(--color-accent);
-  color: var(--color-surface);
-  font-weight: 600;
-  text-decoration: none;
-  box-shadow: var(--shadow-raised);
-  transform: translateY(-200%);
-}
-
-.skip-link:not(:focus) {
-  opacity: 0;
-}
-
-.skip-link:focus {
-  transform: translateY(0);
-}
-
-/* ==========================================================================
-   16. Reduced motion
-   Visitors can ask their OS to minimize motion (Mac/iPhone: Settings →
-   Accessibility → Reduce motion). Durations become ~0 rather than "none"
-   so animationend/transitionend events still fire. Lifts and presses are
-   removed so controls don't move.
-   ========================================================================== */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-delay: 0s !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    transition-delay: 0s !important;
-  }
-
-  .button:hover,
-  .button:active,
-  .header-resume:hover,
-  .header-resume:active,
-  .explain-toggle button:active,
-  .unfurl summary:hover,
-  .unfurl summary:active,
-  .contact-links a:hover,
-  .contact-links a:active {
-    transform: none;
-  }
-
-  .js .reveal {
-    opacity: 1;
-  }
-}
-
-
-/* ==========================================================================
-   Portfolio refinements
-   ========================================================================== */
-
-/* --- Intro: positioning statement, one supporting line, three highlights */
-.hero-lede {
-  font-size: var(--text-lg);
-  line-height: 1.5;
-  max-width: 36rem;
-}
-
-.hero-sub {
-  color: var(--color-muted);
-  max-width: 36rem;
-}
-
-.highlights {
-  display: grid;
-  gap: var(--space-2);
-  list-style: none;
-  padding: 0;
-  margin-top: var(--space-1);
-  font-size: var(--text-sm);
-}
-
-.highlights li {
-  position: relative;
-  padding-left: 1.1em;
-}
-
-/* green dot bullet */
-.highlights li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 0.5em;
-  height: 0.5em;
-  border-radius: 50%;
-  background: var(--color-accent);
-}
-
-.highlights a {
-  color: var(--color-text);
-  text-decoration: none;
-}
-
-.highlights a:hover strong,
-.highlights a:focus-visible strong {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.highlights strong {
-  color: var(--color-accent);
-  font-weight: 600;
-}
-
-/* --- Projects: header, then labeled facts (question, contribution, approach, outcome) */
-.project {
-  display: block;  /* full content width; paragraphs keep their 65ch reading width */
+  border-top: 1px solid var(--color-line-strong);
 }
 
 .project-head {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: var(--space-2);
   margin-bottom: var(--space-4);
 }
 
-.project-head .project-subtitle {
-  margin-top: 0;
+.project-meta {
+  color: var(--color-rust);
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .project-head h3 {
-  font-size: clamp(1.25rem, 1.1rem + 0.8vw, 1.6rem);
+  font-size: var(--text-h3);
 }
 
-.facts {
+.project-subtitle {
+  max-width: var(--measure);
+  color: var(--color-muted);
+  font-size: var(--text-lg);
+}
+
+.project-status {
+  justify-self: start;
+  margin-top: var(--space-1);
+  padding: 0.25em 0.85em;
+  border-radius: var(--radius-pill);
+  background: var(--color-mint);
+  color: var(--color-accent-hover);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+/* --- Featured study: the one strong panel on the page */
+.project-featured {
+  padding: clamp(1.5rem, 1rem + 3vw, 3.25rem);
+  border: 1px solid var(--color-line);
+  border-top: 4px solid var(--color-accent);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.project-featured .project-head {
+  margin-bottom: var(--space-3);
+}
+
+/* Each part: label on the left, content on the right (stacked on phones) */
+.study-block {
   display: grid;
-  gap: var(--space-4);
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: var(--space-2) var(--space-4);
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--color-line);
 }
 
-.facts > div {
+.study-block > * {
+  grid-column: 2;
+}
+
+.study-block > .block-label {
+  grid-column: 1;
+  grid-row: 1;
+  padding-top: 0.3em;
+  color: var(--color-accent);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.study-question {
+  max-width: var(--measure);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  line-height: 1.45;
+}
+
+/* Key finding: two conditions side by side. Qualitative on purpose:
+   no numbers, bars, or scales that would suggest effect sizes. */
+.finding-compare {
   display: grid;
-  grid-template-columns: 9.5rem 1fr;
-  gap: var(--space-1) var(--space-4);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  max-width: 42rem;
+  list-style: none;
 }
 
-.facts dt {
-  padding-top: 0.25em;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.finding-compare li {
+  display: grid;
+  align-content: start;
+  gap: 0.15rem;
+  padding: var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: var(--color-tint);
+}
+
+.finding-icon {
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-bottom: var(--space-2);
   color: var(--color-accent);
 }
 
-.facts dd {
-  margin: 0;
+.finding-condition {
+  color: var(--color-rust);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.finding-result {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  line-height: 1.25;
+}
+
+.finding-note {
+  max-width: 42rem;
+  margin-top: var(--space-2);
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+/* Method: flow diagram, then the explanation control and its panel */
+.study-block .explain-toggle {
+  margin-top: var(--space-3);
+}
+
+.explain-panel {
+  max-width: var(--measure);
+}
+
+.explain-panel p + p {
+  margin-top: var(--space-2);
+}
+
+/* The visible button already names the panel, so its label is for no-JS only */
+.js .panel-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.panel-label {
+  color: var(--color-rust);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.project-why {
+  margin-top: var(--space-2);
+  padding: var(--space-4) 0 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.project-why h4 {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  min-width: 0;
+  align-items: center;
+  gap: 0.45em;
+  margin-bottom: var(--space-2);
+  color: var(--color-accent);
+  font-size: var(--text-sm);
 }
 
-.facts dd > .points {
-  margin-top: 0;
+.project-why p {
+  max-width: var(--measure);
+  color: var(--color-muted);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-style: italic;
+  line-height: 1.5;
 }
 
-@media (max-width: 40rem) {
-  .facts > div {
-    grid-template-columns: 1fr;
-  }
-}
-
-.project .project-why {
-  margin-top: var(--space-4);
-}
-
-/* --- Flow diagrams: an ordered list drawn as steps joined by arrows.
-   It's a real <ol>, so screen readers read the steps in order. */
+/* --- Flow diagrams: a real <ol>, drawn as steps joined by arrows */
 .flow {
   display: flex;
-  align-items: stretch;
   gap: var(--space-2);
-  max-width: 56rem;
   list-style: none;
-  padding: 0;
   counter-reset: step;
 }
 
 .flow li {
   position: relative;
-  flex: 1 1 0;      /* equal-width steps on one row */
+  flex: 1 1 0;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 0.15rem;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border: 1px solid var(--color-line);
   border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
+  background: var(--color-bg);
   counter-increment: step;
 }
 
+.project-featured .flow li {
+  background: var(--color-surface);
+}
+
 .flow li + li {
-  margin-left: 1.5rem;  /* room for the arrow */
+  margin-left: 1.5rem;          /* room for the arrow */
 }
 
 .flow li + li::before {
-  content: "→" / "";   /* decorative: alt text is empty */
+  content: "→" / "";
   position: absolute;
-  left: -1.35rem;
+  left: -1.3rem;
   top: 50%;
   transform: translateY(-50%);
   color: var(--color-accent);
-  font-size: var(--text-base);
 }
 
 .flow-step {
   font-size: var(--text-sm);
   font-weight: 600;
+  line-height: 1.35;
 }
 
 .flow-step::before {
-  content: counter(step) ". ";
-  font-family: var(--font-mono);
+  content: counter(step);
+  display: block;
+  margin-bottom: 0.15rem;
+  color: var(--color-rust);
+  font-family: var(--font-display);
   font-weight: 400;
-  color: var(--color-terracotta);
 }
 
 .flow-note {
+  color: var(--color-muted);
   font-size: var(--text-xs);
   line-height: 1.4;
-  color: var(--color-muted);
 }
 
-/* Phones and tablets: a vertical sequence with downward arrows */
+/* Narrower screens: a vertical sequence with downward arrows */
 @media (max-width: 56rem) {
   .flow {
     flex-direction: column;
+    gap: 0;
   }
 
   .flow li {
     flex: none;
+    padding: var(--space-2) var(--space-3);
   }
 
   .flow li + li {
-    margin-left: 0;
-    margin-top: 1.4rem;
+    margin: 1.6rem 0 0;
   }
 
   .flow li + li::before {
     content: "↓" / "";
     left: 1rem;
-    top: -1.35rem;
+    top: -1.45rem;
     transform: none;
+  }
+
+  .flow-step::before {
+    display: inline;
+    margin-right: 0.5em;
   }
 }
 
-/* --- Methods: one compact, grouped reference */
-.methods {
+/* --- Secondary projects: label/answer rows separated by hairlines */
+.facts {
   display: grid;
-  gap: var(--space-4);
 }
 
-.methods > div {
+.facts > div {
   display: grid;
-  grid-template-columns: 14rem 1fr;
-  gap: var(--space-2) var(--space-4);
-  align-items: start;
-  padding-bottom: var(--space-4);
-  border-bottom: 1px dashed var(--color-border);
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: var(--space-1) var(--space-4);
+  padding-block: var(--space-3);
+  border-top: 1px solid var(--color-line);
 }
 
-.methods > div:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.methods dt {
+.facts dt {
+  padding-top: 0.15em;
+  color: var(--color-accent);
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 
-.method-where {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-weight: 400;
-  color: var(--color-muted);
+.facts dd {
+  margin: 0;
+  max-width: var(--measure);
 }
 
-.methods dd {
-  margin: 0;
+.facts dd:has(.flow) {
+  max-width: none;
 }
 
 @media (max-width: 40rem) {
-  .methods > div {
+  .study-block,
+  .facts > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .study-block > *,
+  .study-block > .block-label {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .finding-compare {
     grid-template-columns: 1fr;
   }
 }
 
-/* --- Contact: invitation and actions first, artwork beside them */
-#contact .contact-grid {
-  align-items: start;
-}
+/* Very narrow phones: slimmer panel and toggle so nothing runs off-screen */
+@media (max-width: 24rem) {
+  .project-featured {
+    padding-inline: 1.1rem;
+  }
 
-.contact-text {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.contact-lede {
-  font-size: var(--text-lg);
-  line-height: 1.5;
-  max-width: 32rem;
-}
-
-.contact-email {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 0.75rem;
-}
-
-.contact-label {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-
-.contact-email a {
-  font-size: var(--text-lg);
-  overflow-wrap: anywhere;
-  user-select: text;
-}
-
-.contact-text .hero-actions {
-  margin-top: 0;
-}
-
-#contact .contact-figure {
-  width: min(100%, 17rem);
-}
-
-/* Intro spacing: the flex gap already separates these; drop the extra
-   paragraph margin, and keep the pronouns close to the name */
-.hero-text > p + p {
-  margin-top: 0;
-}
-
-.hero-text .pronouns {
-  margin-top: calc(-1 * var(--space-2));
-}
-
-.project-head .project-status {
-  max-width: none;
-}
-
-/* Wider screens: a tidy 2-column contact with the art beside the actions */
-@media (min-width: 56rem) {
-  #contact .contact-grid {
-    grid-template-columns: 1.4fr 1fr;
+  .explain-toggle button {
+    padding-inline: 0.75em;
   }
 }
 
+/* Recognition over recall: the project you jump to glows briefly */
+.project:target::after {
+  content: "";
+  position: absolute;
+  inset: -0.5rem;
+  border-radius: var(--radius);
+  box-shadow: 0 0 0 3px var(--color-mint);
+  pointer-events: none;
+  opacity: 0;
+  animation: land 1.8s var(--ease);
+}
 
 /* ==========================================================================
-   Personal synthesis project (inside the Wiskur Lab research entry)
-   One column until a verified structure loads; then text left, molecule
-   right. Stacks on narrow screens.
+   8. Molecule panel (individual synthesis project)
    ========================================================================== */
 .mol-project {
   display: grid;
   gap: var(--space-4);
   margin-top: var(--space-4);
-  padding: var(--space-4);
+  padding: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+  border: 1px solid var(--color-line);
   border-radius: var(--radius);
   background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
 }
 
 @media (min-width: 60rem) {
   .mol-project.has-model {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 17rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 18rem);
     align-items: start;
   }
 }
 
+/* [hidden] must win over the display rules below */
+.mol-project [hidden] {
+  display: none !important;
+}
+
 .mol-text {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: var(--space-2);
   min-width: 0;
 }
 
 .mol-text h4 {
+  font-family: var(--font-display);
   font-size: var(--text-lg);
+  font-weight: 500;
 }
 
 .mol-sub {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-muted);
+  color: var(--color-rust);
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .mol-status {
   padding: 0.1em 0.6em;
   border-radius: var(--radius-pill);
-  background: var(--color-mint-soft);
-  color: var(--color-accent);
+  background: var(--color-mint);
+  color: var(--color-accent-hover);
+  white-space: nowrap;
 }
 
-/* Technical details: a quiet disclosure */
 .mol-details {
   margin-top: var(--space-1);
-  border-top: 1px dashed var(--color-border);
-  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-line);
 }
 
 .mol-details summary {
-  min-height: 2.75rem;          /* touch target */
   display: flex;
   align-items: center;
   gap: 0.5em;
+  min-height: 2.75rem;
+  color: var(--color-accent);
   font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--color-accent);
-  cursor: pointer;
   list-style: none;
+  cursor: pointer;
 }
 
 .mol-details summary::-webkit-details-marker {
@@ -1638,11 +1126,11 @@ figcaption {
   content: "+" / "";
   display: inline-grid;
   place-items: center;
-  width: 1.2em;
-  height: 1.2em;
+  width: 1.25em;
+  height: 1.25em;
+  border: 1px solid currentColor;
   border-radius: 50%;
-  background: var(--color-mint-soft);
-  font-family: var(--font-mono);
+  line-height: 1;
   transition: transform var(--dur-control) var(--ease);
 }
 
@@ -1653,15 +1141,13 @@ figcaption {
 .mol-details dl {
   display: grid;
   gap: var(--space-3);
-  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
 }
 
 .mol-details dt {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--color-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
 }
 
 .mol-details dd {
@@ -1669,21 +1155,16 @@ figcaption {
   font-size: var(--text-sm);
 }
 
-/* Long IUPAC names: break anywhere rather than overflow the card */
 .iupac {
   font-family: var(--font-mono);
   overflow-wrap: anywhere;
-  word-break: break-word;
   line-height: 1.5;
 }
 
-/* [hidden] must win over the display rules below (the figure, fallback
-   image, and viewer are hidden until a verified structure loads) */
-.mol-project [hidden] {
-  display: none !important;
+.mol-method {
+  color: var(--color-muted);
 }
 
-/* Molecule panel */
 .mol-figure {
   display: flex;
   flex-direction: column;
@@ -1691,15 +1172,25 @@ figcaption {
   min-width: 0;
 }
 
+@media (max-width: 59.99rem) {
+  .mol-figure {
+    max-width: 22rem;
+  }
+}
+
 .mol-stage {
   position: relative;
   width: 100%;
   aspect-ratio: 1;
+  border: 1px solid var(--color-line);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
-  box-shadow: var(--shadow-recessed);
   overflow: hidden;
   touch-action: pan-y;          /* vertical swipes scroll the page */
+}
+
+.mol-stage canvas {
+  border-radius: inherit;
 }
 
 .mol-viewer {
@@ -1719,435 +1210,7 @@ figcaption {
   padding: var(--space-3);
 }
 
-.mol-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.mol-controls[hidden] {
-  display: none;
-}
-
-.mol-controls button {
-  min-height: 2.75rem;
-  padding: 0.4em 1em;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
-  color: var(--color-accent);
-  font: inherit;
-  font-size: var(--text-sm);
-  cursor: pointer;
-  transition:
-    transform var(--dur-control) var(--ease),
-    box-shadow var(--dur-control) var(--ease);
-}
-
-.mol-controls button:hover {
-  box-shadow: var(--shadow-raised);
-  transform: translateY(-1px);
-}
-
-.mol-controls button:active {
-  box-shadow: var(--shadow-pressed);
-  transform: translateY(1px);
-}
-
-.mol-caption {
-  font-family: var(--font-mono);
-  font-style: normal;
-  font-size: var(--text-xs);
-  color: var(--color-muted);
-}
-
-@media (max-width: 60rem) {
-  .mol-figure {
-    max-width: 22rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mol-controls button:hover,
-  .mol-controls button:active {
-    transform: none;
-  }
-}
-
-
-/* ==========================================================================
-   UI polish pass
-   ========================================================================== */
-
-/* Wrapping: no single-word last lines in prose; balanced headings.
-   Browsers without text-wrap support simply ignore these. */
-/* (text-wrap-style, not the text-wrap shorthand: the shorthand would also
-   reset nowrap, e.g. in the nav strip) */
-p,
-li,
-dd,
-figcaption {
-  text-wrap-style: pretty;
-}
-
-h1,
-h2,
-.project-head h3,
-.subsection-title,
-.mol-text h4,
-.mol-caption {
-  text-wrap-style: balance;
-}
-
-/* Timeline titles on phones: the organization gets its own line, without
-   the separator dot */
-@media (max-width: 40rem) {
-  .entry-org {
-    display: block;
-    margin-top: 0.1rem;
-  }
-
-  .entry-sep {
-    display: none;
-  }
-}
-
-.nowrap {
-  white-space: nowrap;
-}
-
-/* Project facts: one reading width for every answer, matching the
-   findings box, so text edges line up down the page */
-.facts dd > p,
-.facts dd > .points,
-.facts dd > .points li {
-  max-width: 44rem;
-}
-
-/* A status that wraps on narrow screens looks wrong as a pill */
-.project-status {
-  border-radius: var(--radius-sm);
-}
-
-/* Flow steps (wider screens): content starts at the top of each card and
-   the step number sits on its own line, so numbers and titles line up
-   across the row however the titles wrap */
-@media (min-width: 56.01rem) {
-  .flow li {
-    justify-content: flex-start;
-  }
-
-  .flow-step::before {
-    display: block;
-    margin-bottom: 0.1rem;
-  }
-}
-
-/* Molecule well: the canvas paints over the stage's own inset shadow, so
-   the recess is drawn on an overlay above it (it ignores the mouse, so
-   dragging still reaches the viewer) */
-.mol-stage::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  border-radius: inherit;
-  box-shadow: var(--shadow-recessed);
-  pointer-events: none;
-}
-
-.mol-stage canvas {
-  border-radius: inherit;
-}
-
-/* Plant switch: a little tighter so all three names fit the narrow card
-   with even padding */
-.plant-switch button {
-  padding-inline: 0.85em;
-}
-
-#contact .contact-figure {
-  width: min(100%, 18.5rem);
-}
-
-/* Nav strip (whenever it is too wide to fit): fade only the edge that
-   has more links behind it */
-.site-header nav[data-edge="middle"] {
-  mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 2rem), transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.25rem, #000 calc(100% - 2rem), transparent 100%);
-}
-
-.site-header nav[data-edge="start"] {
-  mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent 100%);
-  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent 100%);
-}
-
-.site-header nav[data-edge="end"] {
-  mask-image: linear-gradient(to right, transparent 0, #000 1.25rem);
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 1.25rem);
-}
-
-.mol-status {
-  white-space: nowrap;
-}
-
-
-/* ==========================================================================
-   Compartments: every item lives in its own card
-   One recipe throughout: a raised surface card on the cream page; things
-   nested inside a card (steps, findings, the molecule panel) sit in a
-   flat, page-colored "well" with a hairline instead of a second shadow.
-   ========================================================================== */
-.timeline > .entry,
-.project,
-.methods > div,
-.skill-list li,
-.about-text,
-.contact-text {
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
-}
-
-/* --- Timeline: a stack of cards (the line and dots retire) */
-.timeline {
-  display: grid;
-  gap: var(--space-3);
-  margin-left: 0;
-  border-left: 0;
-}
-
-.timeline > .entry {
-  grid-template-columns: 9rem 1fr;
-  padding: var(--space-4);
-}
-
-.entry + .entry {
-  border-top: 0;
-}
-
-.entry::before {
-  display: none;
-}
-
-.entry-date {
-  line-height: 1.6;
-  padding: 0.15em 0.6em;
-  border-radius: var(--radius-pill);
-  background: var(--color-bg);
-}
-
-/* --- Projects: one card per project, facts divided by hairlines */
-.project {
-  padding: var(--space-5);
-}
-
-.project + .project {
-  margin-top: var(--space-4);
-  padding-top: var(--space-5);
-  border-top: 0;
-}
-
-.project-head {
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.facts > div + div {
-  padding-top: var(--space-4);
-  border-top: 1px dashed var(--color-border);
-}
-
-/* Nested inside a card: flat wells */
-.project .flow li,
-.project .finding,
-.mol-project {
-  background: var(--color-bg);
-  box-shadow: none;
-  border: 1px solid var(--color-border);
-}
-
-.project .finding {
-  border-left: 3px solid var(--color-accent);
-}
-
-.project .project-why {
-  max-width: none;
-}
-
-/* --- Methods: a 2-up grid of cards */
-.methods {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
-  gap: var(--space-3);
-}
-
-.methods > div {
-  grid-template-columns: 1fr;
-  align-content: start;
-  padding: var(--space-4);
-  border-bottom: 0;
-}
-
-.methods > div:last-child {
-  padding-bottom: var(--space-4);
-}
-
-.methods dt {
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-border);
-}
-
-/* --- Certifications: tiles */
-.skill-list {
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
-  gap: var(--space-3);
-}
-
-.skill-list li {
-  align-content: start;
-  gap: var(--space-2);
-  max-width: none;
-  padding: var(--space-3) var(--space-4);
-}
-
-.skill-list .level {
-  padding: 0.1em 0.6em;
-  border-radius: var(--radius-pill);
-  background: var(--color-bg);
-}
-
-/* --- About and Contact: the text gets a card to match its neighbors */
-.about-text,
-.contact-text {
-  padding: var(--space-5);
-}
-
-.about-text > p {
-  max-width: 65ch;
-}
-
-/* Phones: tighter card padding; the timeline date sits above the title */
-@media (max-width: 40rem) {
-  .timeline > .entry {
-    grid-template-columns: 1fr;
-    padding: var(--space-3) var(--space-3) var(--space-4);
-  }
-
-  .project,
-  .about-text,
-  .contact-text {
-    padding: var(--space-4) var(--space-3);
-  }
-
-  .methods > div,
-  .mol-project {
-    padding: var(--space-3);
-  }
-}
-
-
-/* ==========================================================================
-   Microinteractions and section headers
-   (motion uses transform/opacity only; 150–220 ms for control feedback)
-   ========================================================================== */
-
-/* Display serif for the big headings: the system's book serif, no download
-   (Iowan Old Style on Apple devices, Palatino/Georgia elsewhere) */
-:root {
-  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
-}
-
-.hero h1,
-.section-title,
-.project-head h3,
-.subsection-title {
-  font-family: var(--font-display);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
-
-/* Section numbers become small dark badges */
-.section-title {
-  align-items: center;
-}
-
-.section-num {
-  display: inline-grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background: var(--color-text);
-  color: var(--color-surface);
-  font-size: var(--text-xs);
-  font-weight: 600;
-}
-
-/* "Why it interests me": a tip strip with its leaf */
-.project-why .project-part-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5em;
-}
-
-/* Copy email: a quiet pill that turns mint with a check when it worked */
-.copy-email {
-  align-self: center;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35em;
-  min-height: 2.25rem;
-  padding: 0.2em 0.9em;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
-  color: var(--color-accent);
-  font: inherit;
-  font-size: var(--text-sm);
-  cursor: pointer;
-  transition:
-    transform var(--dur-control) var(--ease),
-    box-shadow var(--dur-control) var(--ease),
-    background-color var(--dur-control) var(--ease);
-}
-
-.copy-email[hidden] {
-  display: none;
-}
-
-.copy-email:hover {
-  box-shadow: var(--shadow-raised);
-  transform: translateY(-1px);
-}
-
-.copy-email:active {
-  box-shadow: var(--shadow-pressed);
-  transform: translateY(1px);
-}
-
-.copy-email:focus-visible {
-  box-shadow: var(--shadow-raised-sm), var(--focus-glow);
-}
-
-.copy-email.is-done {
-  background: var(--color-mint);
-}
-
-.copy-email.is-done::before {
-  content: "✓" / "";
-  animation: pop-in 0.2s var(--ease) both;
-}
-
-@keyframes pop-in {
-  from { opacity: 0; transform: scale(0.4); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* Molecule loading: a soft light sweeps across the empty well until the
-   3D model is drawn (sets expectations instead of a blank box) */
+/* Loading: a soft light sweeps across the empty well until the model draws */
 .mol-stage.is-loading::before {
   content: "";
   position: absolute;
@@ -2159,283 +1222,310 @@ h2,
   pointer-events: none;
 }
 
-@keyframes sweep {
-  to { transform: translateX(100%); }
+.mol-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .copy-email:hover,
-  .copy-email:active {
-    transform: none;
-  }
-
-  .copy-email.is-done::before,
-  .mol-stage.is-loading::before {
-    animation: none;
-  }
-
-  .mol-stage.is-loading::before {
-    transform: none;
-    opacity: 0.5;
-  }
+.mol-caption {
+  text-wrap: balance;
+  color: var(--color-muted);
+  font-size: var(--text-xs);
 }
-
 
 /* ==========================================================================
-   Scanning aids (UX laws applied)
+   9. Experience: date on the left, role on the right, thin dividers
    ========================================================================== */
-
-/* At a glance — key facts at the top, where scanning starts (F-pattern);
-   four short chunks instead of one paragraph (Miller's law) */
-main > .glance {
-  padding-block: 0 var(--space-4);
-}
-
-.glance-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+.entries {
   list-style: none;
-  padding: var(--space-2);
-  border-radius: var(--radius);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
+  border-bottom: 1px solid var(--color-line);
 }
 
-.glance-list li {
+.entry {
   display: grid;
-  align-content: start;
-  gap: 0.15rem;
-  max-width: none;
-  padding: var(--space-3) var(--space-4);
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: var(--space-1) var(--space-4);
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--color-line);
+}
+
+.entry-date {
+  padding-top: 0.1em;
+  color: var(--color-muted);
   font-size: var(--text-sm);
-  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
 }
 
-.glance-list li + li {
-  border-left: 1px solid var(--color-border);
+.entry-body h4 {
+  font-size: 1.1rem;
 }
 
-.glance-icon {
-  width: 1.6rem;
-  height: 1.6rem;
-  margin-bottom: var(--space-2);
-  color: var(--color-accent);
+.entry-org {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  font-weight: 400;
 }
 
-.glance-label {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-terracotta);
+.entry .points {
+  margin-top: var(--space-2);
 }
 
-section .glance-list p + p {
-  margin-top: 0;
-}
-
-/* Two-up on tablets, a single stack on phones: dividers follow the rows */
-@media (max-width: 60rem) {
-  .glance-list {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .glance-list li + li {
-    border-left: 0;
-  }
-
-  .glance-list li:nth-child(even) {
-    border-left: 1px solid var(--color-border);
-  }
-
-  .glance-list li:nth-child(n + 3) {
-    border-top: 1px solid var(--color-border);
-  }
-}
-
-@media (max-width: 30rem) {
-  .glance-list {
+@media (max-width: 40rem) {
+  .entry {
     grid-template-columns: 1fr;
   }
-
-  .glance-list li:nth-child(even) {
-    border-left: 0;
-  }
-
-  .glance-list li + li {
-    border-top: 1px solid var(--color-border);
-  }
-
-  .glance-list li {
-    grid-template-columns: auto 1fr;
-    column-gap: var(--space-3);
-    padding: var(--space-3);
-  }
-
-  .glance-icon {
-    grid-row: span 2;
-    margin-bottom: 0;
-  }
 }
-
-/* Method cards: an icon cue beside each area's name */
-.methods dt {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: var(--space-3);
-  align-items: center;
-}
-
-.method-icon {
-  grid-row: span 2;
-  width: 2.25rem;
-  height: 2.25rem;
-  padding: 0.4rem;
-  border-radius: 50%;
-  background: var(--color-mint-soft);
-  color: var(--color-accent);
-}
-
-/* Recognition over recall: after a "see Projects" link, the card you land
-   on glows mint briefly, so your eye finds it */
-.project {
-  position: relative;
-}
-
-.project:target::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 0 0 3px var(--color-mint), 0 0 0 9px var(--color-mint-soft);
-  pointer-events: none;
-  opacity: 0;
-  animation: land 1.8s var(--ease);
-}
-
-@keyframes land {
-  15%,
-  60% { opacity: 1; }
-  to { opacity: 0; }
-}
-
-/* Fitts's law: the copy control gets a full 44px touch target */
-.copy-email {
-  min-height: 2.75rem;
-}
-
-/* Peak-end: the page ends on a clear next step back up */
-.to-top {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;
-  min-height: 2.75rem;
-  margin-top: var(--space-2);
-  padding: 0.3em 1em;
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
-  color: var(--color-accent);
-  font-size: var(--text-sm);
-  text-decoration: none;
-  transition:
-    transform var(--dur-control) var(--ease),
-    box-shadow var(--dur-control) var(--ease);
-}
-
-.to-top svg {
-  width: 1em;
-  height: 1em;
-}
-
-.to-top:hover {
-  box-shadow: var(--shadow-raised);
-  transform: translateY(-1px);
-}
-
-.to-top:active {
-  box-shadow: var(--shadow-pressed);
-  transform: translateY(1px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .to-top:hover,
-  .to-top:active {
-    transform: none;
-  }
-}
-
 
 /* ==========================================================================
-   Accessibility pass: 44px targets and a motion control
+   10. Skills & Education
    ========================================================================== */
+.skills-education {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: var(--space-6);
+}
 
-/* Nav links, logo, header Email, email link: at least 44px tall so they're
-   easy to tap; the visible text and underline stay where they were */
-.nav-list a {
-  display: inline-flex;
+@media (max-width: 56rem) {
+  .skills-education {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+}
+
+.skill-groups > div,
+.edu-list li,
+.cert-list li {
+  padding-block: var(--space-3);
+  border-top: 1px solid var(--color-line);
+}
+
+.skill-groups,
+.edu-list,
+.cert-list {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.skill-groups dt {
+  font-weight: 600;
+}
+
+.where {
+  margin-left: 0.4em;
+  color: var(--color-rust);
+  font-size: var(--text-sm);
+  font-weight: 400;
+}
+
+.skill-groups dd {
+  margin: 0.25rem 0 0;
+}
+
+/* Skills as a running list separated by middle dots (no chips) */
+.inline-list {
+  list-style: none;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.inline-list li {
+  display: inline;
+}
+
+.inline-list li + li::before {
+  content: "\a0· " / "";      /* the dot stays with the item before it */
+  color: var(--color-line-strong);
+}
+
+.edu-list,
+.cert-list {
+  list-style: none;
+}
+
+.edu-list h4 {
+  font-size: 1.05rem;
+}
+
+.edu-degree {
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+
+.edu-meta,
+.cert-meta {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+}
+
+.cert-name {
+  display: block;
+  font-size: var(--text-sm);
+}
+
+/* ==========================================================================
+   11. About: open text with a small botanical aside
+   ========================================================================== */
+.about-layout {
+  display: grid;
+  grid-template-columns: minmax(0, var(--measure)) minmax(0, 16rem);
+  justify-content: space-between;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+@media (max-width: 56rem) {
+  .about-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.about-text {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.about-lead {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 1.15rem + 0.8vw, 1.7rem);
+  line-height: 1.35;
+}
+
+.growing {
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--color-line-strong);
+  font-size: var(--text-sm);
+}
+
+.growing .leaf-icon {
+  font-size: 1.4rem;
+  margin-bottom: var(--space-2);
+}
+
+.growing h3 {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-lg);
+}
+
+.growing-label {
+  color: var(--color-rust);
+  font-weight: 600;
+}
+
+.growing-name {
+  font-weight: 600;
+}
+
+.growing p:last-child {
+  color: var(--color-muted);
+}
+
+@media (max-width: 56rem) {
+  .growing {
+    padding: var(--space-3) 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--color-line-strong);
+  }
+}
+
+/* ==========================================================================
+   12. Contact + botanical figure
+   Contact text leads; the plant is the closing detail beside it.
+   ========================================================================== */
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 18rem);
+  justify-content: space-between;
+  gap: var(--space-6);
   align-items: center;
-  gap: 0.3em;          /* flex drops the space between number and label */
-  min-height: 2.75rem;
-  padding-block: 0;
 }
 
-.nav-list a::after {
-  bottom: 0.45rem;
+@media (max-width: 47.99rem) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
 }
 
-.logo {
-  min-height: 2.75rem;
-  min-width: 2.75rem;
+.contact-text {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
 }
 
-.header-resume {
-  display: inline-flex;
+.contact-lede {
+  max-width: 30rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 1.25rem + 1.8vw, 2.5rem);
+  line-height: 1.2;
+}
+
+.contact-email {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  min-height: 2.75rem;
+  gap: var(--space-2) var(--space-3);
 }
 
 .contact-email a {
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
+  font-size: clamp(1.15rem, 1rem + 0.6vw, 1.4rem);
+  overflow-wrap: anywhere;
 }
 
-/* Intro highlights: each row is a full-height target; the row pitch stays
-   about what it was (the gap moves into the link) */
-.highlights {
-  gap: 0;
+.contact-location {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
 }
 
-.highlights a {
-  display: block;
-  padding-block: 0.625rem;
+.contact-figure {
+  justify-self: center;
+  width: min(100%, 18rem);
 }
 
-.highlights li::before {
-  top: calc(0.625rem + 0.55em);
+.js .plant-switch {
+  display: flex;
+  margin: 0 auto var(--space-3);
 }
 
-/* Pause / play for the plant (shown only while it animates) */
+.plant-switch[hidden] {
+  display: none !important;
+}
+
+.plant-switch button {
+  padding-inline: 0.85em;
+}
+
+/* The canvas fills this box; the box keeps the plate's 450:604 shape */
+.contact-art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 450 / 604;
+  overflow: hidden;
+  touch-action: pan-y;          /* sideways drags disturb the particles; vertical swipes scroll */
+}
+
+.particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease);
+}
+
+.particles.is-ready {
+  opacity: 1;
+}
+
 .motion-toggle {
   display: flex;
-  align-items: center;
-  gap: 0.45em;
-  min-height: 2.75rem;
   margin: var(--space-2) auto 0;
-  padding: 0.3em 1em;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--color-bg);
-  color: var(--color-accent);
-  font: inherit;
-  font-size: var(--text-sm);
-  cursor: pointer;
-  transition: box-shadow var(--dur-control) var(--ease), transform var(--dur-control) var(--ease);
-}
-
-.motion-toggle[hidden] {
-  display: none;
 }
 
 .motion-toggle::before {
@@ -2449,43 +1539,118 @@ section .glance-list p + p {
   letter-spacing: 0;
 }
 
-.motion-toggle:hover {
-  box-shadow: var(--shadow-raised-sm);
+.contact-figure figcaption {
+  margin-top: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-line);
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  line-height: 1.5;
 }
 
-.motion-toggle:active {
-  box-shadow: var(--shadow-pressed);
-  transform: translateY(1px);
+.figure-credit {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
 }
 
-.motion-toggle:focus-visible {
-  box-shadow: var(--focus-glow);
+/* Mouse-trail pollen: fixed behind all content; ignores the mouse itself */
+.pollen {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .motion-toggle:active {
-    transform: none;
-  }
-}
-
 
 /* ==========================================================================
-   Copy revision: dual degrees on their own lines; model method note
+   13. Footer, motion, utilities
    ========================================================================== */
-.degrees {
-  display: grid;
-  gap: 0.1rem;
-  margin-top: var(--space-1);
-  list-style: none;
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-section);
+  padding: var(--space-5) var(--gutter);
+  border-top: 1px solid var(--color-line);
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.site-footer .leaf-icon {
+  font-size: 1.4rem;
+}
+
+.to-top svg {
+  width: 1em;
+  height: 1em;
+}
+
+/* Scroll reveal: sections fade in once (opacity only) */
+.js .reveal {
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes sweep {
+  to { transform: translateX(100%); }
+}
+
+@keyframes land {
+  15%,
+  60% { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
   padding: 0;
-  color: var(--color-muted);
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-.degrees li {
-  max-width: none;
+.nowrap {
+  white-space: nowrap;
 }
 
-.mol-method {
-  font-size: var(--text-xs);
-  color: var(--color-muted);
+/* Reduce motion: no smooth scrolling, fades, sweeps, or pops.
+   Durations become ~0 rather than "none" so transitionend events still fire. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  .js .reveal {
+    opacity: 1;
+  }
+
+  .mol-stage.is-loading::before {
+    transform: none;
+    opacity: 0.5;
+  }
 }
