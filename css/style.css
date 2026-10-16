@@ -1891,3 +1891,157 @@ h2,
 .mol-status {
   white-space: nowrap;
 }
+
+
+/* ==========================================================================
+   Compartments: every item lives in its own card
+   One recipe throughout: a raised surface card on the cream page; things
+   nested inside a card (steps, findings, the molecule panel) sit in a
+   flat, page-colored "well" with a hairline instead of a second shadow.
+   ========================================================================== */
+.timeline > .entry,
+.project,
+.methods > div,
+.skill-list li,
+.about-text,
+.contact-text {
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
+}
+
+/* --- Timeline: a stack of cards (the line and dots retire) */
+.timeline {
+  display: grid;
+  gap: var(--space-3);
+  margin-left: 0;
+  border-left: 0;
+}
+
+.timeline > .entry {
+  grid-template-columns: 9rem 1fr;
+  padding: var(--space-4);
+}
+
+.entry + .entry {
+  border-top: 0;
+}
+
+.entry::before {
+  display: none;
+}
+
+.entry-date {
+  line-height: 1.6;
+  padding: 0.15em 0.6em;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+}
+
+/* --- Projects: one card per project, facts divided by hairlines */
+.project {
+  padding: var(--space-5);
+}
+
+.project + .project {
+  margin-top: var(--space-4);
+  padding-top: var(--space-5);
+  border-top: 0;
+}
+
+.project-head {
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.facts > div + div {
+  padding-top: var(--space-4);
+  border-top: 1px dashed var(--color-border);
+}
+
+/* Nested inside a card: flat wells */
+.project .flow li,
+.project .finding,
+.mol-project {
+  background: var(--color-bg);
+  box-shadow: none;
+  border: 1px solid var(--color-border);
+}
+
+.project .finding {
+  border-left: 3px solid var(--color-accent);
+}
+
+.project .project-why {
+  max-width: none;
+}
+
+/* --- Methods: a 2-up grid of cards */
+.methods {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: var(--space-3);
+}
+
+.methods > div {
+  grid-template-columns: 1fr;
+  align-content: start;
+  padding: var(--space-4);
+  border-bottom: 0;
+}
+
+.methods > div:last-child {
+  padding-bottom: var(--space-4);
+}
+
+.methods dt {
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* --- Certifications: tiles */
+.skill-list {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: var(--space-3);
+}
+
+.skill-list li {
+  align-content: start;
+  gap: var(--space-2);
+  max-width: none;
+  padding: var(--space-3) var(--space-4);
+}
+
+.skill-list .level {
+  padding: 0.1em 0.6em;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+}
+
+/* --- About and Contact: the text gets a card to match its neighbors */
+.about-text,
+.contact-text {
+  padding: var(--space-5);
+}
+
+.about-text > p {
+  max-width: 65ch;
+}
+
+/* Phones: tighter card padding; the timeline date sits above the title */
+@media (max-width: 40rem) {
+  .timeline > .entry {
+    grid-template-columns: 1fr;
+    padding: var(--space-3) var(--space-3) var(--space-4);
+  }
+
+  .project,
+  .about-text,
+  .contact-text {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .methods > div,
+  .mol-project {
+    padding: var(--space-3);
+  }
+}
