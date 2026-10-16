@@ -2364,3 +2364,106 @@ section .glance-list p + p {
     transform: none;
   }
 }
+
+
+/* ==========================================================================
+   Accessibility pass: 44px targets and a motion control
+   ========================================================================== */
+
+/* Nav links, logo, header Email, email link: at least 44px tall so they're
+   easy to tap; the visible text and underline stay where they were */
+.nav-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;          /* flex drops the space between number and label */
+  min-height: 2.75rem;
+  padding-block: 0;
+}
+
+.nav-list a::after {
+  bottom: 0.45rem;
+}
+
+.logo {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
+
+.header-resume {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.contact-email a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+/* Intro highlights: each row is a full-height target; the row pitch stays
+   about what it was (the gap moves into the link) */
+.highlights {
+  gap: 0;
+}
+
+.highlights a {
+  display: block;
+  padding-block: 0.625rem;
+}
+
+.highlights li::before {
+  top: calc(0.625rem + 0.55em);
+}
+
+/* Pause / play for the plant (shown only while it animates) */
+.motion-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  min-height: 2.75rem;
+  margin: var(--space-2) auto 0;
+  padding: 0.3em 1em;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  color: var(--color-accent);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: box-shadow var(--dur-control) var(--ease), transform var(--dur-control) var(--ease);
+}
+
+.motion-toggle[hidden] {
+  display: none;
+}
+
+.motion-toggle::before {
+  content: "❚❚" / "";
+  font-size: 0.7em;
+  letter-spacing: -0.1em;
+}
+
+.motion-toggle.is-paused::before {
+  content: "▶" / "";
+  letter-spacing: 0;
+}
+
+.motion-toggle:hover {
+  box-shadow: var(--shadow-raised-sm);
+}
+
+.motion-toggle:active {
+  box-shadow: var(--shadow-pressed);
+  transform: translateY(1px);
+}
+
+.motion-toggle:focus-visible {
+  box-shadow: var(--focus-glow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-toggle:active {
+    transform: none;
+  }
+}

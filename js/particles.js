@@ -368,17 +368,19 @@
   let queued = null;      // a choice made mid-morph waits its turn
   let autoTimer = 0;      // seconds the current plant has been on screen
   let holdAuto = false;   // true while the mouse is over the figure or focus is in it
+  let userPaused = false; // the visitor pressed "Pause motion"
+  let pausedAt = 0;
 
   function morphTo(index) {
     if (index === target && morphStart === null) return;
     if (morphStart !== null) { queued = index; return; }
     if (index === current) return;
     target = index;
-    if (reduceMotion) {             // no animation: swap instantly
+    if (reduceMotion || userPaused) {  // no animation: swap instantly
       current = target;
       bindPlants(current, current);
       gl.uniform1f(u.uMorph, 0);
-      drawStill();
+      if (reduceMotion) drawStill(); else drawFrozen();
       return;
     }
     bindPlants(current, target);
@@ -430,12 +432,12 @@
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.POINTS, 0, N);
 
-    if (running && visible) requestAnimationFrame(frame);
+    if (running && visible && !userPaused) requestAnimationFrame(frame);
     else running = false;
   }
 
   function wake() {
-    if (running || !visible || reduceMotion) return;
+    if (running || !visible || reduceMotion || userPaused) return;
     running = true;
     last = performance.now();
     requestAnimationFrame(frame);
@@ -448,6 +450,34 @@
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.POINTS, 0, N);
+  }
+
+  // Paused: redraw the current moment (time stays frozen where it stopped)
+  function drawFrozen() {
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.POINTS, 0, N);
+  }
+
+  /* ---------- Pause / play (WCAG 2.2.2: motion that runs on its own for
+     more than 5 seconds needs a way to stop it) -------------------------- */
+  const motionButton = document.querySelector('.motion-toggle');
+
+  function setPaused(paused) {
+    const now = performance.now();
+    if (paused) {
+      pausedAt = now;
+    } else {
+      // Shift the clocks by the pause length so drift and any morph in
+      // progress continue exactly where they stopped
+      const gap = now - pausedAt;
+      start += gap;
+      if (morphStart !== null) morphStart += gap;
+    }
+    userPaused = paused;
+    motionButton.textContent = paused ? 'Play motion' : 'Pause motion';
+    motionButton.classList.toggle('is-paused', paused);
+    if (!paused) wake();
   }
 
   /* ---------- Plant switch + caption ---------------------------------------- */
@@ -513,6 +543,10 @@
       }
 
       new ResizeObserver(layout).observe(box);
+      if (motionButton) {
+        motionButton.hidden = false;   // only offered when there is motion to stop
+        motionButton.addEventListener('click', () => setPaused(!userPaused));
+      }
       box.addEventListener('pointermove', onPointer);
       box.addEventListener('pointerdown', onPointer);
 
