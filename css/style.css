@@ -2467,3 +2467,25 @@ section .glance-list p + p {
     transform: none;
   }
 }
+
+
+/* ==========================================================================
+   Copy revision: dual degrees on their own lines; model method note
+   ========================================================================== */
+.degrees {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: var(--space-1);
+  list-style: none;
+  padding: 0;
+  color: var(--color-muted);
+}
+
+.degrees li {
+  max-width: none;
+}
+
+.mol-method {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}

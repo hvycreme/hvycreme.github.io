@@ -2,7 +2,7 @@
    molecule.js: interactive 3D model for the personal synthesis project.
 
    Uses 3Dmol.js (vendor/3dmol, BSD-3-Clause), an established molecular
-   viewer. Nothing is shown unless a VERIFIED structure exists:
+   viewer. Nothing is shown unless these structure files exist:
      molecules/target.sdf     3D coordinates (from tools/make_molecule_assets.py)
      molecules/target-2d.svg  static 2D fallback
      molecules/target.json    formula + provenance for the details panel
@@ -110,20 +110,26 @@
     // Chemical formula with proper subscripts (C13H14... -> C₁₃H₁₄...)
     const f = card.querySelector('[data-mol="formula"]');
     if (f && meta.formula) f.innerHTML = meta.formula.replace(/(\d+)/g, '<sub>$1</sub>');
+    // Reader-facing explanation first; how it was generated goes in its own row
     let model = meta.computational === false
-      ? `3D coordinates from: ${meta.coordinates}. Structure source: ${meta.source}.`
-      : `Atom positions were generated computationally (${meta.coordinates || 'force-field geometry'}) from the verified structure. Structure source: ${meta.source}.`;
+      ? 'This 3D model shows how the atoms in the target compound are connected and arranged in space.'
+      : 'This 3D model shows how the atoms in the target compound are connected. Its shape was calculated by computer, not measured in the lab.';
     if (meta.unassigned_stereocenters > 0) {
-      model += ' The stereocenter is not assigned, so the model shows one arbitrary configuration.';
+      model += ' One carbon in the epoxide (oxirane) ring is a stereocenter, meaning it can exist in either of two mirror-image arrangements. The target’s arrangement at that carbon hasn’t been assigned, so the model shows one of the two arbitrarily.';
     }
     set('model', model);
+    const method = [
+      meta.coordinates && `Geometry: ${meta.coordinates}.`,
+      meta.source && `Structure source: ${meta.source}.`,
+    ].filter(Boolean).join(' ');
+    set('method', method);
     if (meta.computational === false) {
       caption.textContent = 'Target structure · 3D model';
     }
   }
 
   async function init() {
-    // Only proceed if a verified structure has been added (see header comment)
+    // Only proceed if the structure files have been added (see header comment)
     const modelUrl = card.dataset.model;
     if (!modelUrl) return;
     let sdf;

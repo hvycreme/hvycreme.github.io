@@ -27,14 +27,14 @@ files/            PDFs: put resume.pdf here
 | Introduction | `#intro` | Name, positioning statement, summer goal, three highlight links, Email / LinkedIn |
 | 01 Research | `#research` | Appointments, dates, concise responsibilities |
 | 02 Projects | `#work` | Each project: question/purpose, my contribution, approach (with a flow diagram), outcome/status. Anchors: `#p-music`, `#p-pipeline`, `#p-synthesis` |
-| 03 Methods | `#methods` | Compact, grouped reference to methods actually used, with the lab where each was used |
+| 03 Research & Technical Skills (nav: Skills) | `#methods` | Methods actually used, grouped by lab; no proficiency ratings |
 | 04 Experience | `#experience` | Housing, teaching, leadership, volunteering, employment |
 | 05 Education | `#education` | Degrees, certifications and training |
 | 06 About | `#about` | Why medicine, personal notes, Currently growing |
 | 07 Contact | `#contact` | Invitation, readable email address, Email / LinkedIn, interactive plant figure |
 
-### Personal synthesis project (molecule viewer)
-The Wiskur Lab entry includes a "Personal synthesis project" card. Its 3D viewer (3Dmol.js, self-hosted in `vendor/3dmol/`, BSD-3-Clause) stays switched off until a **verified** structure is added, so nothing guessed is ever shown:
+### Individual synthesis project (molecule viewer)
+The Wiskur Lab entry includes an "Individual synthesis project" card. Its 3D viewer (3Dmol.js, self-hosted in `vendor/3dmol/`, BSD-3-Clause) stays switched off until a **verified** structure is added, so nothing guessed is ever shown:
 
 ```bash
 pip install rdkit
