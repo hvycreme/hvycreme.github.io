@@ -107,6 +107,9 @@
       dd.closest('.mol-meta').hidden = false;
     };
     set('formula', meta.formula);
+    // Chemical formula with proper subscripts (C13H14... -> C₁₃H₁₄...)
+    const f = card.querySelector('[data-mol="formula"]');
+    if (f && meta.formula) f.innerHTML = meta.formula.replace(/(\d+)/g, '<sub>$1</sub>');
     let model = meta.computational === false
       ? `3D coordinates from: ${meta.coordinates}. Structure source: ${meta.source}.`
       : `Atom positions were generated computationally (${meta.coordinates || 'force-field geometry'}) from the verified structure. Structure source: ${meta.source}.`;

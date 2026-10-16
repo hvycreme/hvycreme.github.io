@@ -1,0 +1,9 @@
+{
+  "formula": "C13H14N2O2S",
+  "molecular_weight": 262.33,
+  "canonical_smiles": "c1cc2c(cc1COCC1CO1)SC1=NCCN12",
+  "unassigned_stereocenters": 1,
+  "source": "structure drawing supplied by Gavin Eubanks; stereocenter not specified",
+  "coordinates": "RDKit ETKDGv3 embedding with MMFF94 cleanup",
+  "computational": true
+}
