@@ -145,9 +145,11 @@
     fillDetails(meta);
 
     if (!hasWebGL()) { showFallback(); return; }
+    stage.classList.add('is-loading');   // skeleton until the model is drawn
     try {
       await loadScript('vendor/3dmol/3Dmol-min.js');
     } catch (e) {
+      stage.classList.remove('is-loading');
       showFallback();
       return;
     }
@@ -165,6 +167,7 @@
     viewer.zoom(0.95);
     viewer.render();
     initialView = viewer.getView();
+    stage.classList.remove('is-loading');
 
     pauseBtn.addEventListener('click', () => { paused = !paused; updateSpin(); });
     resetBtn.addEventListener('click', () => {

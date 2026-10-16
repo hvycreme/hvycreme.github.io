@@ -170,3 +170,33 @@ document.querySelectorAll('.project').forEach((project) => {
   });
   show('plain'); // start in plain language (without JS, both panels stay visible)
 });
+
+/* --------------------------------------------------------------------------
+   5. Copy email: success feedback
+   The button appears only where the Clipboard API works (it needs https,
+   which GitHub Pages provides). It confirms with a check for 2 seconds, and
+   a hidden role="status" line announces "Email address copied" to screen
+   readers, since a label change alone isn't always read aloud.
+   -------------------------------------------------------------------------- */
+document.querySelectorAll('.copy-email').forEach((button) => {
+  if (!navigator.clipboard || !window.isSecureContext) return;
+  const status = button.parentElement.querySelector('.copy-status');
+  let timer = null;
+  button.hidden = false;
+  button.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(button.dataset.copy);
+    } catch (e) {
+      return; // permission refused: the mailto link still works
+    }
+    button.classList.add('is-done');
+    button.textContent = 'Copied';
+    if (status) status.textContent = 'Email address copied';
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      button.classList.remove('is-done');
+      button.textContent = 'Copy';
+      if (status) status.textContent = '';
+    }, 2000);
+  });
+});
