@@ -132,6 +132,62 @@ if ('IntersectionObserver' in window) {
 }
 
 /* --------------------------------------------------------------------------
+   3b. Project cards: closed squares that open to full width
+   Each card has a "Details" button (aria-expanded / aria-controls) and a
+   body that JS hides. Without JS every body stays open. Links to a card or
+   to anything inside it (#p-music, Experience links) open it first, so the
+   browser's jump lands on visible content.
+   -------------------------------------------------------------------------- */
+const projectCards = document.querySelectorAll('.project-card');
+
+function setCard(card, open) {
+  const button = card.querySelector('.project-toggle');
+  const body = card.querySelector('.project-body');
+  button.setAttribute('aria-expanded', String(open));
+  body.hidden = !open;
+  card.classList.toggle('is-open', open);
+}
+
+projectCards.forEach((card) => {
+  setCard(card, false);
+  card.querySelector('.project-toggle').addEventListener('click', () => {
+    const open = !card.classList.contains('is-open');
+    setCard(card, open);
+    // An opened card moves to its own full-width row: bring it into view
+    if (open) {
+      requestAnimationFrame(() => card.scrollIntoView({
+        block: 'start',
+        behavior: prefersReducedMotion.matches ? 'auto' : 'smooth',
+      }));
+    }
+  });
+});
+
+function cardFor(id) {
+  const target = id && document.getElementById(id);
+  return target ? target.closest('.project-card') : null;
+}
+
+// In-page links: open the card synchronously, before the default jump
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('a[href^="#"]');
+  if (!link) return;
+  const card = cardFor(link.getAttribute('href').slice(1));
+  if (card && !card.classList.contains('is-open')) setCard(card, true);
+});
+
+// Arriving with a hash (or typing one): open, then scroll to the target
+function openFromHash() {
+  const id = decodeURIComponent(location.hash.slice(1));
+  const card = cardFor(id);
+  if (!card) return;
+  if (!card.classList.contains('is-open')) setCard(card, true);
+  requestAnimationFrame(() => document.getElementById(id).scrollIntoView({ block: 'start' }));
+}
+openFromHash();
+window.addEventListener('hashchange', openFromHash);
+
+/* --------------------------------------------------------------------------
    4. "Plain language / Scientific detail" toggle
    Each project has two buttons and two panels. The `hidden` attribute
    removes a panel from view AND from screen readers; aria-pressed tells
