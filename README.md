@@ -146,3 +146,6 @@ GitHub Pages lets browsers cache files for up to 10 minutes. Force a fresh copy:
 - Animations only touch `transform` and `opacity`; scroll effects use `IntersectionObserver`, never scroll events.
 - Works without JavaScript: every section is visible and both project explanations show.
 - The particle rose is decorative (hidden from screen readers), loads only near the Contact section, and works with mouse and touch.
+
+## Portrait helix (Mint Drift)
+`vendor/mint-drift/` holds the supplied renderer (`mint-drift.js`, `mint-drift.css`, `preset.json`), unmodified, with the approved preset baked in. `js/portrait-helix.js` mounts it behind the portrait with `chrome:false, controls:false`, wires the site's **Pause animation** button to `pause()`/`play()`, starts paused for Reduce motion, rests while off screen, and exposes `window.portraitHelix.destroy()`. The lean is a CSS `rotate(-24deg)` on `.portrait-helix`; the soft edge is a radial mask over the approved paper color (`#f4f8ef`), so neither the renderer nor its colors were changed.

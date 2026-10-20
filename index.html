@@ -17,12 +17,15 @@
   <!-- Runs before the page paints: tells CSS "JavaScript is on", so effects
        that hide content (reveals, toggles, the phone menu) only apply when JS can undo them. -->
   <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="vendor/mint-drift/mint-drift.css">
   <link rel="stylesheet" href="css/style.css">
   <!-- defer: download in parallel, run after the HTML is parsed (so the DOM exists) -->
   <script src="js/main.js" defer></script>
   <script src="js/particles.js" defer></script>
   <script src="js/pollen.js" defer></script>
   <script src="js/molecule.js" defer></script>
+  <script src="vendor/mint-drift/mint-drift.js" defer></script>
+  <script src="js/portrait-helix.js" defer></script>
 </head>
 <body>
 
@@ -81,12 +84,21 @@
 
       <!-- Headshot. srcset lists two sizes; with `sizes` (how wide it displays) the
            browser picks the smallest file that's still sharp on that screen. -->
-      <figure class="portrait">
-        <img src="images/headshot-800.webp"
-             srcset="images/headshot-480.webp 480w, images/headshot-800.webp 800w"
-             sizes="(max-width: 48rem) 12rem, 17rem"
-             alt="Headshot of Gavin Eubanks" width="800" height="1000" fetchpriority="high">
-      </figure>
+      <div class="portrait-stage">
+        <div class="portrait-frame">
+          <!-- Mint Drift helix behind the portrait (vendor/mint-drift, mounted by
+               js/portrait-helix.js). Decorative, so hidden from screen readers. -->
+          <div class="portrait-helix" aria-hidden="true"></div>
+          <figure class="portrait">
+            <img src="images/headshot-800.webp"
+                 srcset="images/headshot-480.webp 480w, images/headshot-800.webp 800w"
+                 sizes="(max-width: 48rem) 12rem, 17rem"
+                 alt="Headshot of Gavin Eubanks" width="800" height="1000" fetchpriority="high">
+          </figure>
+        </div>
+        <!-- Shown by js/portrait-helix.js once the animation is running -->
+        <button type="button" class="helix-toggle" hidden>Pause animation</button>
+      </div>
 
       <!-- Compact supporting facts -->
       <dl class="hero-facts">

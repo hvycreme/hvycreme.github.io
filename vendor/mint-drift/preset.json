@@ -1,0 +1,13 @@
+{
+  "speed": 0.1,
+  "density": 80,
+  "fluidity": 2,
+  "color": "#afcda4",
+  "numbers": true,
+  "blobDensity": 21,
+  "stickiness": 0.8,
+  "helixRadius": 88,
+  "rotation": 216,
+  "turns": 0.85,
+  "blobSize": 6.3
+}

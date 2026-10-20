@@ -225,6 +225,7 @@ a:hover {
 .copy-email,
 .mol-controls button,
 .motion-toggle,
+.helix-toggle,
 .to-top {
   display: inline-flex;
   align-items: center;
@@ -245,6 +246,7 @@ a:hover {
 .copy-email:hover,
 .mol-controls button:hover,
 .motion-toggle:hover,
+.helix-toggle:hover,
 .to-top:hover {
   border-color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 6%, transparent);
@@ -577,9 +579,8 @@ main > section {
 /* Arched portrait */
 .portrait {
   --arch: 50% 50% var(--radius) var(--radius) / 40% 40% var(--radius) var(--radius);
-  grid-area: portrait;
-  justify-self: center;
-  width: min(100%, 17rem);
+  position: relative;
+  width: 100%;
   padding: 8px;
   border: 1px solid var(--color-line);
   border-radius: var(--arch);
@@ -588,6 +589,84 @@ main > section {
 
 .portrait img {
   border-radius: var(--arch);
+}
+
+/* Portrait with the Mint Drift helix turning behind it.
+   The helix keeps its approved paper color (#f4f8ef); a soft radial mask
+   fades that paper into the cream page, so it reads as a halo, not a box. */
+main {
+  overflow-x: clip;            /* the halo may extend past the screen edge; never scroll sideways */
+}
+
+/* Text always sits above the halo */
+.hero-text,
+.hero-facts {
+  position: relative;
+  z-index: 1;
+}
+
+/* Tablets: the portrait column is narrow, so the halo is smaller */
+@media (min-width: 48rem) and (max-width: 64rem) {
+  .portrait-frame .portrait-helix {
+    width: 27rem;
+    height: 34rem;
+  }
+}
+
+.portrait-stage {
+  grid-area: portrait;
+  justify-self: center;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  width: min(100%, 17rem);
+}
+
+.portrait-frame {
+  position: relative;
+  isolation: isolate;          /* keeps the helix behind the photo, above the page */
+  width: 100%;
+}
+
+.portrait-helix {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  width: 35rem;
+  height: 42rem;               /* the supplied stage caps at 680px; stay under it */
+  /* rotate() leans the whole helix to the left (top tilted left); the
+     renderer itself is untouched */
+  transform: translate(-50%, -50%) rotate(-24deg);
+  pointer-events: none;        /* never blocks the text or links around it */
+}
+
+.portrait-helix .mint-drift {
+  height: 100%;
+  border-radius: 0;
+  -webkit-mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 62%, transparent 100%);
+}
+
+.helix-toggle {
+  position: relative;
+  min-height: 2.75rem;
+  background: var(--color-bg);
+}
+
+.helix-toggle[hidden] {
+  display: none;
+}
+
+.helix-toggle::before {
+  content: "❚❚" / "";
+  font-size: 0.7em;
+  letter-spacing: -0.1em;
+}
+
+.helix-toggle.is-paused::before {
+  content: "▶" / "";
+  letter-spacing: 0;
 }
 
 /* Supporting facts: one quiet row under a hairline */
@@ -631,9 +710,17 @@ main > section {
     gap: var(--space-5);
   }
 
-  .portrait {
-    justify-self: start;
+  .portrait-frame {
     width: min(70%, 12rem);
+  }
+
+  .portrait-stage {
+    margin-top: var(--space-5); /* room above for the leaning helix */
+  }
+
+  .portrait-helix {
+    width: 25rem;
+    height: 29rem;
   }
 }
 
