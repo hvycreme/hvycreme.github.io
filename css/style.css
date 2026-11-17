@@ -1444,25 +1444,40 @@ main {
 }
 
 .entry-toggle {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: center;
-  gap: var(--space-3);
+  display: block;
   width: 100%;
-  min-height: 4.25rem;
+  margin: 0;
   padding: 0.85rem 0.75rem 0.85rem 1.6rem;
   border: 0;
   border-radius: 32px;
+  -webkit-appearance: none;
+  appearance: none;              /* no gray default button on iOS */
   background: none;
   color: inherit;
   font: inherit;
   text-align: left;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The layout lives on an inner span: older iOS Safari mis-lays-out grid set
+   directly on <button> */
+.entry-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 2.55rem;
 }
 
 .entry-toggle:focus-visible {
   outline-offset: -4px;
   border-radius: 30px;
+}
+
+.entry-title,
+.entry-sub {
+  display: block;
 }
 
 .entry-titles {
@@ -1617,10 +1632,13 @@ html:not(.js) .entry-toggle {
   }
 
   .entry-toggle {
+    padding-left: 1.25rem;
+  }
+
+  .entry-row {
     grid-template-columns: minmax(0, 1fr) auto;
     column-gap: var(--space-2);
     row-gap: 0.15rem;
-    padding-left: 1.25rem;
   }
 
   .entry-titles {
@@ -2453,7 +2471,6 @@ html:not(.js) .project-card {
   }
 
   .entry-toggle {
-    min-height: 0;
     padding-block: 0.5rem;
   }
 

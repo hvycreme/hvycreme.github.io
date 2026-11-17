@@ -138,6 +138,9 @@ Deploy status is under the repo's **Actions** tab ("pages build and deployment":
 ### Editing without a terminal
 On github.com, open any file → **pencil icon** → edit → **Commit changes**. To upload a photo or PDF: open the folder → **Add file → Upload files**.
 
+### Version tags on CSS and JS (cache busting)
+Every stylesheet and script link in `index.html` ends in `?v=…` (e.g. `css/style.css?v=20261117b`). Browsers, iOS Safari especially, keep using a saved copy of a file for a while, so a visitor could get the new HTML with an old stylesheet and see a broken page. **Whenever you change any file in `css/`, `js/`, or `vendor/`, change the `?v=` value on all those links** (e.g. to today's date plus a letter). A new value is a new URL, so every browser fetches the fresh file.
+
 ### "I pushed but nothing changed"
 GitHub Pages lets browsers cache files for up to 10 minutes. Force a fresh copy:
 - **Safari (Mac):** Option + Cmd + R
