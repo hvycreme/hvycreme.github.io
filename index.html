@@ -14,6 +14,24 @@
   <meta property="og:description" content="Undergraduate researcher at the University of South Carolina double majoring in Biochemistry and Molecular Biology and in Psychology, with experience in human-participant research, organic synthesis, and Python tools for research.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://hvycreme.github.io/">
+  <meta property="og:image" content="https://hvycreme.github.io/images/headshot-800.webp">
+  <meta property="og:image:alt" content="Headshot of Gavin Eubanks">
+  <link rel="canonical" href="https://hvycreme.github.io/">
+  <!-- Structured data: helps search engines show the right name, school, and profile links -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Gavin Eubanks",
+    "url": "https://hvycreme.github.io/",
+    "image": "https://hvycreme.github.io/images/headshot-800.webp",
+    "email": "mailto:gavineub@gmail.com",
+    "jobTitle": "Undergraduate Researcher",
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "University of South Carolina" },
+    "address": { "@type": "PostalAddress", "addressLocality": "Columbia", "addressRegion": "SC", "addressCountry": "US" },
+    "sameAs": ["https://www.linkedin.com/in/gavin-eubanks-4684912ba/"]
+  }
+  </script>
   <!-- Runs before the page paints: tells CSS "JavaScript is on", so effects
        that hide content (reveals, toggles, the phone menu) only apply when JS can undo them. -->
   <script>document.documentElement.classList.add('js');</script>
@@ -59,8 +77,9 @@
       <ul class="nav-list" id="nav-list">
         <li><a href="#research">Research</a></li>
         <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
         <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a class="nav-cta" href="#contact">Contact</a></li>
       </ul>
     </nav>
   </header>
@@ -108,17 +127,51 @@
         </div>
         <div>
           <dt>Expected graduation</dt>
-          <dd>May 2027</dd>
+          <dd>May 2027<br>Dean’s List 2024–2026</dd>
         </div>
         <div>
           <dt>Certification &amp; training</dt>
           <dd>BLS (American Red Cross)<br>CITI human-subjects research training</dd>
         </div>
         <div>
-          <dt>Seeking</dt>
-          <dd>Summer opportunities in clinical research or emergency care</dd>
+          <dt>Open to</dt>
+          <dd>Research, healthcare, and laboratory roles<br>Based in Columbia, SC</dd>
         </div>
       </dl>
+    </section>
+
+    <!-- ===== At a glance =====
+         What employers screen for (problem-solving, teamwork, communication,
+         technical skill, responsibility), each with a link to the evidence
+         further down the page. Only facts already on this page belong here. -->
+    <section id="strengths" class="strengths reveal" aria-labelledby="strengths-title">
+      <h2 id="strengths-title" class="strengths-title">At a glance</h2>
+      <ul class="strength-grid">
+        <li class="strength">
+          <p class="strength-label">Research</p>
+          <h3>Three labs, one first-author manuscript</h3>
+          <p>Psychology, organic chemistry, and biochemistry. First author on a study now under review at PLOS&nbsp;ONE.</p>
+          <a class="strength-link" href="#p-music">See the study<span aria-hidden="true"> →</span></a>
+        </li>
+        <li class="strength">
+          <p class="strength-label">Technical</p>
+          <h3>Bench work and code</h3>
+          <p>Organic synthesis, chromatography, NMR, and protein purification; Python and Qualtrics for research.</p>
+          <a class="strength-link" href="#skills">See all skills<span aria-hidden="true"> →</span></a>
+        </li>
+        <li class="strength">
+          <p class="strength-label">Communication</p>
+          <h3>Teaching and clear explanations</h3>
+          <p>Teaching assistant and supplemental instructor for introductory psychology; led review sessions and one-on-one help.</p>
+          <a class="strength-link" href="#e-ta">See the role<span aria-hidden="true"> →</span></a>
+        </li>
+        <li class="strength">
+          <p class="strength-label">Responsibility</p>
+          <h3>Trusted with people and records</h3>
+          <p>Resident Assistant on on-call rotations: respond to concerns, document incidents, and refer them by procedure.</p>
+          <a class="strength-link" href="#e-ra">See the role<span aria-hidden="true"> →</span></a>
+        </li>
+      </ul>
     </section>
 
     <!-- ===== 01 Selected Research =====
@@ -339,7 +392,7 @@
 
       <h3 class="group-title">Research appointments</h3>
       <ol class="entries" data-sortable>
-        <li class="entry" data-crc="1" data-ert="2">
+        <li class="entry" id="e-palomares" data-crc="1" data-ert="2">
           <p class="entry-date">Jan 2024 – Present</p>
           <div class="entry-body">
             <h4>Undergraduate Researcher <span class="entry-org">Palomares Lab, Psychology · Supervisor Dr.&nbsp;Melanie&nbsp;Palomares</span></h4>
@@ -350,7 +403,7 @@
             </ul>
           </div>
         </li>
-        <li class="entry" data-crc="2" data-ert="3">
+        <li class="entry" id="e-wiskur" data-crc="2" data-ert="3">
           <p class="entry-date">Oct 2025 – Present</p>
           <div class="entry-body">
             <h4>Undergraduate Researcher <span class="entry-org">Wiskur Lab, Organic Chemistry · Supervisor Dr.&nbsp;Sheryl&nbsp;L.&nbsp;Wiskur</span></h4>
@@ -361,7 +414,7 @@
             </ul>
           </div>
         </li>
-        <li class="entry" data-crc="3" data-ert="4">
+        <li class="entry" id="e-outten" data-crc="3" data-ert="4">
           <p class="entry-date">Sep 2023 – Apr 2024</p>
           <div class="entry-body">
             <h4>Undergraduate Researcher <span class="entry-org">Outten Lab, Biochemistry · with Dr.&nbsp;Outten</span></h4>
@@ -376,7 +429,7 @@
 
       <h3 class="group-title">Leadership, teaching &amp; work</h3>
       <ol class="entries" data-sortable>
-        <li class="entry" data-crc="2" data-ert="1">
+        <li class="entry" id="e-ra" data-crc="2" data-ert="1">
           <p class="entry-date">Mar 2025 – Present</p>
           <div class="entry-body">
             <h4>Resident Assistant <span class="entry-org">East Quad, University Housing</span></h4>
@@ -389,7 +442,7 @@
             </ul>
           </div>
         </li>
-        <li class="entry" data-crc="1" data-ert="3">
+        <li class="entry" id="e-ta" data-crc="1" data-ert="3">
           <p class="entry-date">PSYC 101</p>
           <div class="entry-body">
             <h4>Teaching Assistant &amp; Supplemental Instructor <span class="entry-org">Introductory Psychology, with Professor&nbsp;Tristian&nbsp;Collier</span></h4>
@@ -448,7 +501,7 @@
     </section>
 
     <!-- ===== 03 Skills & Education ===== -->
-    <section id="skills" class="section reveal" aria-labelledby="skills-title" data-nav="experience">
+    <section id="skills" class="section reveal" aria-labelledby="skills-title">
       <span id="methods" class="anchor-alias"></span><!-- old #methods links land here -->
       <header class="section-head">
         <p class="section-num" aria-hidden="true">03</p>
@@ -544,8 +597,6 @@
         </div>
       </section>
     </section>
-      </div>
-    </section>
 
     <!-- ===== 05 Contact ===== -->
     <section id="contact" class="section reveal" aria-labelledby="contact-title">
@@ -555,7 +606,7 @@
       </header>
       <div class="contact-grid">
         <div class="contact-text">
-          <p class="contact-lede">Contact me about opportunities in clinical research or emergency care.</p>
+          <p class="contact-lede">I’d be glad to hear about opportunities in research, healthcare, or the lab sciences.</p>
           <p class="contact-email"><a href="mailto:gavineub@gmail.com">gavineub@gmail.com</a>
             <!-- Shown by main.js only where copying is supported -->
             <button type="button" class="copy-email" data-copy="gavineub@gmail.com" hidden>Copy</button>
@@ -566,6 +617,8 @@
                <a class="button" href="files/resume.pdf" download>Download résumé<span class="sr-only"> (PDF)</span></a> -->
             <a class="button" href="https://www.linkedin.com/in/gavin-eubanks-4684912ba/" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
           </div>
+          <!-- Shown by main.js: prints a clean, text-only version of the page (see the print styles) -->
+          <p class="print-row"><button type="button" class="print-page" hidden>Print or save as PDF</button></p>
           <p class="contact-location">Based in Columbia, South Carolina</p>
         </div>
         <!-- The botanical plates as interactive particles (js/particles.js). The canvas is

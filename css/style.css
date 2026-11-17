@@ -226,6 +226,7 @@ a:hover {
 .mol-controls button,
 .motion-toggle,
 .helix-toggle,
+.print-page,
 .to-top {
   display: inline-flex;
   align-items: center;
@@ -247,12 +248,14 @@ a:hover {
 .mol-controls button:hover,
 .motion-toggle:hover,
 .helix-toggle:hover,
+.print-page:hover,
 .to-top:hover {
   border-color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 6%, transparent);
 }
 
 .copy-email[hidden],
+.print-page[hidden],
 .motion-toggle[hidden] {
   display: none;
 }
@@ -390,6 +393,34 @@ a:hover {
 .nav-list a:hover,
 .nav-list a.is-active {
   color: var(--color-text);
+}
+
+/* Contact stays one click away as a small pill (desktop and tablet) */
+@media (min-width: 48rem) {
+  .nav-list a.nav-cta {
+    min-height: 2.25rem;
+    align-self: center;
+    padding: 0 1.05em;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-pill);
+    color: var(--color-accent);
+    font-weight: 500;
+    transition: background-color var(--dur-control) var(--ease), color var(--dur-control) var(--ease);
+  }
+
+  .nav-list a.nav-cta:hover,
+  .nav-list a.nav-cta.is-active {
+    background: var(--color-accent);
+    color: var(--color-surface);
+  }
+
+  .nav-list a.nav-cta::after {
+    display: none;
+  }
+
+  .nav-list {
+    align-items: center;
+  }
 }
 
 /* Active section: a short green underline (a transform, so it animates smoothly) */
@@ -1707,11 +1738,13 @@ main {
 /* Scroll reveal: sections fade in once (opacity only) */
 .js .reveal {
   opacity: 0;
-  transition: opacity var(--dur-slow) var(--ease);
+  transform: translateY(14px);
+  transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
 }
 
 .js .reveal.is-visible {
   opacity: 1;
+  transform: none;
 }
 
 @keyframes pop-in {
@@ -1764,6 +1797,7 @@ main {
 
   .js .reveal {
     opacity: 1;
+    transform: none;
   }
 
   .mol-stage.is-loading::before {
@@ -1913,4 +1947,288 @@ html:not(.js) .project-card {
 
 .project-card:not(.is-open) .project-status {
   font-size: var(--text-xs);
+}
+
+
+/* ==========================================================================
+   15. At a glance (strengths, each linked to its evidence)
+   ========================================================================== */
+.strengths {
+  padding-top: var(--space-6);
+}
+
+.strengths-title {
+  margin-bottom: var(--space-3);
+  color: var(--color-rust);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.strength-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+  list-style: none;
+}
+
+.strength {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  transition: border-color var(--dur-control) var(--ease), transform var(--dur-control) var(--ease);
+}
+
+.strength:hover {
+  border-color: var(--color-line-strong);
+  transform: translateY(-2px);
+}
+
+.strength-label {
+  color: var(--color-rust);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.strength h3 {
+  font-size: clamp(1.15rem, 1.05rem + 0.35vw, 1.3rem);
+  line-height: 1.25;
+}
+
+.strength p:not(.strength-label) {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+}
+
+/* The whole card is clickable; the link text stays the accessible name */
+.strength-link {
+  margin-top: auto;
+  padding-top: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.strength-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.strength-link:focus-visible {
+  outline: none;
+}
+
+.strength:has(.strength-link:focus-visible) {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.strength:hover .strength-link {
+  text-decoration: underline;
+}
+
+@media (max-width: 64rem) {
+  .strength-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 30rem) {
+  .strength-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   16. Smoother details
+   ========================================================================== */
+/* Closed project cards lift slightly on hover, like the strengths */
+.project-card:not(.is-open) {
+  transition: border-color var(--dur-control) var(--ease), transform var(--dur-control) var(--ease);
+}
+
+.project-card:not(.is-open):hover {
+  border-color: var(--color-line-strong);
+  transform: translateY(-2px);
+}
+
+/* An opened card's details settle in instead of appearing all at once */
+.project-card.is-open .project-body {
+  animation: settle 0.45s var(--ease) both;
+}
+
+@keyframes settle {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Experience entries you jump to (from At a glance) glow briefly */
+.entry {
+  position: relative;
+}
+
+.entry:target::after {
+  content: "";
+  position: absolute;
+  inset: 0 -0.75rem;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 0 0 3px var(--color-mint);
+  pointer-events: none;
+  opacity: 0;
+  animation: land 1.8s var(--ease);
+}
+
+.print-row {
+  margin-top: calc(-1 * var(--space-2));
+}
+
+/* ==========================================================================
+   17. Print: a clean, text-only CV (Print or save as PDF)
+   Decoration, motion, and controls are removed; every project shows.
+   ========================================================================== */
+@media print {
+  @page {
+    margin: 1.6cm 1.8cm;
+  }
+
+  :root {
+    --space-section: 1.6rem;
+  }
+
+  html {
+    font-size: 10pt;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .site-header,
+  .skip-link,
+  .pollen,
+  .portrait-stage,
+  .project-toggle,
+  .explain-toggle,
+  .helix-toggle,
+  .copy-email,
+  .print-row,
+  .contact-figure,
+  .mol-figure,
+  .growing-photo,
+  .section-jump,
+  .strength-link,
+  .to-top,
+  .site-footer .leaf-icon,
+  .project-why,
+  .growing,
+  .section-num {
+    display: none !important;
+  }
+
+  .js .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    grid-template-areas: "text" "facts";
+    gap: 1rem;
+    padding-top: 0;
+  }
+
+  .hero-title {
+    font-size: 26pt;
+  }
+
+  .hero .hero-actions,
+  .contact-text .hero-actions {
+    display: none;
+  }
+
+  .hero-facts {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .strength-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .strength,
+  .project-card,
+  .project-featured,
+  .mol-project,
+  .finding-compare li,
+  .flow li {
+    background: none !important;
+    transform: none !important;
+  }
+
+  .project-grid {
+    display: block;
+  }
+
+  .project-card {
+    min-height: 0 !important;
+    margin-bottom: 1rem !important;
+    padding: 1rem !important;
+  }
+
+  .project-body[hidden] {
+    display: block !important;
+  }
+
+  .explain-panel[hidden] {
+    display: block !important;
+  }
+
+  .js .panel-label {
+    position: static;
+    width: auto;
+    height: auto;
+    clip: auto;
+  }
+
+  .entry,
+  .strength,
+  .study-block,
+  .edu-list li,
+  .cert-list li,
+  .skill-groups > div {
+    break-inside: avoid;
+  }
+
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+
+  .growing-layout,
+  .contact-grid {
+    display: block;
+  }
+
+  /* Links show where they go */
+  .contact-text a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #444;
+  }
+
+  .site-footer {
+    margin-top: 1.5rem;
+    padding: 0.75rem 0 0;
+  }
 }

@@ -24,14 +24,20 @@ files/            PDFs: put resume.pdf here
 
 | Section | id | Purpose |
 |---|---|---|
-| Introduction | `#intro` | Name, short description, one paragraph, "Explore my research" / "Contact me", supporting facts row, arched portrait |
+| Introduction | `#intro` | Name, short description, one paragraph, "Explore my research" / "Contact me", supporting facts row (education, graduation, certifications, open to / location), arched portrait |
+| At a glance | `#strengths` | Four strengths employers screen for (research, technical, communication, responsibility), each a clickable card linking to its evidence on the page. Only facts already on the page belong here |
 | 01 Selected Research | `#research` (old `#work` lands here) | Featured music-labeling study (`#p-music`: question → key finding → role → method), the related Python pipeline (`#p-pipeline`), and the synthesis project with the 3D molecule (`#p-synthesis`) |
 | 02 Experience | `#experience` | Research appointments, then leadership, teaching & work, with thin dividers |
-| 03 Skills & Education | `#skills` (old `#methods` lands here), `#education` | Skills grouped by lab; degrees; certifications & training. Reached from the Experience heading and highlighted as "Experience" in the nav |
+| 03 Skills & Education | `#skills` (old `#methods` lands here), `#education` | Skills grouped by lab; degrees; certifications & training. Has its own nav link |
 | 04 About | `#about` | Background, communication, plants and computers, Currently growing |
-| 05 Contact | `#contact` | Invitation, email (with Copy), Email / LinkedIn, interactive plant figure |
+| 05 Contact | `#contact` | Invitation, email (with Copy), Email / LinkedIn, Print or save as PDF, interactive plant figure |
 
-Main navigation: Research, Experience, About, Contact. Below 48rem the links fold into a labelled **Menu** button (`aria-expanded`; Escape closes it).
+Experience entries that At a glance links to have ids: `#e-palomares`, `#e-wiskur`, `#e-outten`, `#e-ra`, `#e-ta`. A jumped-to entry or project glows briefly.
+
+Main navigation: Research, Experience, Skills, About, and Contact (a pill button on wider screens, so contact is always one click away). Clicking any in-page link reveals the destination immediately instead of waiting for its fade-in.
+
+### Print / save as PDF
+The print styles (section 17 of `css/style.css`) turn the page into a clean, text-only CV: no header, animations, portrait, or plant art; every project card opens; both method explanations show; LinkedIn prints with its URL. The **Print or save as PDF** button in Contact runs it, and so does the browser's own Print command. Below 48rem the links fold into a labelled **Menu** button (`aria-expanded`; Escape closes it).
 
 ### Individual synthesis project (molecule viewer)
 The Wiskur Lab entry includes an "Individual synthesis project" card. Its 3D viewer (3Dmol.js, self-hosted in `vendor/3dmol/`, BSD-3-Clause) stays switched off until a **verified** structure is added, so nothing guessed is ever shown:
@@ -56,7 +62,7 @@ Send a different link with each application. The page re-orders itself so the mo
 
 | Link | Use for | Effect |
 |---|---|---|
-| `https://hvycreme.github.io/` | General | Default order: leads with clinical-research-relevant work |
+| `https://hvycreme.github.io/` | General (any employer) | Default order |
 | `https://hvycreme.github.io/?for=crc` | Clinical research coordinator | Experience lists reordered: research, data, and documentation first |
 | `https://hvycreme.github.io/?for=ert` | Emergency room tech | Experience lists reordered: resident support and service roles first |
 

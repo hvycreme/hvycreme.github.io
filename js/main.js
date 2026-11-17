@@ -53,6 +53,26 @@ if ('IntersectionObserver' in window) {
   revealEls.forEach((el) => el.classList.add('is-visible'));
 }
 
+// Jumping to a section (nav, "See the study", a shared #link) shows it, and
+// everything above it, at once, so the visitor never lands on a blank,
+// still-fading area or sees sections pop in behind the scroll.
+function revealThrough(id) {
+  const target = id && document.getElementById(id);
+  if (!target) return;
+  for (const el of revealEls) {
+    const containsTarget = el.contains(target);
+    // Stop at the first section that starts after the target
+    if (!containsTarget && el.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_PRECEDING) break;
+    el.classList.add('is-visible');
+    if (containsTarget) break;
+  }
+}
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('a[href^="#"]');
+  if (link) revealThrough(link.getAttribute('href').slice(1));
+});
+if (location.hash) revealThrough(decodeURIComponent(location.hash.slice(1)));
+
 /* --------------------------------------------------------------------------
    3. Navigation: phone menu + active link
    Phones: the four links sit behind a "Menu" button (a disclosure:
@@ -252,4 +272,19 @@ document.querySelectorAll('.copy-email').forEach((button) => {
       if (status) status.textContent = '';
     }, 2000);
   });
+});
+
+/* --------------------------------------------------------------------------
+   6. Print or save as PDF
+   The print styles (css/style.css, section 17) turn the page into a clean,
+   text-only CV with every project open. The button only appears with JS,
+   since it needs window.print().
+   -------------------------------------------------------------------------- */
+document.querySelectorAll('.print-page').forEach((button) => {
+  button.hidden = false;
+  button.addEventListener('click', () => window.print());
+});
+// Printing from the browser menu should show every section too
+window.addEventListener('beforeprint', () => {
+  revealEls.forEach((el) => el.classList.add('is-visible'));
 });
