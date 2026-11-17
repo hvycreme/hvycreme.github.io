@@ -56,6 +56,7 @@
     </symbol>
     <symbol id="i-eye-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.6 10.6 0 0 1 12 5c6 0 9.5 7 9.5 7a17 17 0 0 1-3 3.9M6.6 6.6C3.9 8.3 2.5 12 2.5 12s3.5 7 9.5 7a9.8 9.8 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></g></symbol>
     <symbol id="i-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7Z"/><circle cx="12" cy="12" r="3"/></g></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-up" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></g></symbol>
   </svg>
 
@@ -390,39 +391,69 @@
         <p class="section-jump">Also on this page: <a href="#skills">Skills</a> · <a href="#education">Education</a></p>
       </header>
 
-      <h3 class="group-title">Research appointments</h3>
+      <div class="group-row">
+        <h3 class="group-title">Research appointments</h3>
+        <!-- Shown by main.js: opens or closes every role at once -->
+        <button type="button" class="expand-all" aria-pressed="false" hidden>Expand all</button>
+      </div>
+      <!-- Each role is a glass bubble: title + field/organization, tap to open
+           the details (js/main.js). Without JS every role simply shows open. -->
       <ol class="entries" data-sortable>
         <li class="entry" id="e-palomares" data-crc="1" data-ert="2">
-          <p class="entry-date">Jan 2024 – Present</p>
-          <div class="entry-body">
-            <h4>Undergraduate Researcher <span class="entry-org">Palomares Lab, Psychology · Supervisor Dr.&nbsp;Melanie&nbsp;Palomares</span></h4>
-            <ul class="points">
-              <li>Investigate how labeling music as human-created or AI-generated influences listeners’ evaluations, with Dr.&nbsp;Emily&nbsp;Schwitzgebel (School of Music); co-led the <a href="#p-music">listener study</a>.</li>
-              <li>Conduct participant sessions and manage study data.</li>
-              <li>Develop the Qualtrics experiment and lead stimulus preparation for a follow-up study.</li>
-            </ul>
+          <h4 class="entry-head">
+            <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-palomares-body">
+              <span class="entry-titles"><span class="entry-title">Undergraduate Researcher</span><span class="entry-sub">Psychology · Palomares Lab</span></span>
+              <span class="entry-date">Jan 2024 – Present</span>
+              <span class="entry-icon" aria-hidden="true"><svg><use href="#i-chev"/></svg></span>
+            </button>
+          </h4>
+          <div class="entry-body" id="e-palomares-body">
+            <div class="entry-inner"><div class="entry-pad">
+              <p class="entry-meta">Supervisor Dr.&nbsp;Melanie&nbsp;Palomares</p>
+              <ul class="points">
+                <li>Investigate how labeling music as human-created or AI-generated influences listeners’ evaluations, with Dr.&nbsp;Emily&nbsp;Schwitzgebel (School of Music); co-led the <a href="#p-music">listener study</a>.</li>
+                <li>Conduct participant sessions and manage study data.</li>
+                <li>Develop the Qualtrics experiment and lead stimulus preparation for a follow-up study.</li>
+              </ul>
+            </div></div>
           </div>
         </li>
         <li class="entry" id="e-wiskur" data-crc="2" data-ert="3">
-          <p class="entry-date">Oct 2025 – Present</p>
-          <div class="entry-body">
-            <h4>Undergraduate Researcher <span class="entry-org">Wiskur Lab, Organic Chemistry · Supervisor Dr.&nbsp;Sheryl&nbsp;L.&nbsp;Wiskur</span></h4>
-            <ul class="points">
-              <li>Study <a href="#p-synthesis">polymer microenvironments</a>, in experiments emphasizing enantioselectivity and applications of silane polymers in pharmaceutical column chromatography and contaminated-water cleanup.</li>
-              <li>Synthesize, purify, and characterize silane polymers and catalysts.</li>
-              <li>Document experimental procedures, observations, and results in laboratory records.</li>
-            </ul>
+          <h4 class="entry-head">
+            <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-wiskur-body">
+              <span class="entry-titles"><span class="entry-title">Undergraduate Researcher</span><span class="entry-sub">Organic Chemistry · Wiskur Lab</span></span>
+              <span class="entry-date">Oct 2025 – Present</span>
+              <span class="entry-icon" aria-hidden="true"><svg><use href="#i-chev"/></svg></span>
+            </button>
+          </h4>
+          <div class="entry-body" id="e-wiskur-body">
+            <div class="entry-inner"><div class="entry-pad">
+              <p class="entry-meta">Supervisor Dr.&nbsp;Sheryl&nbsp;L.&nbsp;Wiskur</p>
+              <ul class="points">
+                <li>Study <a href="#p-synthesis">polymer microenvironments</a>, in experiments emphasizing enantioselectivity and applications of silane polymers in pharmaceutical column chromatography and contaminated-water cleanup.</li>
+                <li>Synthesize, purify, and characterize silane polymers and catalysts.</li>
+                <li>Document experimental procedures, observations, and results in laboratory records.</li>
+              </ul>
+            </div></div>
           </div>
         </li>
         <li class="entry" id="e-outten" data-crc="3" data-ert="4">
-          <p class="entry-date">Sep 2023 – Apr 2024</p>
-          <div class="entry-body">
-            <h4>Undergraduate Researcher <span class="entry-org">Outten Lab, Biochemistry · with Dr.&nbsp;Outten</span></h4>
-            <ul class="points">
-              <li>Investigated iron–sulfur cluster biogenesis: how cells assemble iron–sulfur clusters, small metal cofactors that many proteins need in order to function.</li>
-              <li>Purified proteins, reconstituted iron–sulfur clusters, and characterized samples using UV–visible and infrared spectroscopy.</li>
-              <li>Prepared experimental buffers and solutions and documented procedures and observations.</li>
-            </ul>
+          <h4 class="entry-head">
+            <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-outten-body">
+              <span class="entry-titles"><span class="entry-title">Undergraduate Researcher</span><span class="entry-sub">Biochemistry · Outten Lab</span></span>
+              <span class="entry-date">Sep 2023 – Apr 2024</span>
+              <span class="entry-icon" aria-hidden="true"><svg><use href="#i-chev"/></svg></span>
+            </button>
+          </h4>
+          <div class="entry-body" id="e-outten-body">
+            <div class="entry-inner"><div class="entry-pad">
+              <p class="entry-meta">With Dr.&nbsp;Outten</p>
+              <ul class="points">
+                <li>Investigated iron–sulfur cluster biogenesis: how cells assemble iron–sulfur clusters, small metal cofactors that many proteins need in order to function.</li>
+                <li>Purified proteins, reconstituted iron–sulfur clusters, and characterized samples using UV–visible and infrared spectroscopy.</li>
+                <li>Prepared experimental buffers and solutions and documented procedures and observations.</li>
+              </ul>
+            </div></div>
           </div>
         </li>
       </ol>
@@ -430,71 +461,120 @@
       <h3 class="group-title">Leadership, teaching &amp; work</h3>
       <ol class="entries" data-sortable>
         <li class="entry" id="e-ra" data-crc="2" data-ert="1">
-          <p class="entry-date">Mar 2025 – Present</p>
-          <div class="entry-body">
-            <h4>Resident Assistant <span class="entry-org">East Quad, University Housing</span></h4>
-            <ul class="points">
-              <li>Conduct individual resident check-ins and host community programs.</li>
-              <li>Serve on scheduled on-call rotations and conduct community walks (scheduled rounds of the residence hall).</li>
-              <li>Respond to resident concerns and connect residents with campus resources.</li>
-              <li>Document incidents and refer concerns to appropriate university staff according to established procedures.</li>
-              <li>Prepare weekly reports for Residence Life staff.</li>
-            </ul>
+          <h4 class="entry-head">
+            <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-ra-body">
+              <span class="entry-titles"><span class="entry-title">Resident Assistant</span><span class="entry-sub">East Quad · University Housing</span></span>
+              <span class="entry-date">Mar 2025 – Present</span>
+              <span class="entry-icon" aria-hidden="true"><svg><use href="#i-chev"/></svg></span>
+            </button>
+          </h4>
+          <div class="entry-body" id="e-ra-body">
+            <div class="entry-inner"><div class="entry-pad">
+              <ul class="points">
+                <li>Conduct individual resident check-ins and host community programs.</li>
+                <li>Serve on scheduled on-call rotations and conduct community walks (scheduled rounds of the residence hall).</li>
+                <li>Respond to resident concerns and connect residents with campus resources.</li>
+                <li>Document incidents and refer concerns to appropriate university staff according to established procedures.</li>
+                <li>Prepare weekly reports for Residence Life staff.</li>
+              </ul>
+            </div></div>
           </div>
         </li>
         <li class="entry" id="e-ta" data-crc="1" data-ert="3">
-          <p class="entry-date">PSYC 101</p>
-          <div class="entry-body">
-            <h4>Teaching Assistant &amp; Supplemental Instructor <span class="entry-org">Introductory Psychology, with Professor&nbsp;Tristian&nbsp;Collier</span></h4>
-            <ul class="points">
-              <li>Led review sessions on introductory psychology concepts and exam preparation.</li>
-              <li>Worked with students individually to clarify course concepts and prepare for exams.</li>
-            </ul>
+          <h4 class="entry-head">
+            <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-ta-body">
+              <span class="entry-titles"><span class="entry-title">Teaching Assistant &amp; Supplemental Instructor</span><span class="entry-sub">Introductory Psychology · PSYC&nbsp;101</span></span>
+              <span class="entry-icon" aria-hidden="true"><svg><use href="#i-chev"/></svg></span>
+            </button>
+          </h4>
+          <div class="entry-body" id="e-ta-body">
+            <div class="entry-inner"><div class="entry-pad">
+              <p class="entry-meta">With Professor&nbsp;Tristian&nbsp;Collier</p>
+              <ul class="points">
+                <li>Led review sessions on introductory psychology concepts and exam preparation.</li>
+                <li>Worked with students individually to clarify course concepts and prepare for exams.</li>
+              </ul>
+            </div></div>
           </div>
         </li>
-        <li class="entry" data-crc="4" data-ert="4">
-          <p class="entry-date">Mar 2025 – Mar 2026</p>
-          <div class="entry-body">
-            <h4>NEXUS Living Learning Community Coordinator <span class="entry-org">University Housing</span></h4>
-            <ul class="points">
-              <li>Supported East Quad residents in the NEXUS living-learning community and helped organize its community programs.</li>
-            </ul>
+        <li class="entry" id="e-nexus" data-crc="4" data-ert="4">
+          <h4 class="entry-head">
+            <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-nexus-body">
+              <span class="entry-titles"><span class="entry-title">NEXUS Living Learning Community Coordinator</span><span class="entry-sub">University Housing</span></span>
+              <span class="entry-date">Mar 2025 – Mar 2026</span>
+              <span class="entry-icon" aria-hidden="true"><svg><use href="#i-chev"/></svg></span>
+            </button>
+          </h4>
+          <div class="entry-body" id="e-nexus-body">
+            <div class="entry-inner"><div class="entry-pad">
+              <ul class="points">
+                <li>Supported East Quad residents in the NEXUS living-learning community and helped organize its community programs.</li>
+              </ul>
+            </div></div>
           </div>
         </li>
-        <li class="entry" data-crc="3" data-ert="5">
-          <p class="entry-date">Apr 2025 – Apr 2026</p>
-          <div class="entry-body">
-            <h4>Co-Vice President <span class="entry-org">American Chemical Society (ACS) Student Chapter</span></h4>
-            <ul class="points">
-              <li>Collaborated on planning chapter meetings and events for students interested in chemistry.</li>
-            </ul>
+        <li class="entry" id="e-acs" data-crc="3" data-ert="5">
+          <h4 class="entry-head">
+            <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-acs-body">
+              <span class="entry-titles"><span class="entry-title">Co-Vice President</span><span class="entry-sub">American Chemical Society (ACS) Student Chapter</span></span>
+              <span class="entry-date">Apr 2025 – Apr 2026</span>
+              <span class="entry-icon" aria-hidden="true"><svg><use href="#i-chev"/></svg></span>
+            </button>
+          </h4>
+          <div class="entry-body" id="e-acs-body">
+            <div class="entry-inner"><div class="entry-pad">
+              <ul class="points">
+                <li>Collaborated on planning chapter meetings and events for students interested in chemistry.</li>
+              </ul>
+            </div></div>
           </div>
         </li>
-        <li class="entry" data-crc="5" data-ert="6">
-          <p class="entry-date">Aug 2026 – Present</p>
-          <div class="entry-body">
-            <h4>Community Volunteer <span class="entry-org">W.&nbsp;Gordon Belser Arboretum</span></h4>
-            <ul class="points">
-              <li>Maintain arboretum grounds alongside students and staff during community service days.</li>
-            </ul>
+        <li class="entry" id="e-arboretum" data-crc="5" data-ert="6">
+          <h4 class="entry-head">
+            <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-arboretum-body">
+              <span class="entry-titles"><span class="entry-title">Community Volunteer</span><span class="entry-sub">W.&nbsp;Gordon Belser Arboretum</span></span>
+              <span class="entry-date">Aug 2026 – Present</span>
+              <span class="entry-icon" aria-hidden="true"><svg><use href="#i-chev"/></svg></span>
+            </button>
+          </h4>
+          <div class="entry-body" id="e-arboretum-body">
+            <div class="entry-inner"><div class="entry-pad">
+              <ul class="points">
+                <li>Maintain arboretum grounds alongside students and staff during community service days.</li>
+              </ul>
+            </div></div>
           </div>
         </li>
-        <li class="entry" data-crc="6" data-ert="2">
-          <p class="entry-date">Oct 2022 – May 2025</p>
-          <div class="entry-body">
-            <h4>Barista <span class="entry-org">Starbucks, Columbia, SC · <span class="nowrap">part-time</span></span></h4>
-            <ul class="points">
-              <li>Provided customer service in a high-volume store and coordinated shift tasks with team members.</li>
-            </ul>
+        <li class="entry" id="e-starbucks" data-crc="6" data-ert="2">
+          <h4 class="entry-head">
+            <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-starbucks-body">
+              <span class="entry-titles"><span class="entry-title">Barista</span><span class="entry-sub">Starbucks · Columbia, SC · <span class="nowrap">part-time</span></span></span>
+              <span class="entry-date">Oct 2022 – May 2025</span>
+              <span class="entry-icon" aria-hidden="true"><svg><use href="#i-chev"/></svg></span>
+            </button>
+          </h4>
+          <div class="entry-body" id="e-starbucks-body">
+            <div class="entry-inner"><div class="entry-pad">
+              <ul class="points">
+                <li>Provided customer service in a high-volume store and coordinated shift tasks with team members.</li>
+              </ul>
+            </div></div>
           </div>
         </li>
-        <li class="entry" data-crc="7" data-ert="7">
-          <p class="entry-date">Jul 2020 – Jan 2023</p>
-          <div class="entry-body">
-            <h4>Customer Service Associate <span class="entry-org">Publix Super Markets, Charleston County · <span class="nowrap">part-time</span></span></h4>
-            <ul class="points">
-              <li>Provided customer service and supported daily store operations.</li>
-            </ul>
+        <li class="entry" id="e-publix" data-crc="7" data-ert="7">
+          <h4 class="entry-head">
+            <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-publix-body">
+              <span class="entry-titles"><span class="entry-title">Customer Service Associate</span><span class="entry-sub">Publix Super Markets · Charleston County · <span class="nowrap">part-time</span></span></span>
+              <span class="entry-date">Jul 2020 – Jan 2023</span>
+              <span class="entry-icon" aria-hidden="true"><svg><use href="#i-chev"/></svg></span>
+            </button>
+          </h4>
+          <div class="entry-body" id="e-publix-body">
+            <div class="entry-inner"><div class="entry-pad">
+              <ul class="points">
+                <li>Provided customer service and supported daily store operations.</li>
+              </ul>
+            </div></div>
           </div>
         </li>
       </ol>

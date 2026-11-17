@@ -183,25 +183,73 @@ projectCards.forEach((card) => {
   });
 });
 
-function cardFor(id) {
-  const target = id && document.getElementById(id);
-  return target ? target.closest('.project-card') : null;
+/* --------------------------------------------------------------------------
+   3c. Experience bubbles
+   Each role's button (aria-expanded / aria-controls) opens its details; the
+   CSS animates the height. Several can be open at once. "Expand all" opens
+   or closes every role, and follows along when roles are toggled one by one.
+   -------------------------------------------------------------------------- */
+const entries = document.querySelectorAll('.entry');
+const expandAll = document.querySelector('.expand-all');
+
+function setEntry(entry, open) {
+  entry.querySelector('.entry-toggle').setAttribute('aria-expanded', String(open));
+  entry.classList.toggle('is-open', open);
 }
 
-// In-page links: open the card synchronously, before the default jump
+function syncExpandAll() {
+  if (!expandAll) return;
+  const allOpen = [...entries].every((e) => e.classList.contains('is-open'));
+  expandAll.textContent = allOpen ? 'Collapse all' : 'Expand all';
+  expandAll.setAttribute('aria-pressed', String(allOpen));
+}
+
+entries.forEach((entry) => {
+  entry.querySelector('.entry-toggle').addEventListener('click', () => {
+    setEntry(entry, !entry.classList.contains('is-open'));
+    syncExpandAll();
+  });
+});
+
+if (expandAll) {
+  expandAll.hidden = false;
+  expandAll.addEventListener('click', () => {
+    const open = expandAll.getAttribute('aria-pressed') !== 'true';
+    entries.forEach((entry) => setEntry(entry, open));
+    syncExpandAll();
+  });
+}
+
+// A link to a card or a role (or anything inside one) opens it first
+function cardFor(id) {
+  const target = id && document.getElementById(id);
+  return target ? target.closest('.project-card, .entry') : null;
+}
+
+function openHolder(holder) {
+  if (holder.classList.contains('is-open')) return;
+  if (holder.classList.contains('entry')) {
+    setEntry(holder, true);
+    syncExpandAll();
+  } else {
+    setCard(holder, true);
+  }
+}
+
+// In-page links: open synchronously, before the default jump
 document.addEventListener('click', (event) => {
   const link = event.target.closest('a[href^="#"]');
   if (!link) return;
-  const card = cardFor(link.getAttribute('href').slice(1));
-  if (card && !card.classList.contains('is-open')) setCard(card, true);
+  const holder = cardFor(link.getAttribute('href').slice(1));
+  if (holder) openHolder(holder);
 });
 
 // Arriving with a hash (or typing one): open, then scroll to the target
 function openFromHash() {
   const id = decodeURIComponent(location.hash.slice(1));
-  const card = cardFor(id);
-  if (!card) return;
-  if (!card.classList.contains('is-open')) setCard(card, true);
+  const holder = cardFor(id);
+  if (!holder) return;
+  openHolder(holder);
   requestAnimationFrame(() => document.getElementById(id).scrollIntoView({ block: 'start' }));
 }
 openFromHash();

@@ -1353,47 +1353,293 @@ main {
 }
 
 /* ==========================================================================
-   9. Experience: date on the left, role on the right, thin dividers
+   9. Experience: sage glass bubbles
+   Compact: title, with field and organization in small type underneath.
+   Tap to open: the bubble grows downward to show the details.
+   The glass: an inner sage gradient on the padding box, a bevelled rim
+   (faint at the top, bright at the bottom) on the border box, a thin groove
+   around the outside, shade under the top rim, and a glow along the bottom.
    ========================================================================== */
+:root {
+  --sage-top: #b3c2a9;
+  --sage-bottom: #eef1e7;
+  --sage-ink: #283428;          /* 6.9:1 on the darkest sage */
+  --sage-sub: #384833;          /* 5.2:1 */
+  --sage-date: #3d4a39;         /* 5.0:1 */
+  --sage-shade: 48 60 44;       /* RGB for shadows, used with / alpha */
+}
+
+.group-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.group-row .group-title {
+  margin: 0;
+}
+
+.expand-all {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.3em 1em;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color var(--dur-control) var(--ease), border-color var(--dur-control) var(--ease);
+}
+
+.expand-all:hover {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+}
+
+.expand-all[hidden] {
+  display: none;
+}
+
 .entries {
+  display: grid;
+  gap: 0.9rem;
   list-style: none;
-  border-bottom: 1px solid var(--color-line);
 }
 
 .entry {
+  position: relative;
+  border: 2px solid transparent;
+  border-radius: 34px;
+  background:
+    radial-gradient(120% 90% at 50% 115%, rgb(255 255 255 / 0.75), rgb(255 255 255 / 0) 60%) padding-box,
+    linear-gradient(180deg, var(--sage-top) 0%, var(--sage-bottom) 100%) padding-box,
+    linear-gradient(180deg, rgb(255 255 255 / 0.55) 0%, rgb(255 255 255 / 0.2) 40%, rgb(255 255 255 / 1) 100%) border-box;
+  box-shadow:
+    0 0 0 1px rgb(var(--sage-shade) / 0.28),
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    inset 0 6px 10px -6px rgb(var(--sage-shade) / 0.22),
+    inset 0 -8px 14px -8px rgb(255 255 255 / 0.9),
+    0 14px 24px -14px rgb(var(--sage-shade) / 0.55),
+    0 2px 4px -2px rgb(var(--sage-shade) / 0.25);
+  color: var(--sage-ink);
+  transition: transform var(--dur-control) var(--ease), border-radius 0.35s var(--ease);
+}
+
+.entry:hover {
+  transform: translateY(-1px);
+}
+
+.entry.is-open {
+  border-radius: 30px;
+}
+
+.entry-head {
+  font: inherit;
+}
+
+.entry-toggle {
   display: grid;
-  grid-template-columns: 10rem minmax(0, 1fr);
-  gap: var(--space-1) var(--space-4);
-  padding-block: var(--space-4);
-  border-top: 1px solid var(--color-line);
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 4.25rem;
+  padding: 0.85rem 0.75rem 0.85rem 1.6rem;
+  border: 0;
+  border-radius: 32px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.entry-toggle:focus-visible {
+  outline-offset: -4px;
+  border-radius: 30px;
+}
+
+.entry-titles {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.entry-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.7);
+}
+
+.entry-sub {
+  color: var(--sage-sub);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.6);
 }
 
 .entry-date {
-  padding-top: 0.1em;
-  color: var(--color-muted);
-  font-size: var(--text-sm);
-  font-variant-numeric: tabular-nums;
-}
-
-.entry-body h4 {
-  font-size: 1.1rem;
-}
-
-.entry-org {
-  display: block;
-  margin-top: 0.15rem;
-  color: var(--color-muted);
-  font-size: var(--text-sm);
+  grid-column: 2;
+  color: var(--sage-date);
+  font-size: var(--text-xs);
   font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.6);
 }
 
-.entry .points {
-  margin-top: var(--space-2);
+/* The round glass button, echoing the bubble's rim */
+.entry-icon {
+  grid-column: 3;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background:
+    radial-gradient(90% 70% at 50% 110%, rgb(255 255 255 / 0.85), rgb(255 255 255 / 0) 65%) padding-box,
+    linear-gradient(180deg, #bfccb6, #f3f5ee) padding-box,
+    linear-gradient(180deg, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.25) 45%, #fff) border-box;
+  box-shadow:
+    0 0 0 1px rgb(var(--sage-shade) / 0.3),
+    inset 0 5px 8px -5px rgb(var(--sage-shade) / 0.25),
+    0 6px 12px -8px rgb(var(--sage-shade) / 0.5);
+  color: #34462f;
+  transition: box-shadow var(--dur-control) var(--ease);
+}
+
+.entry-icon svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  filter: drop-shadow(0 1px 0 rgb(255 255 255 / 0.8));
+  transition: transform 0.35s var(--ease);
+}
+
+.entry-toggle:hover .entry-icon {
+  box-shadow:
+    0 0 0 1px rgb(var(--sage-shade) / 0.45),
+    inset 0 5px 8px -5px rgb(var(--sage-shade) / 0.3),
+    0 8px 14px -8px rgb(var(--sage-shade) / 0.6);
+}
+
+.entry-toggle:active .entry-icon {
+  box-shadow:
+    0 0 0 1px rgb(var(--sage-shade) / 0.45),
+    inset 0 7px 10px -5px rgb(var(--sage-shade) / 0.4);
+}
+
+.entry-toggle[aria-expanded="true"] .entry-icon svg {
+  transform: rotate(180deg);
+}
+
+/* Details: the bubble grows smoothly. grid-template-rows 0fr -> 1fr animates
+   to the content's real height; visibility removes closed details from the
+   tab order and from screen readers once the close finishes. */
+.entry-body {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+
+.entry-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Padding lives on this wrapper so the closed bubble collapses fully */
+.entry-pad {
+  padding: 0 1.6rem 1.25rem;
+}
+
+/* An etched line: dark, with a light line under it */
+.entry-pad::before {
+  content: "";
+  display: block;
+  height: 2px;
+  margin-bottom: 0.9rem;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgb(var(--sage-shade) / 0.16) 0 1px, rgb(255 255 255 / 0.85) 1px 2px);
+}
+
+.js .entry-body {
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 0.4s var(--ease), visibility 0s linear 0.4s;
+}
+
+.js .entry.is-open .entry-body {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition: grid-template-rows 0.4s var(--ease), visibility 0s linear 0s;
+}
+
+.js .entry-inner {
+  opacity: 0;
+  transition: opacity 0.25s var(--ease);
+}
+
+.js .entry.is-open .entry-inner {
+  opacity: 1;
+  transition: opacity 0.35s var(--ease) 0.08s;
+}
+
+/* Without JS there is nothing to toggle */
+html:not(.js) .entry-icon {
+  display: none;
+}
+
+html:not(.js) .entry-toggle {
+  cursor: default;
+}
+
+.entry-meta {
+  margin-bottom: var(--space-2);
+  color: var(--sage-date);
+  font-size: var(--text-sm);
+}
+
+.entry .points li::marker {
+  color: #4a6a43;
 }
 
 @media (max-width: 40rem) {
   .entry {
-    grid-template-columns: 1fr;
+    border-radius: 28px;
+  }
+
+  .entry-toggle {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--space-2);
+    row-gap: 0.15rem;
+    padding-left: 1.25rem;
+  }
+
+  .entry-titles {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .entry-date {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .entry-icon {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .entry-pad {
+    padding-inline: 1.25rem;
   }
 }
 
@@ -2073,15 +2319,11 @@ html:not(.js) .project-card {
 }
 
 /* Experience entries you jump to (from At a glance) glow briefly */
-.entry {
-  position: relative;
-}
-
 .entry:target::after {
   content: "";
   position: absolute;
-  inset: 0 -0.75rem;
-  border-radius: var(--radius-sm);
+  inset: -6px;
+  border-radius: 38px;
   box-shadow: 0 0 0 3px var(--color-mint);
   pointer-events: none;
   opacity: 0;
@@ -2187,6 +2429,38 @@ html:not(.js) .project-card {
 
   .project-body[hidden] {
     display: block !important;
+  }
+
+  .entry {
+    background: none !important;
+    box-shadow: none !important;
+    border: 1px solid #bbb !important;
+    border-radius: 12px !important;
+  }
+
+  .js .entry-body {
+    grid-template-rows: 1fr !important;
+    visibility: visible !important;
+  }
+
+  .js .entry-inner {
+    opacity: 1 !important;
+  }
+
+  .entry-icon,
+  .expand-all {
+    display: none !important;
+  }
+
+  .entry-toggle {
+    min-height: 0;
+    padding-block: 0.5rem;
+  }
+
+  .entry-title,
+  .entry-sub,
+  .entry-date {
+    text-shadow: none;
   }
 
   .explain-panel[hidden] {
