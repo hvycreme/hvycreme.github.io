@@ -27,7 +27,7 @@ files/            PDFs: put resume.pdf here
 | Introduction | `#intro` | Name, short description, one paragraph, "Explore my research" / "Contact me", supporting facts row (education, graduation, certifications, open to / location), arched portrait |
 | At a glance | `#strengths` | Four strengths employers screen for (research, technical, communication, responsibility), each a clickable card linking to its evidence on the page. Only facts already on the page belong here |
 | 01 Selected Research | `#research` (old `#work` lands here) | Featured music-labeling study (`#p-music`: question → key finding → role → method), the related Python pipeline (`#p-pipeline`), and the synthesis project with the 3D molecule (`#p-synthesis`) |
-| 02 Experience | `#experience` | Research appointments, then leadership, teaching & work, with thin dividers |
+| 02 Experience | `#experience` | Research appointments, then leadership, teaching & work. Each role is a sage glass bubble (title, with field/organization in small type underneath, dates, round arrow button) that opens to its details; "Expand all" opens every role |
 | 03 Skills & Education | `#skills` (old `#methods` lands here), `#education` | Skills grouped by lab; degrees; certifications & training. Has its own nav link |
 | 04 About | `#about` | Background, communication, plants and computers, Currently growing |
 | 05 Contact | `#contact` | Invitation, email (with Copy), Email / LinkedIn, Print or save as PDF, interactive plant figure |
@@ -76,7 +76,7 @@ The order is set in `index.html` by numbers on each experience entry and skill g
 
 **Résumé:** save your PDF as **`files/resume.pdf`** (exact name). Résumé links are removed from the site until this file exists; once it does, restore the résumé links in the header, hero, and contact section.
 
-**Add an experience entry:** copy one whole `<li>…</li>` inside `<ol class="timeline">`, then give it `data-crc` / `data-ert` numbers.
+**Add an experience entry:** copy one whole `<li class="entry">…</li>` inside an `<ol class="entries">`, give it a new `id` (and change the `aria-controls` / body `id` to match, e.g. `e-new` / `e-new-body`), then give it `data-crc` / `data-ert` numbers. Leave out the `<span class="entry-date">` if there is no date. The glass colors are the `--sage-*` tokens at the top of section 9 in `css/style.css`; keep small text at 4.5:1 or better against `--sage-top`.
 
 **Project figures:** export your chart as PNG or SVG into `images/`, change the `<img src>`, and write `alt` text that states what the chart *shows* (the trend, not just "a chart").
 
