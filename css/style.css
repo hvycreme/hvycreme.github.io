@@ -1965,16 +1965,6 @@ html:not(.js) .entry-toggle {
   font-size: var(--text-xs);
 }
 
-/* Mouse-trail pollen: fixed behind all content; ignores the mouse itself */
-.pollen {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  pointer-events: none;
-}
-
 /* ==========================================================================
    13. Footer, motion, utilities
    ========================================================================== */
@@ -3225,7 +3215,6 @@ html.sheet-open {
 
   .site-header,
   .skip-link,
-  .pollen,
   .portrait-stage,
   .project-toggle,
   .explain-toggle,
@@ -3400,5 +3389,79 @@ html.sheet-open {
   .site-footer {
     margin-top: 1.5rem;
     padding: 0.75rem 0 0;
+  }
+}
+
+/* ==========================================================================
+   19. UX audit fixes (Nov 2026)
+   Screen only, so the print styles above still decide the printed CV.
+   ========================================================================== */
+@media screen {
+  /* Eyebrow: balance the two lines on phones instead of orphaning "· Psychology" */
+  .eyebrow {
+    text-wrap: balance;
+  }
+
+  /* "Expand all roles" sits in the Experience heading row, at its right edge */
+  .section-head .expand-all {
+    margin-left: auto;
+  }
+
+  .section-head .section-jump + .expand-all {
+    margin-left: 0;
+  }
+
+  /* Green glass now means "you can press this". Degrees and certificates are
+     facts, not controls, so they become flat cards on the page surface. */
+  .edu-list li,
+  .cert-list li {
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+    box-shadow: none;
+    color: var(--color-text);
+  }
+
+  .edu-list h4,
+  .cert-name {
+    text-shadow: none;
+  }
+
+  /* Skill tags are labels too: flat chips, no hover lift */
+  .inline-list li {
+    border: 1px solid var(--color-line);
+    background: var(--color-surface);
+    box-shadow: none;
+    color: var(--color-text);
+    text-shadow: none;
+  }
+
+  .inline-list li:hover {
+    transform: none;
+  }
+
+  /* In the floating panel the × is the one close control; the card's own
+     Details/Close toggle hides there and returns when the card goes back. */
+  .project-card.in-sheet .project-toggle {
+    display: none;
+  }
+
+  /* Keep the last role's chevron clear of the floating back-to-top button */
+  #experience {
+    padding-bottom: 4.5rem;
+  }
+
+  /* Phones: the chevron moves to the row with the title, top-aligned, so it
+     never sits in the bottom-right corner where the ↑ button floats */
+  @media (max-width: 47.99rem) {
+    .entry-icon {
+      grid-row: 1;
+      align-self: start;
+    }
+
+    /* Contact keeps its call-to-action look inside the phone menu */
+    .nav-list a.nav-cta {
+      color: var(--color-accent);
+      font-weight: 600;
+    }
   }
 }

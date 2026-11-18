@@ -1,7 +1,7 @@
 /* ==========================================================================
    portrait-helix.js: mounts the Mint Drift helix behind the portrait.
-   Uses the supplied renderer (vendor/mint-drift) with its approved preset
-   unchanged: no settings overrides and nothing read from browser storage.
+   Uses the supplied renderer (vendor/mint-drift) with its approved preset,
+   overriding only `numbers` (off); no other settings overrides and nothing read from browser storage.
    - chrome:false / controls:false hide the prototype title, caption, panel.
    - A site-native button pauses and plays it (the API's pause()/play()).
    - Reduce motion: starts paused (a still frame); the button can still play.
@@ -24,6 +24,9 @@
     controls: false,
     height: '100%',
     paused: userPaused,
+    // Digits along the strands read as data and invite decoding; the helix
+    // is decoration, so draw it without them.
+    settings: { numbers: false },
   });
 
   function apply() {

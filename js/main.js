@@ -44,9 +44,11 @@ if ('IntersectionObserver' in window) {
         observer.unobserve(entry.target); // reveal once, then stop watching
       });
     },
-    // Reveal once a section is a little way onscreen. threshold 0 (not e.g.
-    // 0.3) so very tall sections still trigger on small phone screens.
-    { rootMargin: '0px 0px -10% 0px', threshold: 0 }
+    // Reveal just BEFORE a section scrolls in (positive bottom margin), so the
+    // fade is already under way when it arrives and the visitor never sees a
+    // blank stretch that reads as "the page ended". threshold 0 so very tall
+    // sections still trigger on small phone screens.
+    { rootMargin: '0px 0px 15% 0px', threshold: 0 }
   );
   revealEls.forEach((el) => revealObserver.observe(el));
 } else {
@@ -205,9 +207,15 @@ function setEntry(entry, open) {
 function syncExpandAll() {
   if (!expandAll) return;
   const allOpen = [...entries].every((e) => e.classList.contains('is-open'));
-  expandAll.textContent = allOpen ? 'Collapse all' : 'Expand all';
+  expandAll.textContent = allOpen ? 'Collapse all roles' : 'Expand all roles';
   expandAll.setAttribute('aria-pressed', String(allOpen));
 }
+
+// Roles marked data-open (the research appointments) start open, so the
+// evidence recruiters scan for is visible without a tap
+entries.forEach((entry) => {
+  if (entry.hasAttribute('data-open')) setEntry(entry, true);
+});
 
 entries.forEach((entry) => {
   entry.querySelector('.entry-toggle').addEventListener('click', () => {
@@ -218,6 +226,7 @@ entries.forEach((entry) => {
 
 if (expandAll) {
   expandAll.hidden = false;
+  syncExpandAll();
   expandAll.addEventListener('click', () => {
     const open = expandAll.getAttribute('aria-pressed') !== 'true';
     entries.forEach((entry) => setEntry(entry, open));
