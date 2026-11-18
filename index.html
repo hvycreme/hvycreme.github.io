@@ -35,15 +35,15 @@
   <!-- Runs before the page paints: tells CSS "JavaScript is on", so effects
        that hide content (reveals, toggles, the phone menu) only apply when JS can undo them. -->
   <script>document.documentElement.classList.add('js');</script>
-  <link rel="stylesheet" href="vendor/mint-drift/mint-drift.css?v=20261117b">
-  <link rel="stylesheet" href="css/style.css?v=20261117b">
+  <link rel="stylesheet" href="vendor/mint-drift/mint-drift.css?v=20261118a">
+  <link rel="stylesheet" href="css/style.css?v=20261118a">
   <!-- defer: download in parallel, run after the HTML is parsed (so the DOM exists) -->
-  <script src="js/main.js?v=20261117b" defer></script>
-  <script src="js/particles.js?v=20261117b" defer></script>
-  <script src="js/pollen.js?v=20261117b" defer></script>
-  <script src="js/molecule.js?v=20261117b" defer></script>
-  <script src="vendor/mint-drift/mint-drift.js?v=20261117b" defer></script>
-  <script src="js/portrait-helix.js?v=20261117b" defer></script>
+  <script src="js/main.js?v=20261118a" defer></script>
+  <script src="js/particles.js?v=20261118a" defer></script>
+  <script src="js/pollen.js?v=20261118a" defer></script>
+  <script src="js/molecule.js?v=20261118a" defer></script>
+  <script src="vendor/mint-drift/mint-drift.js?v=20261118a" defer></script>
+  <script src="js/portrait-helix.js?v=20261118a" defer></script>
 </head>
 <body>
 
@@ -83,6 +83,8 @@
         <li><a class="nav-cta" href="#contact">Contact</a></li>
       </ul>
     </nav>
+    <!-- Reading progress: a thin sage line along the header's bottom edge (js/main.js) -->
+    <div class="scroll-progress" aria-hidden="true"></div>
   </header>
 
   <main id="main" tabindex="-1">
@@ -726,6 +728,9 @@
     </section>
 
   </main>
+
+  <!-- Floating back-to-top: appears after scrolling down a screen or two (js/main.js) -->
+  <a class="float-top" href="#intro" aria-label="Back to top"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-up"/></svg></a>
 
   <footer class="site-footer">
     <svg class="leaf-icon" aria-hidden="true"><use href="#leaf"/></svg>

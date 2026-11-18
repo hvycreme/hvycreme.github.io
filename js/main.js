@@ -336,3 +336,98 @@ document.querySelectorAll('.print-page').forEach((button) => {
 window.addEventListener('beforeprint', () => {
   revealEls.forEach((el) => el.classList.add('is-visible'));
 });
+
+/* --------------------------------------------------------------------------
+   7. Glass interactions (css/style.css, section 18)
+   -------------------------------------------------------------------------- */
+
+// 7a. Segmented controls: one glass thumb glides to the pressed option.
+// Watches aria-pressed, so it also follows the plant switch in particles.js.
+document.querySelectorAll('.explain-toggle').forEach((group) => {
+  function place(animate) {
+    const pressed = group.querySelector('button[aria-pressed="true"]');
+    if (!pressed || !pressed.offsetWidth) return;
+    group.classList.toggle('no-anim', !animate);
+    group.style.setProperty('--thumb-x', `${pressed.offsetLeft - 3}px`);
+    group.style.setProperty('--thumb-w', `${pressed.offsetWidth}px`);
+    group.classList.add('has-thumb');
+  }
+  new MutationObserver(() => place(true)).observe(group, {
+    subtree: true, attributes: true, attributeFilter: ['aria-pressed', 'hidden'],
+  });
+  // Sizes change when a card opens, the plant switch appears, or fonts load
+  if ('ResizeObserver' in window) new ResizeObserver(() => place(false)).observe(group);
+  place(false);
+});
+
+// 7b. Desktop nav: a frosted pill slides behind the active link
+const navList = document.querySelector('.nav-list');
+if (navList) {
+  const indicator = document.createElement('li'); // a list may only hold <li>
+  indicator.className = 'nav-indicator';
+  indicator.setAttribute('aria-hidden', 'true');
+  navList.prepend(indicator);
+  navList.classList.add('has-indicator');
+
+  const placeIndicator = () => {
+    const active = navList.querySelector('a.is-active:not(.nav-cta)');
+    if (!active) {
+      navList.style.setProperty('--ind-o', '0');
+      return;
+    }
+    const listBox = navList.getBoundingClientRect();
+    const box = active.getBoundingClientRect();
+    navList.style.setProperty('--ind-x', `${box.left - listBox.left}px`);
+    navList.style.setProperty('--ind-w', `${box.width}px`);
+    navList.style.setProperty('--ind-o', '1');
+  };
+  // The active class is set by section 3; follow its changes
+  new MutationObserver(placeIndicator).observe(navList, {
+    subtree: true, attributes: true, attributeFilter: ['class'],
+  });
+  window.addEventListener('resize', placeIndicator);
+}
+
+// 7c. Reading progress and the floating back-to-top button.
+// One passive scroll listener, batched to one update per frame.
+const progressBar = document.querySelector('.scroll-progress');
+const floatTop = document.querySelector('.float-top');
+let scrollQueued = false;
+
+function onScrollFrame() {
+  scrollQueued = false;
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const y = window.scrollY;
+  if (progressBar) progressBar.style.setProperty('--progress', max > 0 ? Math.min(y / max, 1) : 0);
+  if (floatTop) {
+    // Shown after ~1.5 screens, hidden again near the footer's own button
+    const nearEnd = max - y < 200;
+    floatTop.classList.toggle('is-shown', y > window.innerHeight * 1.5 && !nearEnd);
+  }
+}
+window.addEventListener('scroll', () => {
+  if (!scrollQueued) {
+    scrollQueued = true;
+    requestAnimationFrame(onScrollFrame);
+  }
+}, { passive: true });
+onScrollFrame();
+
+// 7d. Pointer sheen on glass cards (mouse and trackpad only)
+const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+document.querySelectorAll('.strength, .project-card, .entry, .skill-groups > div').forEach((card) => {
+  card.classList.add('sheen');
+  card.addEventListener('pointermove', (event) => {
+    if (!finePointer.matches || prefersReducedMotion.matches) return;
+    const box = card.getBoundingClientRect();
+    card.style.setProperty('--mx', `${event.clientX - box.left}px`);
+    card.style.setProperty('--my', `${event.clientY - box.top}px`);
+  });
+});
+
+// 7e. Staggered entrances: number the cards in each group
+document.querySelectorAll('.strength-grid, .project-grid, .entries, .skill-groups, .edu-list, .cert-list, .growing-list')
+  .forEach((group) => {
+    group.classList.add('stagger');
+    [...group.children].forEach((child, i) => child.style.setProperty('--i', Math.min(i, 8)));
+  });

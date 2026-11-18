@@ -101,6 +101,27 @@ Nothing loads until a visitor scrolls near Contact; the fly-in plays when it com
 
 **Rose source image:** P.-J. Redouté, *Rosa centifolia*, from *Les Roses* (1817–1824). The artwork is in the public domain; the specific scan's source is not recorded yet; track it in `TODO.private.md` and add a source link to the credit (or swap in a scan with a documented source, e.g. from the Biodiversity Heritage Library) before publishing. To process a new scan: `pip install pillow numpy scipy`, then `python3 tools/prepare_plate.py my-scan.jpg images/rose-plate.webp`.
 
+## Glass system
+
+Every section uses one glass material (section 18 of `css/style.css`) in three tints, with the same bevelled rim, outer groove, inner shading, and soft lift:
+
+| Tint | Token | Used for | Text that passes 4.5:1 on it |
+|---|---|---|---|
+| Frost | `--fill-frost`, `--fill-frost-strong` | Content panels: facts strip, At a glance, project cards, skill groups, email pill, secondary buttons | Every site color (`--color-text`, `--color-muted`, `--color-accent`, `--color-rust`) |
+| Sage | `--fill-sage` | Compact items: role bubbles, skill chips, degrees, certificates, Currently growing, status badges, selected toggle | Only the sage inks: `--sage-ink`, `--sage-sub`, `--sage-date` |
+| Forest | (in `.button-primary`) | Main actions: Explore my research, Email me, the active Contact pill | White |
+
+Shared pieces: `--rim` (bright bevel), `--groove` (thin outer line), `--glass-shadow` / `--glass-shadow-sm` (shading and lift), `--glass-shadow-pressed` (the sunk look while a button is pressed), `--etch` (an engraved divider line). To put something new in glass: `border: 2px solid transparent; background: var(--fill-frost), var(--rim); box-shadow: var(--glass-shadow);`.
+
+### Interaction details
+- **Buttons** rise slightly on hover and sink into their groove while pressed.
+- **Toggles** (Plain language / Scientific detail; Rose / Hyacinth / Orchid): a single glass thumb glides to the chosen option.
+- **Navigation:** a frosted pill slides behind the active section's link; a thin sage line under the header shows reading progress.
+- **Back to top:** a round glass button floats in after about a screen and a half of scrolling, and steps aside near the footer.
+- **Cards** lift on hover, and a soft light follows the cursor across them (mouse and trackpad only).
+- **Entrances:** cards in a group rise one after another as their section scrolls in.
+- All motion is off for visitors with Reduce motion turned on; print flattens the glass into plain outlined boxes.
+
 ## Customizing the look
 
 All in the `:root` block at the top of `css/style.css`:
@@ -139,7 +160,7 @@ Deploy status is under the repo's **Actions** tab ("pages build and deployment":
 On github.com, open any file → **pencil icon** → edit → **Commit changes**. To upload a photo or PDF: open the folder → **Add file → Upload files**.
 
 ### Version tags on CSS and JS (cache busting)
-Every stylesheet and script link in `index.html` ends in `?v=…` (e.g. `css/style.css?v=20261117b`). Browsers, iOS Safari especially, keep using a saved copy of a file for a while, so a visitor could get the new HTML with an old stylesheet and see a broken page. **Whenever you change any file in `css/`, `js/`, or `vendor/`, change the `?v=` value on all those links** (e.g. to today's date plus a letter). A new value is a new URL, so every browser fetches the fresh file.
+Every stylesheet and script link in `index.html` ends in `?v=…` (e.g. `css/style.css?v=20261118a`). Browsers, iOS Safari especially, keep using a saved copy of a file for a while, so a visitor could get the new HTML with an old stylesheet and see a broken page. **Whenever you change any file in `css/`, `js/`, or `vendor/`, change the `?v=` value on all those links** (e.g. to today's date plus a letter). A new value is a new URL, so every browser fetches the fresh file.
 
 ### "I pushed but nothing changed"
 GitHub Pages lets browsers cache files for up to 10 minutes. Force a fresh copy:

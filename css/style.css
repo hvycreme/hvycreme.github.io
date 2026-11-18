@@ -2353,6 +2353,675 @@ html:not(.js) .project-card {
 }
 
 /* ==========================================================================
+   18. Glass system
+   One material in three tints, shared by every section:
+     frost  — pale, for content panels (all body text colors pass 4.7:1+)
+     sage   — compact items: role bubbles, chips, certificates, selected states
+     forest — the main action buttons (white text, 5.3:1+)
+   Each piece = a fill on the padding box + a bevelled rim on the border box
+   (faint at the top, bright at the bottom), a thin groove around it, shade
+   under the top rim, a glow along the bottom, and a soft lift off the page.
+   ========================================================================== */
+:root {
+  --rim: linear-gradient(180deg, rgb(255 255 255 / 0.55) 0%, rgb(255 255 255 / 0.2) 40%, rgb(255 255 255 / 1) 100%) border-box;
+  --glow: radial-gradient(120% 90% at 50% 115%, rgb(255 255 255 / 0.75), rgb(255 255 255 / 0) 60%) padding-box;
+  --fill-frost: var(--glow), linear-gradient(180deg, #e4eadc 0%, #fbfaf5 100%) padding-box;
+  --fill-frost-strong: var(--glow), linear-gradient(180deg, #d8e1ce 0%, #f7f8f1 100%) padding-box;
+  --fill-sage: var(--glow), linear-gradient(180deg, var(--sage-top) 0%, var(--sage-bottom) 100%) padding-box;
+  --groove: 0 0 0 1px rgb(var(--sage-shade) / 0.24);
+  --glass-shadow:
+    var(--groove),
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    inset 0 6px 10px -6px rgb(var(--sage-shade) / 0.2),
+    inset 0 -8px 14px -8px rgb(255 255 255 / 0.9),
+    0 14px 24px -14px rgb(var(--sage-shade) / 0.5),
+    0 2px 4px -2px rgb(var(--sage-shade) / 0.22);
+  --glass-shadow-sm:
+    var(--groove),
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    inset 0 4px 7px -4px rgb(var(--sage-shade) / 0.2),
+    inset 0 -5px 9px -5px rgb(255 255 255 / 0.9),
+    0 6px 12px -8px rgb(var(--sage-shade) / 0.5);
+  --glass-shadow-pressed:
+    0 0 0 1px rgb(var(--sage-shade) / 0.36),
+    inset 0 6px 10px -4px rgb(var(--sage-shade) / 0.32),
+    inset 0 -3px 6px -4px rgb(255 255 255 / 0.8);
+  /* an etched line: dark, with a light line under it */
+  --etch: linear-gradient(180deg, rgb(var(--sage-shade) / 0.16) 0 1px, rgb(255 255 255 / 0.85) 1px 2px);
+  --radius-glass: 28px;
+}
+
+/* ---- Buttons ------------------------------------------------------------ */
+.button,
+.copy-email,
+.mol-controls button,
+.motion-toggle,
+.helix-toggle,
+.print-page,
+.to-top,
+.expand-all,
+.project-toggle,
+.js .menu-toggle {
+  border: 2px solid transparent;
+  background: var(--fill-frost), var(--rim);
+  box-shadow: var(--glass-shadow-sm);
+  color: var(--color-accent);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.7);
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform var(--dur-control) var(--ease),
+    box-shadow var(--dur-control) var(--ease),
+    filter var(--dur-control) var(--ease);
+}
+
+.button:hover,
+.copy-email:hover,
+.mol-controls button:hover,
+.motion-toggle:hover,
+.helix-toggle:hover,
+.print-page:hover,
+.to-top:hover,
+.expand-all:hover,
+.project-toggle:hover,
+.js .menu-toggle:hover {
+  border-color: transparent;
+  background: var(--fill-frost-strong), var(--rim);
+  color: var(--color-accent-hover);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* Pressed: the glass sinks into its groove */
+.button:active,
+.copy-email:active,
+.mol-controls button:active,
+.motion-toggle:active,
+.helix-toggle:active,
+.print-page:active,
+.to-top:active,
+.expand-all:active,
+.project-toggle:active,
+.js .menu-toggle:active,
+.float-top:active {
+  transform: translateY(1px);
+  box-shadow: var(--glass-shadow-pressed);
+}
+
+/* Primary: forest-green glass */
+.button-primary,
+.button-primary:hover {
+  background:
+    radial-gradient(120% 90% at 50% 120%, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0) 60%) padding-box,
+    linear-gradient(180deg, #437650 0%, #2c5a37 100%) padding-box,
+    linear-gradient(180deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.08) 45%, rgb(255 255 255 / 0.6)) border-box;
+  box-shadow:
+    0 0 0 1px rgb(20 40 26 / 0.5),
+    inset 0 1px 0 rgb(255 255 255 / 0.35),
+    inset 0 -6px 10px -6px rgb(255 255 255 / 0.3),
+    0 10px 20px -10px rgb(20 40 26 / 0.65);
+  color: #fff;
+  text-shadow: 0 -1px 0 rgb(0 0 0 / 0.25);
+}
+
+.button-primary:hover {
+  filter: brightness(1.06);
+  color: #fff;
+}
+
+/* Copy turns sage when done */
+.copy-email.is-done {
+  background: var(--fill-sage), var(--rim);
+  color: var(--sage-ink);
+}
+
+/* Header Contact pill (wider screens; in the phone menu it is a plain row) */
+@media (min-width: 48rem) {
+  .nav-list a.nav-cta {
+    border: 2px solid transparent;
+    background: var(--fill-frost), var(--rim);
+    box-shadow: var(--glass-shadow-sm);
+    text-shadow: 0 1px 0 rgb(255 255 255 / 0.7);
+    transition: transform var(--dur-control) var(--ease), box-shadow var(--dur-control) var(--ease);
+  }
+
+  .nav-list a.nav-cta:hover {
+    border-color: transparent;
+    background: var(--fill-frost-strong), var(--rim);
+    color: var(--color-accent-hover);
+    transform: translateY(-1px);
+  }
+
+  .nav-list a.nav-cta:active {
+    transform: translateY(1px);
+    box-shadow: var(--glass-shadow-pressed);
+  }
+}
+
+/* Header Contact pill: fills forest when its section is in view */
+@media (min-width: 48rem) {
+  .nav-list a.nav-cta.is-active {
+    background:
+      linear-gradient(180deg, #437650 0%, #2c5a37 100%) padding-box,
+      linear-gradient(180deg, rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.1) 45%, rgb(255 255 255 / 0.55)) border-box;
+    color: #fff;
+    text-shadow: none;
+  }
+}
+
+/* "Details" on project cards: the round icon becomes a glass knob */
+.project-toggle {
+  padding-left: 0.45em;
+}
+
+.project-toggle .toggle-icon {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border: 1.5px solid transparent;
+  border-radius: 50%;
+  background: var(--fill-sage), var(--rim);
+  box-shadow: 0 0 0 1px rgb(var(--sage-shade) / 0.25), inset 0 3px 5px -3px rgb(var(--sage-shade) / 0.3);
+  color: var(--sage-ink);
+}
+
+.project-toggle .toggle-icon::before,
+.project-toggle .toggle-icon::after {
+  inset: 50% 0.42rem auto;
+}
+
+/* ---- Segmented controls: a glass thumb that slides ----------------------- */
+.explain-toggle {
+  position: relative;
+  isolation: isolate;
+  border: 0;
+  background: rgb(var(--sage-shade) / 0.07);
+  box-shadow:
+    inset 0 2px 5px -1px rgb(var(--sage-shade) / 0.25),
+    inset 0 -1px 0 rgb(255 255 255 / 0.8),
+    0 0 0 1px rgb(var(--sage-shade) / 0.14);
+}
+
+.explain-toggle button[aria-pressed="true"] {
+  background: var(--fill-sage), var(--rim);
+  border: 0;
+  box-shadow: var(--glass-shadow-sm);
+  color: var(--sage-ink);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.6);
+}
+
+/* With JS the thumb is one element that glides between options */
+.explain-toggle.has-thumb::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 3px;
+  bottom: 3px;
+  left: 0;
+  width: var(--thumb-w, 0);
+  border: 2px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--fill-sage), var(--rim);
+  box-shadow: var(--glass-shadow-sm);
+  transform: translateX(var(--thumb-x, 0));
+  transition: transform 0.35s var(--ease), width 0.35s var(--ease);
+}
+
+.explain-toggle.has-thumb button[aria-pressed="true"] {
+  background: none;
+  box-shadow: none;
+}
+
+.explain-toggle.no-anim::before {
+  transition: none;
+}
+
+/* ---- Header -------------------------------------------------------------- */
+.site-header {
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.7);
+}
+
+.scroll-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--sage-top), #6f8f66 70%, var(--color-accent));
+  transform: scaleX(var(--progress, 0));
+  transform-origin: left;
+  pointer-events: none;
+}
+
+/* Desktop nav: a frosted glass pill slides behind the active link */
+.nav-indicator {
+  display: none;
+}
+
+@media (min-width: 48rem) {
+  .nav-list {
+    position: relative;
+  }
+
+  .nav-indicator {
+    display: block;
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 0;
+    height: 2.25rem;
+    width: var(--ind-w, 0);
+    margin-top: -1.125rem;
+    border: 2px solid transparent;
+    border-radius: var(--radius-pill);
+    background: var(--fill-frost), var(--rim);
+    box-shadow: var(--glass-shadow-sm);
+    opacity: var(--ind-o, 0);
+    transform: translateX(var(--ind-x, 0));
+    transition: transform 0.4s var(--ease), width 0.4s var(--ease), opacity 0.25s var(--ease);
+    pointer-events: none;
+  }
+
+  .nav-list.has-indicator a:not(.nav-cta) {
+    padding-inline: 0.85rem;
+  }
+
+  .nav-list.has-indicator {
+    gap: var(--space-1) 0.35rem;
+    isolation: isolate;
+  }
+
+  .nav-list.has-indicator a::after {
+    display: none;
+  }
+}
+
+/* Phone menu: a frosted sheet with rounded lower corners */
+@media (max-width: 47.99rem) {
+  .js .nav-list {
+    border-bottom: 0;
+    border-radius: 0 0 var(--radius-glass) var(--radius-glass);
+    background: var(--fill-frost);
+    box-shadow: 0 18px 30px -18px rgb(var(--sage-shade) / 0.55), 0 1px 0 rgb(var(--sage-shade) / 0.15);
+  }
+
+  .js .menu-open .nav-list {
+    animation: drop 0.28s var(--ease) both;
+  }
+
+  .js .nav-list li + li {
+    border-top: 0;
+    background-image: var(--etch);
+    background-repeat: no-repeat;
+    background-size: 100% 2px;
+  }
+
+  .js .menu-toggle {
+    color: var(--sage-ink);
+  }
+}
+
+@keyframes drop {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---- Introduction -------------------------------------------------------- */
+.portrait {
+  border: 2px solid transparent;
+  background: var(--fill-frost), var(--rim);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Supporting facts: one frosted strip with etched dividers */
+.hero-facts {
+  padding: var(--space-4);
+  border: 2px solid transparent;
+  border-radius: var(--radius-glass);
+  background: var(--fill-frost), var(--rim);
+  box-shadow: var(--glass-shadow);
+  gap: var(--space-3) 0;
+}
+
+.hero-facts > div {
+  padding-inline: var(--space-4);
+}
+
+.hero-facts > div + div {
+  background: linear-gradient(90deg, rgb(var(--sage-shade) / 0.16) 0 1px, rgb(255 255 255 / 0.85) 1px 2px) left / 2px 100% no-repeat;
+}
+
+@media (max-width: 56rem) {
+  .hero-facts > div:nth-child(3) {
+    background: none;
+  }
+}
+
+@media (max-width: 30rem) {
+  .hero-facts > div + div,
+  .hero-facts > div:nth-child(3) {
+    padding-top: var(--space-3);
+    background: var(--etch) top / 100% 2px no-repeat;
+  }
+
+  .hero-facts > div {
+    padding-inline: var(--space-2);
+  }
+}
+
+/* ---- Cards: At a glance and Selected Research ----------------------------- */
+.strength,
+.project-card,
+.project-card + .project-card {
+  border: 2px solid transparent;
+  border-radius: var(--radius-glass);
+  background: var(--fill-frost), var(--rim);
+  box-shadow: var(--glass-shadow);
+}
+
+.strength:hover,
+.project-card:not(.is-open):hover {
+  border-color: transparent;
+  transform: translateY(-3px);
+  box-shadow:
+    var(--groove),
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    inset 0 6px 10px -6px rgb(var(--sage-shade) / 0.2),
+    inset 0 -8px 14px -8px rgb(255 255 255 / 0.9),
+    0 22px 32px -18px rgb(var(--sage-shade) / 0.55),
+    0 2px 4px -2px rgb(var(--sage-shade) / 0.22);
+}
+
+.strength,
+.project-card:not(.is-open) {
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+/* The featured study: a slightly greener frost instead of a top stripe */
+.project-card.project-featured {
+  border-top: 2px solid transparent;
+  background: var(--fill-frost-strong), var(--rim);
+}
+
+.project-status,
+.mol-status {
+  border: 1.5px solid transparent;
+  background: var(--fill-sage), var(--rim);
+  box-shadow: 0 0 0 1px rgb(var(--sage-shade) / 0.22), inset 0 3px 5px -3px rgb(var(--sage-shade) / 0.25);
+  color: var(--sage-ink);
+}
+
+/* Pointer sheen: a soft light follows the cursor across glass cards */
+.sheen {
+  position: relative;
+}
+
+.sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgb(255 255 255 / 0.38), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .sheen:hover::after {
+    opacity: 1;
+  }
+}
+
+/* The jump-to glow keeps its own look */
+.project:target::after,
+.entry:target::after {
+  background: none;
+}
+
+/* Inside an open study: etched rows and inset glass wells */
+.study-block,
+.facts > div,
+.project-why,
+.mol-details {
+  border-top: 0;
+  background-image: var(--etch);
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+}
+
+.finding-compare li,
+.flow li,
+.project-featured .flow li,
+.mol-project {
+  border: 1px solid rgb(var(--sage-shade) / 0.14);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.35), rgb(255 255 255 / 0.7));
+  box-shadow:
+    inset 0 2px 4px -1px rgb(var(--sage-shade) / 0.16),
+    0 1px 0 rgb(255 255 255 / 0.8);
+}
+
+.finding-compare li {
+  border-radius: 20px;
+}
+
+.flow li {
+  border-radius: 16px;
+}
+
+.mol-project {
+  border-radius: 22px;
+}
+
+.mol-stage {
+  border-radius: 16px;
+}
+
+/* ---- Experience bubbles share the system tokens -------------------------- */
+.entry {
+  background: var(--fill-sage), var(--rim);
+  box-shadow: var(--glass-shadow);
+}
+
+/* ---- Skills & Education --------------------------------------------------- */
+.skill-groups,
+.edu-list,
+.cert-list {
+  display: grid;
+  gap: 0.9rem;
+  border-bottom: 0;
+}
+
+/* Skill groups: frosted panels holding sage chips */
+.skill-groups > div {
+  padding: var(--space-4);
+  border: 2px solid transparent;
+  border-top: 2px solid transparent;
+  border-radius: var(--radius-glass);
+  background: var(--fill-frost), var(--rim);
+  box-shadow: var(--glass-shadow);
+}
+
+.skill-groups dd {
+  margin-top: var(--space-3);
+}
+
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.inline-list li {
+  display: block;
+  padding: 0.3em 0.85em;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--fill-sage), var(--rim);
+  box-shadow: 0 0 0 1px rgb(var(--sage-shade) / 0.22), inset 0 3px 5px -3px rgb(var(--sage-shade) / 0.25), 0 3px 6px -4px rgb(var(--sage-shade) / 0.4);
+  color: var(--sage-ink);
+  font-size: var(--text-xs);
+  line-height: 1.35;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.6);
+  transition: transform var(--dur-control) var(--ease);
+}
+
+.inline-list li:hover {
+  transform: translateY(-1px);
+}
+
+.inline-list li + li::before {
+  content: none;
+}
+
+/* Degrees and certificates: compact sage bubbles, like the roles */
+.edu-list li,
+.cert-list li {
+  padding: 0.9rem 1.5rem;
+  border: 2px solid transparent;
+  border-top: 2px solid transparent;
+  border-radius: var(--radius-glass);
+  background: var(--fill-sage), var(--rim);
+  box-shadow: var(--glass-shadow);
+  color: var(--sage-ink);
+}
+
+.edu-list h4,
+.cert-name {
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.7);
+}
+
+.edu-list .edu-degree {
+  color: var(--sage-ink);
+}
+
+.edu-list .edu-meta,
+.cert-list .cert-meta {
+  color: var(--sage-sub);
+}
+
+.cert-name {
+  font-weight: 600;
+}
+
+/* ---- About ---------------------------------------------------------------- */
+.growing-photo::before {
+  border: 2px solid transparent;
+  background: var(--fill-frost-strong), var(--rim);
+  box-shadow: var(--glass-shadow);
+}
+
+.growing-list {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.growing-list li,
+.growing-list li + li {
+  padding: 1rem 1.5rem;
+  border: 2px solid transparent;
+  border-top: 2px solid transparent;
+  border-radius: var(--radius-glass);
+  background: var(--fill-sage), var(--rim);
+  box-shadow: var(--glass-shadow);
+  color: var(--sage-ink);
+}
+
+.growing-list .growing-label {
+  color: var(--sage-sub);
+}
+
+.growing-list li p:last-child {
+  color: var(--sage-sub);
+}
+
+.growing-name {
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.7);
+}
+
+/* ---- Contact -------------------------------------------------------------- */
+.contact-email {
+  justify-self: start;
+  max-width: 100%;
+  padding: 0.35rem 0.4rem 0.35rem 1.4rem;
+  border: 2px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--fill-frost), var(--rim);
+  box-shadow: var(--glass-shadow);
+}
+
+.contact-figure figcaption {
+  border-top: 0;
+  background: var(--etch) top / 100% 2px no-repeat;
+}
+
+/* ---- Footer and floating back-to-top --------------------------------------- */
+.site-footer {
+  border-top: 0;
+  background: var(--etch) top / 100% 2px no-repeat;
+}
+
+.float-top {
+  position: fixed;
+  z-index: 15;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1.25rem, calc(env(safe-area-inset-bottom) + 0.75rem));
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: var(--fill-frost), var(--rim);
+  box-shadow: var(--glass-shadow);
+  color: var(--color-accent);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px) scale(0.92);
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease), visibility 0s linear 0.3s;
+}
+
+.float-top.is-shown {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease), visibility 0s;
+}
+
+.float-top:hover {
+  color: var(--color-accent-hover);
+  transform: translateY(-2px);
+}
+
+html:not(.js) .float-top {
+  display: none;
+}
+
+/* ---- Staggered entrances: cards in a group rise one after another --------- */
+.js .reveal.is-visible .stagger > * {
+  animation: rise 0.6s var(--ease) backwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal.is-visible .stagger > * {
+    animation: none;
+  }
+
+  .float-top,
+  .explain-toggle.has-thumb::before,
+  .nav-indicator {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
    17. Print: a clean, text-only CV (Print or save as PDF)
    Decoration, motion, and controls are removed; every project shows.
    ========================================================================== */
@@ -2399,6 +3068,36 @@ html:not(.js) .project-card {
   .js .reveal {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  /* Glass flattens to plain outlined boxes on paper */
+  body * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+  }
+
+  .hero-facts,
+  .strength,
+  .project-card,
+  .skill-groups > div,
+  .edu-list li,
+  .cert-list li,
+  .growing-list li,
+  .contact-email,
+  .inline-list li,
+  .project-status {
+    background: none !important;
+    border: 1px solid #bbb !important;
+  }
+
+  .hero-facts > div + div {
+    background: none !important;
+  }
+
+  .float-top,
+  .scroll-progress {
+    display: none !important;
   }
 
   .hero {
