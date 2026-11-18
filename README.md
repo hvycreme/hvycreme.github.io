@@ -118,6 +118,7 @@ Shared pieces: `--rim` (bright bevel), `--groove` (thin outer line), `--glass-sh
 - **Toggles** (Plain language / Scientific detail; Rose / Hyacinth / Orchid): a single glass thumb glides to the chosen option.
 - **Navigation:** a frosted pill slides behind the active section's link; a thin sage line under the header shows reading progress.
 - **Back to top:** a round glass button floats in after about a screen and a half of scrolling, and steps aside near the footer.
+- **Research cards open as a floating panel** (`js/study-sheet.js`): pressing Details grows a glass blob from the card into a centred panel, with a slight overshoot and unevenly wobbling corners (a damped spring; tune `OPEN_MS`, `CLOSE_MS`, and the `zeta` / `omega` / `wobble` values at the top and in `open()` / `close()`). The page behind blurs and dims; the details fade in as the shape settles. Close with ×, Close, Escape, a tap outside, or a downward swipe on phones. Links to a study (`#p-music`, "See the study") open its panel. The real card moves into the panel and back, so everything inside keeps working.
 - **Cards** lift on hover, and a soft light follows the cursor across them (mouse and trackpad only).
 - **Entrances:** cards in a group rise one after another as their section scrolls in.
 - All motion is off for visitors with Reduce motion turned on; print flattens the glass into plain outlined boxes.
@@ -160,7 +161,7 @@ Deploy status is under the repo's **Actions** tab ("pages build and deployment":
 On github.com, open any file → **pencil icon** → edit → **Commit changes**. To upload a photo or PDF: open the folder → **Add file → Upload files**.
 
 ### Version tags on CSS and JS (cache busting)
-Every stylesheet and script link in `index.html` ends in `?v=…` (e.g. `css/style.css?v=20261118a`). Browsers, iOS Safari especially, keep using a saved copy of a file for a while, so a visitor could get the new HTML with an old stylesheet and see a broken page. **Whenever you change any file in `css/`, `js/`, or `vendor/`, change the `?v=` value on all those links** (e.g. to today's date plus a letter). A new value is a new URL, so every browser fetches the fresh file.
+Every stylesheet and script link in `index.html` ends in `?v=…` (e.g. `css/style.css?v=20261118b`). Browsers, iOS Safari especially, keep using a saved copy of a file for a while, so a visitor could get the new HTML with an old stylesheet and see a broken page. **Whenever you change any file in `css/`, `js/`, or `vendor/`, change the `?v=` value on all those links** (e.g. to today's date plus a letter). A new value is a new URL, so every browser fetches the fresh file.
 
 ### "I pushed but nothing changed"
 GitHub Pages lets browsers cache files for up to 10 minutes. Force a fresh copy:

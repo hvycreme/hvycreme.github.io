@@ -3022,6 +3022,186 @@ html:not(.js) .float-top {
 }
 
 /* ==========================================================================
+   19. Study panel (js/study-sheet.js)
+   A research card opens as a floating glass panel; the page behind recedes.
+   ========================================================================== */
+html {
+  scrollbar-gutter: stable;      /* locking scroll doesn't shift the layout */
+}
+
+html.sheet-open {
+  overflow: hidden;
+}
+
+.sheet-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+.sheet-layer[hidden] {
+  display: none;
+}
+
+/* The page recedes: blurred, softened, and dimmed toward the cream */
+.sheet-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgb(236 233 222 / 0.6);
+  -webkit-backdrop-filter: blur(12px) saturate(0.85);
+  backdrop-filter: blur(12px) saturate(0.85);
+  opacity: 0;
+  transition: opacity 0.45s var(--ease);
+}
+
+.sheet-layer.is-active .sheet-scrim {
+  opacity: 1;
+}
+
+/* The glass blob that grows from the card into the panel */
+.sheet-blob {
+  position: fixed;
+  border: 2px solid transparent;
+  border-radius: var(--radius-glass);
+  background: var(--fill-frost-strong), var(--rim);
+  box-shadow:
+    var(--glass-shadow),
+    0 40px 80px -36px rgb(var(--sage-shade) / 0.55);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sheet-ripple {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(var(--sage-shade) / 0.28), rgb(var(--sage-shade) / 0) 70%);
+  transform: scale(0);
+  opacity: 0;
+}
+
+/* The panel: centred, scrolls on its own */
+.sheet {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: min(100vw - 2rem, 60rem);
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  padding: clamp(1.25rem, 0.75rem + 2.5vw, 2.75rem);
+  overflow: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-glass);
+  transform: translate(-50%, -50%);
+  outline: none;
+}
+
+@media (max-width: 40rem) {
+  .sheet {
+    width: calc(100vw - 1rem);
+    max-height: calc(100vh - 1rem);
+    max-height: calc(100dvh - 1rem);
+  }
+}
+
+/* Details fade and rise in once the blob has nearly settled */
+.sheet > * {
+  transition: opacity 0.4s var(--ease), transform 0.5s var(--ease);
+}
+
+.sheet.is-hidden > * {
+  opacity: 0;
+  transform: translateY(12px);
+  transition-duration: 0.15s;
+}
+
+/* Round glass × that stays in the corner while the panel scrolls */
+.sheet-close {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  /* Sits in the top-right corner without taking up a row or a column
+     (a float would narrow the whole card beside it) */
+  margin: 0 calc(-1 * var(--space-2)) -2.75rem auto;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: var(--fill-frost), var(--rim);
+  box-shadow: var(--glass-shadow-sm);
+  color: var(--color-accent);
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--dur-control) var(--ease), box-shadow var(--dur-control) var(--ease);
+}
+
+.sheet-close:hover {
+  transform: rotate(90deg);
+}
+
+.sheet-close:active {
+  box-shadow: var(--glass-shadow-pressed);
+}
+
+/* The card inside the panel: the blob is its glass now */
+.sheet .project-card,
+.sheet .project-card.is-open {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  transform: none;
+}
+
+.sheet .project-card::after {
+  display: none;
+}
+
+.sheet .project-card .project-body {
+  animation: none;
+}
+
+.sheet .project-head h3 {
+  font-size: var(--text-h3);
+}
+
+/* Keep the title clear of the × button */
+.sheet .project-head {
+  padding-right: 3rem;
+}
+
+/* Where the card was: a faint, empty glass slot */
+.project-placeholder {
+  border-radius: var(--radius-glass);
+  background: rgb(var(--sage-shade) / 0.05);
+  box-shadow: inset 0 2px 6px -2px rgb(var(--sage-shade) / 0.2), 0 0 0 1px rgb(var(--sage-shade) / 0.12);
+}
+
+/* Status badges size to their text; softer corners when they wrap */
+.project-status {
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.35em 0.95em;
+  border-radius: 1.05em;
+  line-height: 1.35;
+}
+
+@media print {
+  .sheet-layer {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
    17. Print: a clean, text-only CV (Print or save as PDF)
    Decoration, motion, and controls are removed; every project shows.
    ========================================================================== */

@@ -170,7 +170,12 @@ function setCard(card, open) {
 
 projectCards.forEach((card) => {
   setCard(card, false);
-  card.querySelector('.project-toggle').addEventListener('click', () => {
+  card.querySelector('.project-toggle').addEventListener('click', (event) => {
+    // With js/study-sheet.js the card opens as a floating panel instead
+    if (window.studySheet) {
+      window.studySheet.toggle(card, event);
+      return;
+    }
     const open = !card.classList.contains('is-open');
     setCard(card, open);
     // An opened card moves to its own full-width row: bring it into view
@@ -226,11 +231,13 @@ function cardFor(id) {
   return target ? target.closest('.project-card, .entry') : null;
 }
 
-function openHolder(holder) {
+function openHolder(holder, targetId) {
   if (holder.classList.contains('is-open')) return;
   if (holder.classList.contains('entry')) {
     setEntry(holder, true);
     syncExpandAll();
+  } else if (window.studySheet) {
+    window.studySheet.open(holder, null, targetId);
   } else {
     setCard(holder, true);
   }
@@ -240,8 +247,12 @@ function openHolder(holder) {
 document.addEventListener('click', (event) => {
   const link = event.target.closest('a[href^="#"]');
   if (!link) return;
-  const holder = cardFor(link.getAttribute('href').slice(1));
-  if (holder) openHolder(holder);
+  const id = link.getAttribute('href').slice(1);
+  const holder = cardFor(id);
+  if (!holder) return;
+  // A study opens as a floating panel: no jump down the page
+  if (window.studySheet && holder.classList.contains('project-card')) event.preventDefault();
+  openHolder(holder, id);
 });
 
 // Arriving with a hash (or typing one): open, then scroll to the target
@@ -249,10 +260,12 @@ function openFromHash() {
   const id = decodeURIComponent(location.hash.slice(1));
   const holder = cardFor(id);
   if (!holder) return;
-  openHolder(holder);
+  openHolder(holder, id);
+  if (window.studySheet && holder.classList.contains('project-card')) return;
   requestAnimationFrame(() => document.getElementById(id).scrollIntoView({ block: 'start' }));
 }
-openFromHash();
+// After every deferred script has run, so study-sheet.js is ready
+document.addEventListener('DOMContentLoaded', openFromHash);
 window.addEventListener('hashchange', openFromHash);
 
 /* --------------------------------------------------------------------------
