@@ -30,7 +30,7 @@ files/            PDFs: put resume.pdf here
 | 02 Experience | `#experience` | Research appointments, then leadership, teaching & work. Each role is a sage glass bubble (title, with field/organization in small type underneath, dates, round arrow button) that opens to its details; "Expand all" opens every role |
 | 03 Skills & Education | `#skills` (old `#methods` lands here), `#education` | Skills grouped by lab; degrees; certifications & training. Has its own nav link |
 | 04 About | `#about` | Background, communication, plants and computers, Currently growing |
-| 05 Contact | `#contact` | Invitation, email (with Copy), Email / LinkedIn, Print or save as PDF, interactive plant figure |
+| 05 Contact | `#contact` | Invitation over four equal glass tiles (Email with Copy, LinkedIn, Résumé download with Print this page, Based in); the interactive plant figure in a glass frame with the plant switch and a round pause button in one row. Both columns start and end on the same lines |
 
 Experience entries that At a glance links to have ids: `#e-palomares`, `#e-wiskur`, `#e-outten`, `#e-ra`, `#e-ta`. A jumped-to entry or project glows briefly.
 
@@ -50,8 +50,8 @@ python3 tools/make_molecule_assets.py --smiles "<lab-verified SMILES>" --source 
 
 This writes `molecules/target.sdf` (computational 3D coordinates: RDKit ETKDGv3 + MMFF94), `molecules/target-2d.svg` (static fallback), and `molecules/target.json` (formula, provenance), and adds `data-model="molecules/target.sdf"` to the card, which turns the viewer on. If any stereocenter is unassigned the script stops; pass `--allow-unassigned-stereo` only if that's correct (e.g. a racemate), and the page will say the model shows one arbitrary configuration.
 
-### Adding the résumé
-There is no résumé file yet, so no download button is shown. To add it: save the PDF as `files/resume.pdf`, then in `index.html` uncomment the two `Download résumé` links (one in the intro's `.hero-actions`, one in Contact).
+### Résumé
+`files/resume.pdf` is the downloadable résumé (linked from the intro's **Résumé** button and the Contact **Résumé** tile; it downloads as `Gavin_Eubanks_Resume.pdf`). It was made from the Word file with LibreOffice; the website copy names the BLS issuer as American Red Cross to match the site. To replace it, export the new résumé to PDF and save it over `files/resume.pdf` (same name), then change the `?v=` version tags so browsers fetch the new copy. It is public: anything in it, including the phone number, can be downloaded by anyone.
 
 ## Unverified content
 Anything not yet confirmed (dates, titles, duties, certifications, skill levels, photos) is tracked in **`TODO.private.md`** at the project root. That file is git-ignored (`.gitignore`), so it is never committed or published by GitHub Pages. Do not put unverified details on the page; add them only after they are confirmed.
@@ -74,7 +74,7 @@ The order is set in `index.html` by numbers on each experience entry and skill g
 
 ## Common edits
 
-**Résumé:** save your PDF as **`files/resume.pdf`** (exact name). Résumé links are removed from the site until this file exists; once it does, restore the résumé links in the header, hero, and contact section.
+**Résumé:** see *Résumé* above.
 
 **Add an experience entry:** copy one whole `<li class="entry">…</li>` inside an `<ol class="entries">`, give it a new `id` (and change the `aria-controls` / body `id` to match, e.g. `e-new` / `e-new-body`), then give it `data-crc` / `data-ert` numbers. Leave out the `<span class="entry-date">` if there is no date. The glass colors are the `--sage-*` tokens at the top of section 9 in `css/style.css`; keep small text at 4.5:1 or better against `--sage-top`.
 
@@ -161,7 +161,7 @@ Deploy status is under the repo's **Actions** tab ("pages build and deployment":
 On github.com, open any file → **pencil icon** → edit → **Commit changes**. To upload a photo or PDF: open the folder → **Add file → Upload files**.
 
 ### Version tags on CSS and JS (cache busting)
-Every stylesheet and script link in `index.html` ends in `?v=…` (e.g. `css/style.css?v=20261118b`). Browsers, iOS Safari especially, keep using a saved copy of a file for a while, so a visitor could get the new HTML with an old stylesheet and see a broken page. **Whenever you change any file in `css/`, `js/`, or `vendor/`, change the `?v=` value on all those links** (e.g. to today's date plus a letter). A new value is a new URL, so every browser fetches the fresh file.
+Every stylesheet and script link in `index.html` ends in `?v=…` (e.g. `css/style.css?v=20261119a`). Browsers, iOS Safari especially, keep using a saved copy of a file for a while, so a visitor could get the new HTML with an old stylesheet and see a broken page. **Whenever you change any file in `css/`, `js/`, or `vendor/`, change the `?v=` value on all those links** (e.g. to today's date plus a letter). A new value is a new URL, so every browser fetches the fresh file.
 
 ### "I pushed but nothing changed"
 GitHub Pages lets browsers cache files for up to 10 minutes. Force a fresh copy:

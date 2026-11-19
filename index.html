@@ -35,16 +35,16 @@
   <!-- Runs before the page paints: tells CSS "JavaScript is on", so effects
        that hide content (reveals, toggles, the phone menu) only apply when JS can undo them. -->
   <script>document.documentElement.classList.add('js');</script>
-  <link rel="stylesheet" href="vendor/mint-drift/mint-drift.css?v=20261118b">
-  <link rel="stylesheet" href="css/style.css?v=20261118b">
+  <link rel="stylesheet" href="vendor/mint-drift/mint-drift.css?v=20261119a">
+  <link rel="stylesheet" href="css/style.css?v=20261119a">
   <!-- defer: download in parallel, run after the HTML is parsed (so the DOM exists) -->
-  <script src="js/main.js?v=20261118b" defer></script>
-  <script src="js/particles.js?v=20261118b" defer></script>
-  <script src="js/pollen.js?v=20261118b" defer></script>
-  <script src="js/molecule.js?v=20261118b" defer></script>
-  <script src="vendor/mint-drift/mint-drift.js?v=20261118b" defer></script>
-  <script src="js/portrait-helix.js?v=20261118b" defer></script>
-  <script src="js/study-sheet.js?v=20261118b" defer></script>
+  <script src="js/main.js?v=20261119a" defer></script>
+  <script src="js/particles.js?v=20261119a" defer></script>
+  <script src="js/pollen.js?v=20261119a" defer></script>
+  <script src="js/molecule.js?v=20261119a" defer></script>
+  <script src="vendor/mint-drift/mint-drift.js?v=20261119a" defer></script>
+  <script src="js/portrait-helix.js?v=20261119a" defer></script>
+  <script src="js/study-sheet.js?v=20261119a" defer></script>
 </head>
 <body>
 
@@ -58,6 +58,10 @@
     <symbol id="i-eye-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.1A10.6 10.6 0 0 1 12 5c6 0 9.5 7 9.5 7a17 17 0 0 1-3 3.9M6.6 6.6C3.9 8.3 2.5 12 2.5 12s3.5 7 9.5 7a9.8 9.8 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></g></symbol>
     <symbol id="i-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7Z"/><circle cx="12" cy="12" r="3"/></g></symbol>
     <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="m4 7 8 6 8-6"/></g></symbol>
+    <symbol id="i-person" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 19.5c1.2-3.4 3.9-5 7-5s5.8 1.6 7 5"/></g></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10A.5.5 0 0 1 7 20Z" transform="translate(-0.5 0)"/><path d="M13.5 3.5V8h4M9.5 12.5h5M9.5 16h5"/></g></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21Z"/><circle cx="12" cy="10" r="2.3"/></g></symbol>
     <symbol id="i-up" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></g></symbol>
   </svg>
 
@@ -100,8 +104,7 @@
         <div class="hero-actions">
           <a class="button button-primary" href="#research">Explore my research</a>
           <a class="button" href="#contact">Contact me</a>
-          <!-- Résumé: add files/resume.pdf, then uncomment this link.
-               <a class="button" href="files/resume.pdf" download>Download résumé<span class="sr-only"> (PDF)</span></a> -->
+          <a class="button" href="files/resume.pdf" download="Gavin_Eubanks_Resume.pdf">Résumé<span class="sr-only"> (PDF download)</span></a>
         </div>
       </div>
 
@@ -461,13 +464,36 @@
         </li>
       </ol>
 
+      <h3 class="group-title">Clinical experience</h3>
+      <ol class="entries" data-sortable>
+        <li class="entry" id="e-lexington" data-crc="1" data-ert="1">
+          <h4 class="entry-head">
+            <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-lexington-body"><span class="entry-row">
+              <span class="entry-titles"><span class="entry-title">Patient Care Intern (Volunteer)</span><span class="entry-sub">Interventional Radiology · Lexington Medical Center, West Columbia, SC</span></span>
+              <span class="entry-date">Jan 2025 – Jan 2026</span>
+              <span class="entry-icon" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24"><use href="#i-chev"/></svg></span>
+            </span></button>
+          </h4>
+          <div class="entry-body" id="e-lexington-body">
+            <div class="entry-inner"><div class="entry-pad">
+              <ul class="points">
+                <li>Obtained and reported vital signs under the direct supervision of Registered Nurses to support pre- and post-procedure patient care.</li>
+                <li>Escorted and transported patients and visitors between waiting areas, procedure rooms, and recovery, assisting with safe positioning and ambulation.</li>
+                <li>Restocked rooms with clean gowns, linens, and patient care supplies; kept equipment and rooms safe and ready.</li>
+                <li>Comforted patients and families, protected confidentiality, and reported patient needs and status changes to nurses.</li>
+              </ul>
+            </div></div>
+          </div>
+        </li>
+      </ol>
+
       <h3 class="group-title">Leadership, teaching &amp; work</h3>
       <ol class="entries" data-sortable>
         <li class="entry" id="e-ra" data-crc="2" data-ert="1">
           <h4 class="entry-head">
             <button type="button" class="entry-toggle" aria-expanded="false" aria-controls="e-ra-body"><span class="entry-row">
               <span class="entry-titles"><span class="entry-title">Resident Assistant</span><span class="entry-sub">East Quad · University Housing</span></span>
-              <span class="entry-date">Mar 2025 – Present</span>
+              <span class="entry-date">Aug 2024 – Present</span>
               <span class="entry-icon" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24"><use href="#i-chev"/></svg></span>
             </span></button>
           </h4>
@@ -634,6 +660,7 @@
           <h3 class="group-title">Certifications &amp; training</h3>
           <ul class="cert-list">
             <li><span class="cert-name">Basic Life Support (BLS) — American Red Cross</span><span class="cert-meta">Certification · issued Sep 2026 · expires Sep 2028</span></li>
+            <li><span class="cert-name">CERT Emergency Response Training — FEMA</span><span class="cert-meta">Training · triage, first aid, bleeding control · 3 years</span></li>
             <li><span class="cert-name">Human Research: Social &amp; Behavioral Research — CITI Program</span><span class="cert-meta">Training · completed Jan 2024 · expires Jan 2027</span></li>
             <li><span class="cert-name">Social and Behavioral Responsible Conduct of Research — CITI Program</span><span class="cert-meta">Training · completed Sep 2025 · expires Sep 2029</span></li>
             <li><span class="cert-name">Chemical and Laboratory Safety Training — University of South Carolina</span><span class="cert-meta">Training · completed Feb 2024</span></li>
@@ -691,23 +718,46 @@
       <div class="contact-grid">
         <div class="contact-text">
           <p class="contact-lede">I’d be glad to hear about opportunities in research, healthcare, or the lab sciences.</p>
-          <p class="contact-email"><a href="mailto:gavineub@gmail.com">gavineub@gmail.com</a>
-            <!-- Shown by main.js only where copying is supported -->
-            <button type="button" class="copy-email" data-copy="gavineub@gmail.com" hidden>Copy</button>
-            <span class="sr-only copy-status" role="status"></span></p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="mailto:gavineub@gmail.com">Email me</a>
-            <!-- Résumé: add files/resume.pdf, then uncomment this link.
-               <a class="button" href="files/resume.pdf" download>Download résumé<span class="sr-only"> (PDF)</span></a> -->
-            <a class="button" href="https://www.linkedin.com/in/gavin-eubanks-4684912ba/" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
-          </div>
-          <!-- Shown by main.js: prints a clean, text-only version of the page (see the print styles) -->
-          <p class="print-row"><button type="button" class="print-page" hidden>Print or save as PDF</button></p>
-          <p class="contact-location">Based in Columbia, South Carolina</p>
+
+          <!-- Four equal glass tiles on one grid, so every edge lines up.
+               Each tile's main link covers the whole tile; Copy and Print sit above it. -->
+          <ul class="contact-tiles">
+            <li class="contact-tile">
+              <span class="tile-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><use href="#i-mail"/></svg></span>
+              <p class="tile-label">Email</p>
+              <p class="tile-value"><a class="tile-link" href="mailto:gavineub@gmail.com">gavineub@gmail.com</a></p>
+              <p class="tile-actions">
+                <!-- Shown by main.js only where copying is supported -->
+                <button type="button" class="copy-email" data-copy="gavineub@gmail.com" hidden>Copy</button>
+                <span class="sr-only copy-status" role="status"></span>
+              </p>
+            </li>
+            <li class="contact-tile">
+              <span class="tile-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><use href="#i-person"/></svg></span>
+              <p class="tile-label">LinkedIn</p>
+              <p class="tile-value"><a class="tile-link" href="https://www.linkedin.com/in/gavin-eubanks-4684912ba/" target="_blank" rel="noopener">Gavin Eubanks<span class="sr-only"> on LinkedIn (opens in a new tab)</span></a></p>
+              <p class="tile-note">Profile and updates</p>
+            </li>
+            <li class="contact-tile">
+              <span class="tile-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><use href="#i-doc"/></svg></span>
+              <p class="tile-label">Résumé</p>
+              <p class="tile-value"><a class="tile-link" href="files/resume.pdf" download="Gavin_Eubanks_Resume.pdf">Download PDF<span class="sr-only"> (résumé)</span></a></p>
+              <p class="tile-actions">
+                <!-- Shown by main.js: prints a clean, text-only version of this page -->
+                <button type="button" class="print-page" hidden>Print this page</button>
+              </p>
+            </li>
+            <li class="contact-tile tile-static">
+              <span class="tile-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"><use href="#i-pin"/></svg></span>
+              <p class="tile-label">Based in</p>
+              <p class="tile-value">Columbia, South Carolina</p>
+              <p class="tile-note">Open to research, healthcare, and laboratory roles</p>
+            </li>
+          </ul>
         </div>
         <!-- The botanical plates as interactive particles (js/particles.js). The canvas is
              decorative (hidden from screen readers); the caption below is real text. -->
-        <figure class="contact-figure">
+        <figure class="contact-figure glass-frame">
           <!-- Plant switch: the same particles morph between three plates.
                Hidden until the particle effect is running (js/particles.js). -->
           <div class="explain-toggle plant-switch" role="group" aria-label="Choose a plant" hidden>
